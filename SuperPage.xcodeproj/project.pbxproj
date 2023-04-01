@@ -61,12 +61,12 @@
 		A01CA2B729D0EA2A00AEB258 /* EnvironmentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2B629D0EA2A00AEB258 /* EnvironmentState.swift */; };
 		A01CA2BA29D0EAF500AEB258 /* UserInteractor+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2B929D0EAF500AEB258 /* UserInteractor+Mock.swift */; };
 		A01CA2BC29D0EB0200AEB258 /* UserInteractor+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2BB29D0EB0200AEB258 /* UserInteractor+API.swift */; };
-		A01CA2BF29D0EBEE00AEB258 /* NoAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A01CA2BE29D0EBEE00AEB258 /* NoAPI */; };
 		A01CA2C429D0EC8F00AEB258 /* EnvironmentInteractor+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2C329D0EC8F00AEB258 /* EnvironmentInteractor+Mock.swift */; };
 		A01CA2C629D0F01400AEB258 /* APIRequest+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2C529D0F01400AEB258 /* APIRequest+Response.swift */; };
 		A01CA2C829D0F05B00AEB258 /* APIResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2C729D0F05B00AEB258 /* APIResponseError.swift */; };
 		A01CA2CA29D0F3A800AEB258 /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2C929D0F3A800AEB258 /* SignInResponse.swift */; };
 		A01CA2CE29D15FF000AEB258 /* NoAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A01CA2CD29D15FF000AEB258 /* NoAuth */; };
+		A02882B429D7CAAE005F6479 /* NoAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A02882B329D7CAAE005F6479 /* NoAPI */; };
 		A03A1C6129D4B41A00158E95 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C6029D4B41A00158E95 /* SettingsScreen.swift */; };
 		A03A1C6629D5260800158E95 /* SettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C6529D5260800158E95 /* SettingsInteractor.swift */; };
 		A03A1C6929D5269700158E95 /* SettingsUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C6829D5269700158E95 /* SettingsUsage.swift */; };
@@ -108,7 +108,6 @@
 		A01CA25329D01E1000AEB258 /* AppleSignInProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInProvider.swift; sourceTree = "<group>"; };
 		A01CA25729D0203E00AEB258 /* SignInScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInScreen.swift; sourceTree = "<group>"; };
 		A01CA25A29D020BF00AEB258 /* AppleSignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInButton.swift; sourceTree = "<group>"; };
-		A01CA25D29D025A700AEB258 /* NoAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = NoAPI; path = ../NoAPI; sourceTree = "<group>"; };
 		A01CA26429D02D2200AEB258 /* SystemImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemImage.swift; sourceTree = "<group>"; };
 		A01CA26729D02D3C00AEB258 /* NavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavView.swift; sourceTree = "<group>"; };
 		A01CA26829D02D3C00AEB258 /* NavLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavLink.swift; sourceTree = "<group>"; };
@@ -162,7 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A01CA2BF29D0EBEE00AEB258 /* NoAPI in Frameworks */,
+				A02882B429D7CAAE005F6479 /* NoAPI in Frameworks */,
 				A01CA2CE29D15FF000AEB258 /* NoAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,7 +256,6 @@
 		A01CA23629D019C500AEB258 = {
 			isa = PBXGroup;
 			children = (
-				A01CA25C29D025A700AEB258 /* Packages */,
 				A01CA24129D019C500AEB258 /* SuperPage */,
 				A01CA24029D019C500AEB258 /* Products */,
 				A01CA2BD29D0EBEE00AEB258 /* Frameworks */,
@@ -329,14 +327,6 @@
 				A01CA25A29D020BF00AEB258 /* AppleSignInButton.swift */,
 			);
 			path = Button;
-			sourceTree = "<group>";
-		};
-		A01CA25C29D025A700AEB258 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				A01CA25D29D025A700AEB258 /* NoAPI */,
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 		A01CA25E29D0289700AEB258 /* App */ = {
@@ -690,8 +680,8 @@
 			);
 			name = SuperPage;
 			packageProductDependencies = (
-				A01CA2BE29D0EBEE00AEB258 /* NoAPI */,
 				A01CA2CD29D15FF000AEB258 /* NoAuth */,
+				A02882B329D7CAAE005F6479 /* NoAPI */,
 			);
 			productName = SuperPage;
 			productReference = A01CA23F29D019C500AEB258 /* SuperPage.app */;
@@ -723,6 +713,7 @@
 			mainGroup = A01CA23629D019C500AEB258;
 			packageReferences = (
 				A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */,
+				A02882B229D7CAAE005F6479 /* XCRemoteSwiftPackageReference "NoAPI" */,
 			);
 			productRefGroup = A01CA24029D019C500AEB258 /* Products */;
 			projectDirPath = "";
@@ -1047,17 +1038,26 @@
 				kind = branch;
 			};
 		};
+		A02882B229D7CAAE005F6479 /* XCRemoteSwiftPackageReference "NoAPI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ultim8p/NoAPI.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A01CA2BE29D0EBEE00AEB258 /* NoAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = NoAPI;
-		};
 		A01CA2CD29D15FF000AEB258 /* NoAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */;
 			productName = NoAuth;
+		};
+		A02882B329D7CAAE005F6479 /* NoAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A02882B229D7CAAE005F6479 /* XCRemoteSwiftPackageReference "NoAPI" */;
+			productName = NoAPI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

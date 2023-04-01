@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "noapi",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ultim8p/NoAPI.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4a7e24c3f6cf5231815997c8dafbfecead19b398"
+      }
+    },
+    {
       "identity" : "noauth",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ultim8p/NoAuth.git",
