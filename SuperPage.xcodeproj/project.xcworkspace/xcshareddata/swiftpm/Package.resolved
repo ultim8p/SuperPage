@@ -1,0 +1,50 @@
+{
+  "pins" : [
+    {
+      "identity" : "codableutils",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ultim8p/CodableUtils",
+      "state" : {
+        "revision" : "45a6378f16e700fdbbd6df13a67ebad1f517af80",
+        "version" : "0.0.3"
+      }
+    },
+    {
+      "identity" : "mergeable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ultim8p/Mergeable.git",
+      "state" : {
+        "revision" : "cdb7cbce9cd311f300621594244874c1acec925d",
+        "version" : "0.0.4"
+      }
+    },
+    {
+      "identity" : "noauth",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ultim8p/NoAuth.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e10655213ad8bc4628cc9945ad8d929c00b3c8d8"
+      }
+    },
+    {
+      "identity" : "nocrypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ultim8p/NoCrypto.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f7f222ca6e811476c343932e7c97016292b35c45"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto.git",
+      "state" : {
+        "revision" : "da0fe44138ab86e380f40a2acbd8a611b07d3f64",
+        "version" : "2.4.0"
+      }
+    }
+  ],
+  "version" : 2
+}
