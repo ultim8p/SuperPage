@@ -37,7 +37,7 @@ struct HomeToolBar: View {
             .buttonStyle(ButtonIconStyle())
             Spacer()
             Button {
-                showChatCreation = !showChatCreation
+//                showChatCreation = !showChatCreation
             } label: {
                 Image(systemName: SystemImage.textMagnifyingGlass.rawValue)
                     .foregroundColor(.cyan)

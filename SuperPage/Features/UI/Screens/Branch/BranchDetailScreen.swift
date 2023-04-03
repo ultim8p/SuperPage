@@ -47,9 +47,9 @@ struct BranchDetailScreen: View {
                 ForEach(chatInt.messages) { message in
                     let role = message.role
                     let isAssistant = role == .assistant
-                    let backgroundColor = isAssistant ?
-                    Color.clear :
-                    Color(red: 79, green: 92, blue: 117, opacity: 0.1)
+//                    let backgroundColor = isAssistant ?
+//                    Color.clear :
+//                    Color(red: 79, green: 92, blue: 117, opacity: 0.1)
                     let topOffset: CGFloat = isAssistant ? 0.0 : 15
                     let indicatorIcon = isAssistant ?
                     SystemImage.arrowTurnDownRight.rawValue : SystemImage.chevronCompactRight.rawValue
@@ -63,7 +63,7 @@ struct BranchDetailScreen: View {
                                 .font(.title3).fontWeight(.light)
                                 .foregroundColor(.primary)
                                 .textSelection(.enabled)
-                                .background(backgroundColor)
+                                .background(Color.clear)
                         }
                     }
                     .addReadablePadding()
