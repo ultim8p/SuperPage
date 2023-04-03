@@ -91,4 +91,24 @@ extension ChatInteractor {
         chat.branches = branches
         chats[chatIndex] = chat
     }
+    
+    func setBranch(name: String, branch: Branch) {
+        guard let chatIndex = chats.firstIndex(where: {$0.id == branch.chat?.id}) else { return }
+        var chat = chats[chatIndex]
+        var branches = chat.branches ?? []
+        guard let branchIndex = branches.firstIndex(where: {$0.id == branch.id}) else { return }
+        
+        var branch = branches[branchIndex]
+        branch.name = name
+        branches[branchIndex] = branch
+        chat.branches = branches
+        chats[chatIndex] = chat
+    }
+    
+    func setChat(name: String, chat: Chat) {
+        guard let chatIndex = chats.firstIndex(where: {$0.id == chat.id}) else { return }
+        var chat = chats[chatIndex]
+        chat.name = name
+        chats[chatIndex] = chat
+    }
 }

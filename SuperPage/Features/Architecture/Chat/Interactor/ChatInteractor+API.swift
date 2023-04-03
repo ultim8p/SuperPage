@@ -139,9 +139,10 @@ extension ChatInteractor {
     func editChat(name: String, chat: Chat) {
         Task {
             do {
-                let chat = Chat(_id: chat._id, name: name)
-                let result = try await repo.editChat(env: env, chat: chat)
+                let request = Chat(_id: chat._id, name: name)
+                let result = try await repo.editChat(env: env, chat: request)
                 guard result.result == .ok else { return }
+                setChat(name: name, chat: chat)
             } catch {
                 print("EDIT CHAT ERR: \(error)")
             }
@@ -151,9 +152,10 @@ extension ChatInteractor {
     func editBranch(name: String, branch: Branch) {
         Task {
             do {
-                let branch = Branch(_id: branch._id, name: name)
-                let result = try await repo.editBranch(env: env, branch: branch)
+                let request = Branch(_id: branch._id, name: name)
+                let result = try await repo.editBranch(env: env, branch: request)
                 guard result.result == .ok else { return }
+                setBranch(name: name, branch: branch)
             } catch {
                 print("EDIT BRANCH ERR: \(error)")
             }
