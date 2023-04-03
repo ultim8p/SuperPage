@@ -8,6 +8,57 @@
 import Foundation
 import SwiftUI
 
+struct NameEditView: View {
+    
+    @Binding var presented: Bool
+    
+    var placeholder: String
+    
+    var title: String
+    
+    @State var name: String = ""
+    
+    var submitHandler: ((_ name: String) -> Void)?
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.7).edgesIgnoringSafeArea(.all)
+            VStack {
+                HStack {
+                    Button {
+                        presented = false
+                    } label: {
+                        Image(systemName: SystemImage.xmark.rawValue)
+                            .foregroundColor(Color.white)
+                    }
+                    Text(title)
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.white)
+                }
+                FieldNameTextField(text: $name, placeholder: placeholder)
+                    .onSubmitName {
+                        guard !name.isEmpty else { return }
+                        submitHandler?(name)
+                        presented = false
+                        name = ""
+                    }
+                Spacer()
+            }
+            .padding()
+            .padding(.top)
+            .padding(.top)
+        }
+    }
+}
+
+extension NameEditView {
+    
+    func onSubmitName(submitHandler: ((_ name: String) -> Void)?) -> some View {
+        NameEditView(presented: $presented, placeholder: placeholder, title: title, submitHandler: submitHandler)
+    }
+}
+
 struct BranchCreationView: View {
     
     @EnvironmentObject var chatInt: ChatInteractor

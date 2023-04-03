@@ -41,7 +41,6 @@ struct HomeScreen: View {
             }
         }
         .padding(.bottom)
-//        .statusBarHidden(true)
         .ignoresSafeArea(edges: [.top, .bottom])
     }
 }

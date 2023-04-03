@@ -24,4 +24,6 @@ struct Chat: Codable, Identifiable {
     var name: String?
     
     var branches: [Branch]?
+    
+    var expanded: Bool?
 }

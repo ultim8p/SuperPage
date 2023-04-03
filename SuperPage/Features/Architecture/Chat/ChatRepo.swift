@@ -22,6 +22,16 @@ enum ChatPath: APIPath {
     
     case postChatsBranchesMessagesCreate
     
+    case deleteChat
+    
+    case deleteBranch
+    
+    case deleteMessage
+    
+    case postChatEdit
+    
+    case postBranchEdit
+    
     var description: String {
         switch self {
         case .getChatsAllMe:
@@ -36,6 +46,16 @@ enum ChatPath: APIPath {
             return "/v1/chats/branches/create"
         case .postChatsBranchesMessagesCreate:
             return "/v1/chats/branches/messages/create"
+        case .deleteChat:
+            return "/v1/chats/delete"
+        case .deleteBranch:
+            return "/v1/branches/delete"
+        case .deleteMessage:
+            return "/v1/messages/delete"
+        case .postChatEdit:
+            return "/v1/chats/edit"
+        case .postBranchEdit:
+            return "/v1/branches/edit"
         }
     }
 }
@@ -84,6 +104,41 @@ class ChatRepo {
     func postChatsBranchesMessagesCreate(env: EnvironmentInteractor, reques: MessagesCreateRequest)
     async throws -> ListResponse<Message> {
         return try await reques.request(env, method: .post, path: ChatPath.postChatsBranchesMessagesCreate)
+            .authenticate(env: env)
+            .responseValue()
+    }
+    
+    func deleteChat(env: EnvironmentInteractor, chat: Chat) async throws -> EmptyResponse {
+        let chatRequest = Chat(_id: chat._id)
+        return try await chatRequest.request(env, method: .delete, path: ChatPath.deleteChat)
+            .authenticate(env: env)
+            .responseValue()
+    }
+    
+    func deleteBranch(env: EnvironmentInteractor, branch: Branch) async throws -> EmptyResponse {
+        let branchRequest = Branch(_id: branch._id)
+        return try await branchRequest.request(env, method: .delete, path: ChatPath.deleteBranch)
+            .authenticate(env: env)
+            .responseValue()
+    }
+    
+    func deleteMessage(env: EnvironmentInteractor, message: Message) async throws -> EmptyResponse {
+        let messageRequest = Message(_id: message._id)
+        return try await messageRequest.request(env, method: .delete, path: ChatPath.deleteMessage)
+            .authenticate(env: env)
+            .responseValue()
+    }
+    
+    func editChat(env: EnvironmentInteractor, chat: Chat) async throws -> EmptyResponse {
+        let request = Chat(_id: chat._id, name: chat.name)
+        return try await request.request(env, method: .post, path: ChatPath.postChatEdit)
+            .authenticate(env: env)
+            .responseValue()
+    }
+    
+    func editBranch(env: EnvironmentInteractor, branch: Branch) async throws -> EmptyResponse {
+        let request = Branch(_id: branch._id, name: branch.name)
+        return try await request.request(env, method: .post, path: ChatPath.postBranchEdit)
             .authenticate(env: env)
             .responseValue()
     }

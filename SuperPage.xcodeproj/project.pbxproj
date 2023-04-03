@@ -79,6 +79,8 @@
 		A03A1C8629D75FE700158E95 /* HomeToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C8529D75FE700158E95 /* HomeToolBar.swift */; };
 		A03A1C8829D76D2B00158E95 /* FieldNameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C8729D76D2B00158E95 /* FieldNameTextField.swift */; };
 		A03A1C8A29D76E6200158E95 /* BranchCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C8929D76E6200158E95 /* BranchCreationView.swift */; };
+		A0A22CA129DA2B76003F9ED1 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */; };
+		A0A22CA429DA500E003F9ED1 /* FileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A22CA329DA500E003F9ED1 /* FileRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +156,8 @@
 		A03A1C8529D75FE700158E95 /* HomeToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeToolBar.swift; sourceTree = "<group>"; };
 		A03A1C8729D76D2B00158E95 /* FieldNameTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldNameTextField.swift; sourceTree = "<group>"; };
 		A03A1C8929D76E6200158E95 /* BranchCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchCreationView.swift; sourceTree = "<group>"; };
+		A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
+		A0A22CA329DA500E003F9ED1 /* FileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				A009F13A29D3B9ED0045F311 /* ListResponse.swift */,
+				A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -641,6 +646,7 @@
 		A03A1C8229D75ADB00158E95 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				A0A22CA229DA4FFD003F9ED1 /* ListItems */,
 				A03A1C8429D75FDD00158E95 /* ToolBar */,
 				A03A1C8329D75AE300158E95 /* TextField */,
 			);
@@ -661,6 +667,14 @@
 				A03A1C8529D75FE700158E95 /* HomeToolBar.swift */,
 			);
 			path = ToolBar;
+			sourceTree = "<group>";
+		};
+		A0A22CA229DA4FFD003F9ED1 /* ListItems */ = {
+			isa = PBXGroup;
+			children = (
+				A0A22CA329DA500E003F9ED1 /* FileRow.swift */,
+			);
+			path = ListItems;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -695,7 +709,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					A01CA23E29D019C500AEB258 = {
 						CreatedOnToolsVersion = 14.2;
@@ -774,6 +788,7 @@
 				A01CA25B29D020BF00AEB258 /* AppleSignInButton.swift in Sources */,
 				A01CA29C29D0E08C00AEB258 /* SignInRequest.swift in Sources */,
 				A009F15E29D410150045F311 /* BranchDetailScreen.swift in Sources */,
+				A0A22CA129DA2B76003F9ED1 /* EmptyResponse.swift in Sources */,
 				A01CA28229D0B3B700AEB258 /* UserInteractor.swift in Sources */,
 				A03A1C6929D5269700158E95 /* SettingsUsage.swift in Sources */,
 				A01CA29E29D0E6E600AEB258 /* AuthenticationInteractor+Mock.swift in Sources */,
@@ -804,6 +819,7 @@
 				A01CA2C429D0EC8F00AEB258 /* EnvironmentInteractor+Mock.swift in Sources */,
 				A01CA2BA29D0EAF500AEB258 /* UserInteractor+Mock.swift in Sources */,
 				A01CA27029D02E4F00AEB258 /* NavLink.swift in Sources */,
+				A0A22CA429DA500E003F9ED1 /* FileRow.swift in Sources */,
 				A01CA24329D019C500AEB258 /* SuperPageApp.swift in Sources */,
 				A03A1C8829D76D2B00158E95 /* FieldNameTextField.swift in Sources */,
 				A009F15429D3ED570045F311 /* AIModel.swift in Sources */,
@@ -848,6 +864,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -908,6 +925,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -936,6 +954,7 @@
 				CODE_SIGN_ENTITLEMENTS = SuperPage/SuperPage.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SuperPage/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J5NGE9JCN;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -975,6 +994,7 @@
 				CODE_SIGN_ENTITLEMENTS = SuperPage/SuperPage.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SuperPage/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J5NGE9JCN;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -26,23 +26,32 @@ struct HomeToolBar: View {
     
     var body: some View {
         HStack {
-                Spacer()
-                Button {
-                    showChatCreation = !showChatCreation
-                } label: {
-                    Image(systemName: SystemImage.folderBadgePlus.rawValue)
-                        .foregroundColor(.blue)
+            Spacer()
+            Button {
+                showChatCreation = !showChatCreation
+            } label: {
+                Image(systemName: SystemImage.folderBadgePlus.rawValue)
+                    .foregroundColor(.cyan)
                         
-                }
-                .buttonStyle(ButtonIconStyle())
-                Spacer()
-                NavLink(destination: SettingsScreen()) {
-                    Image(systemName: SystemImage.gearShape.rawValue)
-                        .foregroundColor(.blue)
-                        .font(.title)
-                }
-                .buttonStyle(ButtonIconStyle())
-                Spacer()
+            }
+            .buttonStyle(ButtonIconStyle())
+            Spacer()
+            Button {
+                showChatCreation = !showChatCreation
+            } label: {
+                Image(systemName: SystemImage.textMagnifyingGlass.rawValue)
+                    .foregroundColor(.cyan)
+                    
+            }
+            .buttonStyle(ButtonIconStyle())
+            Spacer()
+            NavLink(destination: SettingsScreen()) {
+                Image(systemName: SystemImage.gearShape.rawValue)
+                    .foregroundColor(.cyan)
+                    .font(.title)
+            }
+            .buttonStyle(ButtonIconStyle())
+            Spacer()
         }.padding([.bottom, .top])
     }
 }

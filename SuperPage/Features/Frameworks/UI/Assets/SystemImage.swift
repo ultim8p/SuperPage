@@ -18,6 +18,10 @@ enum SystemImage: String {
     case xmark = "xmark"
     
     case docPlaintext = "doc.plaintext"
+    case docAppend = "doc.append"
+    case docText = "doc.text"
+    
+    case textMagnifyingGlass = "text.magnifyingglass"
     
     case gearShape = "gearshape"
     
@@ -31,4 +35,7 @@ enum SystemImage: String {
     case listBullet = "list.bullet"
     
     case chevronRight = "chevron.right"
+    case chevronCompactRight = "chevron.compact.right"
+    
+    case arrowTurnDownRight = "arrow.turn.down.right"
 }

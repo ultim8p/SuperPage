@@ -96,25 +96,67 @@ extension ChatInteractor {
         }
     }
     
-    func addBranch(response: Branch, to chat: Chat) {
-        var chats = self.chats
-        guard let chatIndex = chats.firstIndex(where: { $0._id == chat._id }) else { return }
-        var updatingChat = chats[chatIndex]
-        var branches = updatingChat.branches ?? []
-        
-        branches.append(response)
-        
-        updatingChat.branches = branches
-        chats[chatIndex] = updatingChat
-        self.chats = chats
+    // MARK: - DELETE
+    
+    func deleteChat(chat: Chat) {
+        Task {
+            do {
+                let response = try await repo.deleteChat(env: env, chat: chat)
+                guard response.result == .ok else { return }
+                remove(chat: chat)
+            } catch {
+                print("DELETE CHAT ERR: \(error)")
+            }
+        }
     }
     
-    func setBranches(response: [Branch], for chat: Chat) {
-        var chats = self.chats
-        guard let chatIndex = chats.firstIndex(where: { $0._id == chat._id }) else { return }
-        var updatingChat = chats[chatIndex]
-        updatingChat.branches = response
-        chats[chatIndex] = updatingChat
-        self.chats = chats
+    func deleteBranch(branch: Branch) {
+        Task {
+            do {
+                let response = try await repo.deleteBranch(env: env, branch: branch)
+                guard response.result == .ok else { return }
+                remove(branch: branch)
+            } catch {
+                print("DELETE CHAT ERR: \(error)")
+            }
+        }
+    }
+    
+    func deleteMessage(message: Message) {
+        Task {
+            do {
+                let response = try await repo.deleteMessage(env: env, message: message)
+                guard response.result == .ok else { return }
+                print("DELETE SUCESS: \(response.toDictionary())")
+            } catch {
+                print("DELETE CHAT ERR: \(error)")
+            }
+        }
+    }
+    
+    // MARK: EDIT
+    
+    func editChat(name: String, chat: Chat) {
+        Task {
+            do {
+                let chat = Chat(_id: chat._id, name: name)
+                let result = try await repo.editChat(env: env, chat: chat)
+                guard result.result == .ok else { return }
+            } catch {
+                print("EDIT CHAT ERR: \(error)")
+            }
+        }
+    }
+    
+    func editBranch(name: String, branch: Branch) {
+        Task {
+            do {
+                let branch = Branch(_id: branch._id, name: name)
+                let result = try await repo.editBranch(env: env, branch: branch)
+                guard result.result == .ok else { return }
+            } catch {
+                print("EDIT BRANCH ERR: \(error)")
+            }
+        }
     }
 }

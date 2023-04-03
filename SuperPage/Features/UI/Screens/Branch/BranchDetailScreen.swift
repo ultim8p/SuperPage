@@ -38,29 +38,39 @@ struct BranchDetailScreen: View {
             VStack {
                 HStack {
                     Toggle("Reply as independent messages", isOn: $independentMessages)
+                    Spacer()
                 }
-                TextField("Order(ex): Only reply with poems.", text: $systemMessage, axis: .vertical)
+                TextField("Instruction(ex): Act as a lawyer.", text: $systemMessage, axis: .vertical)
             }
             .padding([.leading, .trailing])
             List {
                 ForEach(chatInt.messages) { message in
                     let role = message.role
                     let isAssistant = role == .assistant
-                    let separator: Visibility = isAssistant ? .visible : .hidden
+                    let backgroundColor = isAssistant ?
+                    Color.clear :
+                    Color(red: 79, green: 92, blue: 117, opacity: 0.1)
+                    let topOffset: CGFloat = isAssistant ? 0.0 : 15
+                    let indicatorIcon = isAssistant ?
+                    SystemImage.arrowTurnDownRight.rawValue : SystemImage.chevronCompactRight.rawValue
                     VStack(alignment: .leading, spacing: 0) {
-                        Text(role?.rawValue ?? "")
-                            .font(.headline)
-                        Text(message.text ?? "")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .disabled(false)
-                            .textSelection(.enabled)
-                            
+                        HStack(alignment: .top) {
+                            if !isAssistant {
+                                Image(systemName: indicatorIcon)
+                                    .foregroundColor(.cyan)
+                            }
+                            Text(message.text ?? "")
+                                .font(.title3).fontWeight(.light)
+                                .foregroundColor(.primary)
+                                .textSelection(.enabled)
+                                .background(backgroundColor)
+                        }
                     }
                     .addReadablePadding()
-                    .listRowBackground(Color.clear)
                     .listRowInsets(.init())
-                    .listRowSeparator(separator)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .padding(.top, topOffset)
                     .onTapGesture {
                         #if os(iOS)
                         UIApplication.shared.endEditing()
@@ -74,12 +84,7 @@ struct BranchDetailScreen: View {
                             #if os(macOS)
                             let modifiers = NSApplication.shared.currentEvent?.modifierFlags ?? []
                             if modifiers.contains(.shift) {
-                                chatInt.postCreateMessage(
-                                    text: text,
-                                    branch: branch,
-                                    independentMessages: independentMessages,
-                                    systemMessage: systemMessage)
-                                text = ""
+                                sendMessage()
                             } else {
                                 text.append("\n")
                                 textEditing = true
@@ -91,13 +96,7 @@ struct BranchDetailScreen: View {
                         .addReadablePadding()
                     #if os(iOS)
                     Button {
-                        guard !text.isEmpty else { return }
-                        chatInt.postCreateMessage(
-                            text: text,
-                            branch: branch,
-                            independentMessages: independentMessages,
-                            systemMessage: systemMessage)
-                        text = ""
+                        sendMessage()
                     } label: {
                         Image(systemName: SystemImage.paperplaneFill.rawValue)
                             .font(.title2)
@@ -109,13 +108,48 @@ struct BranchDetailScreen: View {
                 .ignoresSafeArea(edges: [.top, .bottom])
                 .listRowInsets(.init())
         }
-        
+            .background(ignoresSafeAreaEdges: .all)
+            .background(Color.white)
 
         }
-        .onAppear{
+        .onAppear {
             chatInt.messages = []
             chatInt.getMessages(branch: branch)
+            
+            loadSettings()
         }
+        .onDisappear {
+            saveSettings()
+        }
+    }
+    
+    
+    func loadSettings() {
+        let settings = chatInt.branchSettings(id: branch.id)
+        if let isOn = settings["isOn"] as? Bool {
+            independentMessages = isOn
+        }
+        if let sysRole = settings["sysRole"] as? String {
+            systemMessage = sysRole
+        }
+    }
+    
+    func saveSettings() {
+        let settings: [String: Any] = [
+            "isOn": independentMessages,
+            "sysRole": systemMessage]
+        chatInt.saveBranchSettings(id: branch.id, settings: settings)
+    }
+    
+    func sendMessage() {
+        saveSettings()
+        guard !text.isEmpty else { return }
+        chatInt.postCreateMessage(
+            text: text,
+            branch: branch,
+            independentMessages: independentMessages,
+            systemMessage: systemMessage)
+        text = ""
     }
 }
 
@@ -131,6 +165,7 @@ extension View {
 }
 
 struct BranchDetailScreen_Previews: PreviewProvider {
+    
     static var previews: some View {
         BranchDetailScreen(branch: Branch())
             .environmentObject(ChatInteractor.mock)
