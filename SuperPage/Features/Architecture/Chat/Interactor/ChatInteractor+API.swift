@@ -78,6 +78,7 @@ extension ChatInteractor {
     }
     
     func postCreateMessage(text: String, branch: Branch, independentMessages: Bool, systemMessage: String) {
+        print("SENDING MSG: \(text)")
         let system: String? = systemMessage.isEmpty ? nil : systemMessage
         let context = MessagesCreateRequestContext(
             branch: BranchReference(_id: branch._id),

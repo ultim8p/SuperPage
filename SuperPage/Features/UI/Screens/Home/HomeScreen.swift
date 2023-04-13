@@ -40,6 +40,7 @@ struct HomeScreen: View {
                     chat: $chatContextMenu)
             }
         }
+        .frame(minWidth: 200.0)
         .padding(.bottom)
         .ignoresSafeArea(edges: [.top, .bottom])
     }

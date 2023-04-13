@@ -16,10 +16,11 @@ struct ContentView: View {
     var body: some View {
         if userInt.state.isSignedIn {
             NavView {
-                VStack {
-                    HomeScreen()      
-                }
+//                VStack {
+                    HomeScreen()
+//                }
             }
+            
         } else {
             SignInScreen()
         }
