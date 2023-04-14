@@ -34,6 +34,12 @@ class BranchViewController: NOViewController {
     
     var systemRoleView: SystemRoleView!
     
+    var localModel: AIModel = .gpt35turbo {
+        didSet {
+            toolBar.set(aiModel: localModel)
+        }
+    }
+    
     var isLoading = false {
         didSet {
             toolBar?.set(loading: isLoading)
@@ -81,7 +87,7 @@ class BranchViewController: NOViewController {
     
 //    var localChatMode: Bool
     
-    var sendMessageHandler: ((_ message: String) -> Void)?
+    var sendMessageHandler: ((_ message: String, _ model: AIModel) -> Void)?
     
     var saveContextHandler: ((_ systemRole: String, _ chatMode: Bool) -> Void)?
     
@@ -147,7 +153,7 @@ class BranchViewController: NOViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        
+        localModel = .claudeV1dot3
     }
     
     // MARK: Setup
@@ -191,6 +197,9 @@ class BranchViewController: NOViewController {
         toolBar.onChatMode {
             self.localChatMode = !self.localChatMode
             self.saveContext()
+        }
+        toolBar.onModel {
+            self.localModel = self.localModel == .gpt35turbo ? .claudeV1dot3 : .gpt35turbo
         }
     }
     

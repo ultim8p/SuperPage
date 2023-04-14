@@ -77,8 +77,7 @@ extension ChatInteractor {
         }
     }
     
-    func postCreateMessage(text: String, branch: Branch, independentMessages: Bool, systemMessage: String) {
-        print("SENDING MSG: \(text)")
+    func postCreateMessage(text: String, model: AIModel, branch: Branch, independentMessages: Bool, systemMessage: String) {
         let system: String? = systemMessage.isEmpty ? nil : systemMessage
         let context = MessagesCreateRequestContext(
             branch: BranchReference(_id: branch._id),
@@ -86,7 +85,7 @@ extension ChatInteractor {
             useBranch: !independentMessages)
         var request = MessagesCreateRequest(context: context)
         request.messages = [Message(role: .user, text: text)]
-        request.model = .gpt35turbo
+        request.model = model
         Task {
             do {
                 let response = try await repo.postChatsBranchesMessagesCreate(env: env, reques: request)

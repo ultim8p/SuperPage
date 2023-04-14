@@ -22,6 +22,8 @@ class SendMessageToolBar: NOView {
     
     var systemRoleHandler: (() -> Void)?
     
+    var modelHandler: (() -> Void)?
+    
     let contentView: NOView = NOView()
     
     var spinner: NOSpinner!
@@ -33,6 +35,8 @@ class SendMessageToolBar: NOView {
     let chatModeButton: PlatformButton = PlatformButton.noButton(image: .square)
     
     let systemRoleButton: PlatformButton = PlatformButton.noButton(image: .paperclip)
+    
+    let modelButton: PlatformButton = PlatformButton()
     
     enum Constant {
         static let height: CGFloat = 50.0
@@ -70,9 +74,14 @@ class SendMessageToolBar: NOView {
         chatModeButton.noTarget(self, action: #selector(chatModeButtonAction))
         
         contentView.addSubview(systemRoleButton)
-        systemRoleButton.onRight(to: chatModeButton, const: Constant.buttonSpacing)
+        systemRoleButton.onRight(to: chatModeButton, const: 0.0)
             .top(to: contentView).bottom(to: contentView).width(Constant.height)
         systemRoleButton.noTarget(self, action: #selector(systemRoleAction))
+        
+        contentView.addSubview(modelButton)
+        modelButton.onRight(to: systemRoleButton, const: 0.0)
+            .top(to: contentView).bottom(to: contentView)
+        modelButton.noTarget(self, action: #selector(modelButtonAction))
     }
     
     static func setup(in view: PlatformView) -> SendMessageToolBar {
@@ -81,10 +90,6 @@ class SendMessageToolBar: NOView {
         
         toolBar.contentView.noBackgroundColor = SuperColor.toolBar
         toolBar.onFullBottom(to: view).height(Constant.height)
-        
-        
-//        toolBar.widthConstraint = toolBar.contentView.widthAnchor.constraint(equalToConstant: NODevice.readableWidth(for: view.bounds.size.width))
-//        toolBar.widthConstraint.isActive = true
         
         return toolBar
     }
@@ -101,6 +106,10 @@ class SendMessageToolBar: NOView {
         self.systemRoleHandler = handler
     }
         
+    func onModel(handler: (() -> Void)?) {
+        self.modelHandler = handler
+    }
+    
     @objc private func sendButtonTapped() {
         sendHandler?()
     }
@@ -113,11 +122,12 @@ class SendMessageToolBar: NOView {
         systemRoleHandler?()
     }
     
+    @objc private func modelButtonAction() {
+        modelHandler?()
+    }
+    
     func reloadConstraints() {
-//        let width = NODevice.readableWidth(for: self.bounds.size.width)
-//        widthConstraint.constant = width
-//        noConstraints.width?.constant = bounds.size.width
-//        reloadLayoutIfNeeded()
+        
     }
     
     func set(systemRole: Bool) {
@@ -126,6 +136,10 @@ class SendMessageToolBar: NOView {
     
     func set(chatMode: Bool) {
         chatModeButton.noSetImage(chatMode ? .checkmarkSquare : .square)
+    }
+    
+    func set(aiModel: AIModel) {
+        modelButton.no(setTitle: "🤖 \(aiModel.botName)")
     }
     
     func systemRoleFrame() -> PlatformRect {

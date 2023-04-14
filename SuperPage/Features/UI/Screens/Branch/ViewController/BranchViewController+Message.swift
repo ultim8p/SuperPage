@@ -18,7 +18,7 @@ extension BranchViewController {
     
     func sendNewMessage() {
         guard !newMessage.isEmpty else { return }
-        sendMessageHandler?(newMessage)
+        sendMessageHandler?(newMessage, localModel)
         
         isLoading = true
         

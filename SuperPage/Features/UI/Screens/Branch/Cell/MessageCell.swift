@@ -50,6 +50,8 @@ class MessageCell: PlatformCollectionViewCell, NOTextViewDelegate, ClassNameProt
     
     var lineSeparator: NOView = NOView()
     
+    var modelLabel = NOTextView(frame: .zero, textContainer: nil)
+    
     var hasPlaceholder: Bool = false
     
     enum Constant {
@@ -98,13 +100,28 @@ class MessageCell: PlatformCollectionViewCell, NOTextViewDelegate, ClassNameProt
         
         cardView.addSubview(placeholderTextView)
         
+        cardView.addSubview(modelLabel)
+        
         textView.noTextViewDelegate = self
         cardView.addSubview(textView)
-        textView.lead(to: cardView).trail(to: cardView).top(to: cardView, const: Constant.topSpace).bottom(to: cardView, const: -Constant.bottomSpace)
+        textView.lead(to: cardView).trail(to: cardView)
+            .top(to: cardView, const: Constant.topSpace)
+            .bottom(to: cardView, const: -Constant.bottomSpace)
         
         textView.register(closure: {
             self.delegate?.messageCell(self, didPerform: .commandEnter)
         }, for: .commandEnter)
+        
+        modelLabel.top(to: cardView, const: 0.0).trail(to: cardView)
+            .lead(to: cardView)
+        modelLabel.formatters = [TextFormat.placeholder]
+        modelLabel.isEditable = false
+        modelLabel.isSelectable = false
+    #if os(macOS)
+        modelLabel.alignment = .right
+    #elseif os(iOS)
+        modelLabel.textAlignment = .right
+    #endif
         
         placeholderTextView.formatters = [TextFormat.placeholder]
         placeholderTextView.onFull(to: textView)
@@ -129,6 +146,10 @@ class MessageCell: PlatformCollectionViewCell, NOTextViewDelegate, ClassNameProt
         lineSeparator.isHidden = false
         hasPlaceholder = false
         reloadPlaceholder()
+        
+        let modelString: String = message?.role == .user ? "User" : message?.model?.botName ?? ""
+        modelLabel.noSetText(text: modelString)
+        modelLabel.height(modelLabel.targetTextSize.height)
     }
     
     func configure(text: String, editable: Bool, width: CGFloat) {
@@ -139,6 +160,7 @@ class MessageCell: PlatformCollectionViewCell, NOTextViewDelegate, ClassNameProt
         lineSeparator.isHidden = true
         hasPlaceholder = true
         reloadPlaceholder()
+        modelLabel.noSetText(text: "")
     }
     
     func reloadPlaceholder() {

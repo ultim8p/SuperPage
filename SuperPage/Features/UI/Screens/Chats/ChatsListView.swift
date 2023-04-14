@@ -71,8 +71,8 @@ struct BranchRow: View {
                 messages: $chatInt.messages,
                 systemRole: $systemRole,
                 chatMode: $chatMode,
-                sendMessageHandler: { message in
-                    sendMessage(message: message)
+                sendMessageHandler: { message, model in
+                    sendMessage(message: message, model: model)
                 },
                 saveContextHandler: { systemRole, chatMode in
                     saveSettings(systemRole: systemRole, chatMode: chatMode)
@@ -115,10 +115,11 @@ struct BranchRow: View {
 
 extension BranchRow {
     
-    func sendMessage(message: String) {
+    func sendMessage(message: String, model: AIModel) {
         guard !message.isEmpty else { return }
         chatInt.postCreateMessage(
             text: message,
+            model: model,
             branch: branch,
             independentMessages: !chatMode,
             systemMessage: systemRole)

@@ -23,7 +23,7 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
     @Binding var chatMode: Bool
     
-    var sendMessageHandler: ((_ message: String) -> Void)?
+    var sendMessageHandler: ((_ message: String, _ model: AIModel) -> Void)?
     
     var saveContextHandler: ((_ systemRole: String, _ chatMode: Bool) -> Void)?
     
