@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Foundation
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -16,7 +17,17 @@ import Cocoa
 
 class CollectionViewFlowLayout: PlatformCollectionViewFlowLayout {
     
-    var totalItemHeight: CGFloat = 0
+    var totalHeights: [Int: CGFloat] = [:]
+    
+    func totalHeight(for sections: [Int]) -> CGFloat {
+        var height: CGFloat = 0.0
+
+        for section in sections {
+            height += totalHeights[section] ?? 0.0
+        }
+
+        return height
+    }
     
     override init() {
         super.init()
@@ -30,7 +41,7 @@ class CollectionViewFlowLayout: PlatformCollectionViewFlowLayout {
     
     override func prepare() {
         super.prepare()
-        self.totalItemHeight = 0
+        self.totalHeights = [:]
     }
     
     #if os(macOS)
@@ -57,13 +68,21 @@ class CollectionViewFlowLayout: PlatformCollectionViewFlowLayout {
         let layoutAttributes = super.layoutAttributesForElements(in: rect) ?? []
     #endif
         for attribute in layoutAttributes {
-            self.totalItemHeight += attribute.frame.size.height
+        #if os(macOS)
+            guard let section = attribute.indexPath?.section else { continue }
+        #elseif os(iOS)
+            let section = attribute.indexPath.section
+        #endif
+            totalHeights[section] = (totalHeights[section] ?? 0) + attribute.frame.size.height
         }
         return layoutAttributes
     }
     private func noLayoutAttributesForItem(at indexPath: IndexPath) -> PlatformCollectionViewLayoutAttributes? {
         let layoutAttribute = super.layoutAttributesForItem(at: indexPath)
-        self.totalItemHeight += layoutAttribute?.frame.size.height ?? 0
+        if let height = layoutAttribute?.frame.size.height {
+            let section = indexPath.section
+            totalHeights[section] = (totalHeights[section] ?? 0) + height
+        }
         return layoutAttribute
     }
 }

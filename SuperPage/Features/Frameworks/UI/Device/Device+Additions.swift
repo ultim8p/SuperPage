@@ -50,4 +50,13 @@ class NODevice {
         }
         return 400.0
     }
+    
+    static func popoverSize(for size: PlatformSize) -> PlatformSize {
+        if isPhone {
+            return PlatformSize(width: size.width - 32.0, height: size.height * 0.5)
+        } else if isPad {
+            return PlatformSize(width: size.width * 0.8, height: size.height * 0.5)
+        }
+        return PlatformSize(width: size.width * 0.6, height: size.height * 0.6)
+    }
 }

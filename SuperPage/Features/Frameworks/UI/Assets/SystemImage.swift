@@ -38,4 +38,13 @@ enum SystemImage: String {
     case chevronCompactRight = "chevron.compact.right"
     
     case arrowTurnDownRight = "arrow.turn.down.right"
+    
+    case squareAndPencil = "square.and.pencil"
+    case rectangleAndPencilAndEllipsis = "rectangle.and.pencil.and.ellipsis"
+    
+    case paperclipBadgeEllipsis = "paperclip.badge.ellipsis"
+    case paperclip = "paperclip"
+    
+    case checkmarkSquare = "checkmark.square"
+    case square = "square"
 }

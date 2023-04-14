@@ -28,6 +28,8 @@ enum TextFormat: TextFormatter {
     
     case defaultText
     
+    case placeholder
+    
     // Code
     
     case defaultCode
@@ -69,6 +71,8 @@ enum TextFormat: TextFormatter {
         case .codeVariableNames:
             let prefixCharacters = ".$&*#!^"
             return "[\(prefixCharacters)](?<=[\(prefixCharacters)])[a-zA-Z0-9\(prefixCharacters)]+.*?(?=[^a-zA-Z0-9\(prefixCharacters)]|$)"
+        case .placeholder:
+            return nil
         }
     }
     
@@ -76,12 +80,17 @@ enum TextFormat: TextFormatter {
         switch self {
         case .defaultText:
             return [
-                .foregroundColor: PlatformColor(named: "defaultText")!,
+                .foregroundColor: SuperColor.defaultText,
+                .font: PlatformFont.systemFont(ofSize: 14.0),
+            ]
+        case .placeholder:
+            return [
+                .foregroundColor: SuperColor.textPlaceholder,
                 .font: PlatformFont.systemFont(ofSize: 14.0),
             ]
         case .defaultCode:
             return [
-                .foregroundColor: PlatformColor(named: "codeDefaultText")!,
+                .foregroundColor: SuperColor.defaultText,
                 .font: PlatformFont(name: "Menlo-Regular", size: 13)!,
             ]
         case .codeKeywords:

@@ -60,17 +60,31 @@ struct BranchRow: View {
     @Binding var branchContextMenu: Branch
     @Binding var showEditBranch: Bool
     @Binding var showBranchDeleteAlert: Bool
-
+    
+    @State var systemRole: String = ""
+    @State var chatMode: Bool = false
+    
     var body: some View {
-        
         NavLink(
-            destination: ViewControllerWrapper(messages: $chatInt.messages, sendMessageHandler: {
-                message in
-                sendMessage(message: message)
-            })
+            
+            destination: BranchViewControllerWrapper(
+                messages: $chatInt.messages,
+                systemRole: $systemRole,
+                chatMode: $chatMode,
+                sendMessageHandler: { message in
+                    sendMessage(message: message)
+                },
+                saveContextHandler: { systemRole, chatMode in
+                    saveSettings(systemRole: systemRole, chatMode: chatMode)
+                }
+            )
             .onAppear {
                 chatInt.messages = []
                 chatInt.getMessages(branch: branch)
+                
+                let settings = chatInt.branchSettings(id: branch.id)
+                chatMode = settings["isOn"] as? Bool ?? false
+                systemRole = settings["sysRole"] as? String ?? ""
             }
         ) {
             HStack {
@@ -106,8 +120,17 @@ extension BranchRow {
         chatInt.postCreateMessage(
             text: message,
             branch: branch,
-            independentMessages: true,
-            systemMessage: "")
+            independentMessages: !chatMode,
+            systemMessage: systemRole)
+    }
+    
+    func saveSettings(systemRole: String, chatMode: Bool) {
+        self.chatMode = chatMode
+        self.systemRole = systemRole
+        let settings: [String: Any] = [
+            "isOn": chatMode,
+            "sysRole": systemRole]
+        chatInt.saveBranchSettings(id: branch.id, settings: settings)
     }
 }
 

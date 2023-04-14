@@ -95,6 +95,19 @@
 		A03645D229E7708500D524BB /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = A03645D129E7708500D524BB /* Lottie */; };
 		A03645D929E7736100D524BB /* loadingDots.json in Resources */ = {isa = PBXBuildFile; fileRef = A03645D829E7736100D524BB /* loadingDots.json */; };
 		A03645DC29E77C8900D524BB /* Device+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645DB29E77C8900D524BB /* Device+Additions.swift */; };
+		A03645E529E88EA100D524BB /* SystemRoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645E429E88EA100D524BB /* SystemRoleView.swift */; };
+		A03645E829E8952D00D524BB /* NOLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645E729E8952D00D524BB /* NOLayout.swift */; };
+		A03645EB29E8974D00D524BB /* SuperColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645EA29E8974D00D524BB /* SuperColor.swift */; };
+		A03645ED29E89D7300D524BB /* BranchViewController+Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645EC29E89D7300D524BB /* BranchViewController+Message.swift */; };
+		A03645EF29E89DAD00D524BB /* BranchViewController+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645EE29E89DAD00D524BB /* BranchViewController+Layout.swift */; };
+		A03645F129E89DD900D524BB /* BranchViewController+Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645F029E89DD900D524BB /* BranchViewController+Cells.swift */; };
+		A03645F329E89F2700D524BB /* BranchViewControllerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645F229E89F2700D524BB /* BranchViewControllerWrapper.swift */; };
+		A03645F629E8AF1E00D524BB /* NOViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645F529E8AF1E00D524BB /* NOViewController.swift */; };
+		A03645F829E8B02A00D524BB /* NOContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645F729E8B02A00D524BB /* NOContainerView.swift */; };
+		A03645FB29E9573F00D524BB /* NOPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645FA29E9573F00D524BB /* NOPopoverViewController.swift */; };
+		A03645FD29E9576600D524BB /* ModalPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645FC29E9576600D524BB /* ModalPopoverViewController.swift */; };
+		A03645FF29E957AE00D524BB /* NOPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645FE29E957AE00D524BB /* NOPopover.swift */; };
+		A036460129E957DA00D524BB /* Button+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A036460029E957DA00D524BB /* Button+Actions.swift */; };
 		A03A1C6129D4B41A00158E95 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C6029D4B41A00158E95 /* SettingsScreen.swift */; };
 		A03A1C6629D5260800158E95 /* SettingsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C6529D5260800158E95 /* SettingsInteractor.swift */; };
 		A03A1C6929D5269700158E95 /* SettingsUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03A1C6829D5269700158E95 /* SettingsUsage.swift */; };
@@ -199,6 +212,19 @@
 		A03645CE29E7707100D524BB /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		A03645D829E7736100D524BB /* loadingDots.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loadingDots.json; sourceTree = "<group>"; };
 		A03645DB29E77C8900D524BB /* Device+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Device+Additions.swift"; sourceTree = "<group>"; };
+		A03645E429E88EA100D524BB /* SystemRoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemRoleView.swift; sourceTree = "<group>"; };
+		A03645E729E8952D00D524BB /* NOLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOLayout.swift; sourceTree = "<group>"; };
+		A03645EA29E8974D00D524BB /* SuperColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperColor.swift; sourceTree = "<group>"; };
+		A03645EC29E89D7300D524BB /* BranchViewController+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BranchViewController+Message.swift"; sourceTree = "<group>"; };
+		A03645EE29E89DAD00D524BB /* BranchViewController+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BranchViewController+Layout.swift"; sourceTree = "<group>"; };
+		A03645F029E89DD900D524BB /* BranchViewController+Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BranchViewController+Cells.swift"; sourceTree = "<group>"; };
+		A03645F229E89F2700D524BB /* BranchViewControllerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchViewControllerWrapper.swift; sourceTree = "<group>"; };
+		A03645F529E8AF1E00D524BB /* NOViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOViewController.swift; sourceTree = "<group>"; };
+		A03645F729E8B02A00D524BB /* NOContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOContainerView.swift; sourceTree = "<group>"; };
+		A03645FA29E9573F00D524BB /* NOPopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOPopoverViewController.swift; sourceTree = "<group>"; };
+		A03645FC29E9576600D524BB /* ModalPopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPopoverViewController.swift; sourceTree = "<group>"; };
+		A03645FE29E957AE00D524BB /* NOPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOPopover.swift; sourceTree = "<group>"; };
+		A036460029E957DA00D524BB /* Button+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Actions.swift"; sourceTree = "<group>"; };
 		A03A1C6029D4B41A00158E95 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		A03A1C6529D5260800158E95 /* SettingsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInteractor.swift; sourceTree = "<group>"; };
 		A03A1C6829D5269700158E95 /* SettingsUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUsage.swift; sourceTree = "<group>"; };
@@ -410,6 +436,7 @@
 		A01CA26229D02D1000AEB258 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				A03645E629E8952600D524BB /* Layout */,
 				A03645DA29E77C7900D524BB /* Device */,
 				A03645C529E7542D00D524BB /* Button */,
 				A03645C229E74A9D00D524BB /* Image */,
@@ -705,6 +732,7 @@
 		A03645B229E6EA6A00D524BB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A03645F429E8AF1100D524BB /* ViewController */,
 				A03645CD29E7706600D524BB /* Animation */,
 				A03645B329E6EA7800D524BB /* View+Layout.swift */,
 				A03645BC29E7115200D524BB /* View+Properties.swift */,
@@ -725,6 +753,10 @@
 			isa = PBXGroup;
 			children = (
 				A036458829E4D68C00D524BB /* BranchViewController.swift */,
+				A03645EC29E89D7300D524BB /* BranchViewController+Message.swift */,
+				A03645EE29E89DAD00D524BB /* BranchViewController+Layout.swift */,
+				A03645F029E89DD900D524BB /* BranchViewController+Cells.swift */,
+				A03645F229E89F2700D524BB /* BranchViewControllerWrapper.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -750,6 +782,7 @@
 			isa = PBXGroup;
 			children = (
 				A03645C629E7543A00D524BB /* Button+Create.swift */,
+				A036460029E957DA00D524BB /* Button+Actions.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -792,6 +825,50 @@
 				A03645DB29E77C8900D524BB /* Device+Additions.swift */,
 			);
 			path = Device;
+			sourceTree = "<group>";
+		};
+		A03645E329E88E9700D524BB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A03645E429E88EA100D524BB /* SystemRoleView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A03645E629E8952600D524BB /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				A03645E729E8952D00D524BB /* NOLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		A03645E929E8973900D524BB /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				A03645EA29E8974D00D524BB /* SuperColor.swift */,
+			);
+			path = Color;
+			sourceTree = "<group>";
+		};
+		A03645F429E8AF1100D524BB /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A03645F929E9571C00D524BB /* Popover */,
+				A03645F529E8AF1E00D524BB /* NOViewController.swift */,
+				A03645F729E8B02A00D524BB /* NOContainerView.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		A03645F929E9571C00D524BB /* Popover */ = {
+			isa = PBXGroup;
+			children = (
+				A03645FA29E9573F00D524BB /* NOPopoverViewController.swift */,
+				A03645FC29E9576600D524BB /* ModalPopoverViewController.swift */,
+				A03645FE29E957AE00D524BB /* NOPopover.swift */,
+			);
+			path = Popover;
 			sourceTree = "<group>";
 		};
 		A03A1C6229D525E800158E95 /* Settings */ = {
@@ -876,6 +953,7 @@
 		A03A1C8029D74A8900158E95 /* Branch */ = {
 			isa = PBXGroup;
 			children = (
+				A03645E329E88E9700D524BB /* View */,
 				A03645B929E6ECC600D524BB /* Cell */,
 				A03645B829E6ECBB00D524BB /* ViewController */,
 				A009F15D29D410150045F311 /* BranchDetailScreen.swift */,
@@ -895,6 +973,7 @@
 		A03A1C8229D75ADB00158E95 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				A03645E929E8973900D524BB /* Color */,
 				A0A22CA229DA4FFD003F9ED1 /* ListItems */,
 				A03A1C8429D75FDD00158E95 /* ToolBar */,
 				A03A1C8329D75AE300158E95 /* TextField */,
@@ -1010,6 +1089,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A01CA2AD29D0E79700AEB258 /* APIRequest+Auth.swift in Sources */,
+				A03645EB29E8974D00D524BB /* SuperColor.swift in Sources */,
+				A03645F829E8B02A00D524BB /* NOContainerView.swift in Sources */,
 				A01CA28629D0B50800AEB258 /* UserState.swift in Sources */,
 				A01CA29929D0C43000AEB258 /* AuthenticationState.swift in Sources */,
 				A036459429E6AA1D00D524BB /* TextFormatter.swift in Sources */,
@@ -1033,16 +1114,20 @@
 				A03645C729E7543A00D524BB /* Button+Create.swift in Sources */,
 				A03A1C7D29D743E400158E95 /* ChatCreationView.swift in Sources */,
 				A01CA2AA29D0E79700AEB258 /* Encodable+Request.swift in Sources */,
+				A03645E829E8952D00D524BB /* NOLayout.swift in Sources */,
 				A03645B729E6EBB300D524BB /* CollectionViewFlowLayout.swift in Sources */,
 				A03645B129E6EA2300D524BB /* KeyboardShortcut.swift in Sources */,
 				A009F15C29D4088F0045F311 /* ChatsListView.swift in Sources */,
+				A03645F629E8AF1E00D524BB /* NOViewController.swift in Sources */,
 				A01CA29729D0C42600AEB258 /* AuthenticationRepo.swift in Sources */,
 				A036459A29E6B43300D524BB /* TextFormatting.swift in Sources */,
 				A01CA2C629D0F01400AEB258 /* APIRequest+Response.swift in Sources */,
+				A03645E529E88EA100D524BB /* SystemRoleView.swift in Sources */,
 				A03645B429E6EA7800D524BB /* View+Layout.swift in Sources */,
 				A01CA26D29D02E4900AEB258 /* NavView.swift in Sources */,
 				A03A1C8629D75FE700158E95 /* HomeToolBar.swift in Sources */,
 				A01CA25429D01E1000AEB258 /* AppleSignInProvider.swift in Sources */,
+				A03645FD29E9576600D524BB /* ModalPopoverViewController.swift in Sources */,
 				A01CA26E29D02E4F00AEB258 /* NavBarContentView.swift in Sources */,
 				A009F14329D3BA800045F311 /* Chat.swift in Sources */,
 				A01CA27529D03C9500AEB258 /* ChatsScreen.swift in Sources */,
@@ -1056,14 +1141,19 @@
 				A036459C29E6D7D500D524BB /* NOTextView.swift in Sources */,
 				A01236AB29E2C43000DF14C4 /* TextView.swift in Sources */,
 				A01CA25B29D020BF00AEB258 /* AppleSignInButton.swift in Sources */,
+				A03645ED29E89D7300D524BB /* BranchViewController+Message.swift in Sources */,
 				A01CA29C29D0E08C00AEB258 /* SignInRequest.swift in Sources */,
+				A036460129E957DA00D524BB /* Button+Actions.swift in Sources */,
 				A009F15E29D410150045F311 /* BranchDetailScreen.swift in Sources */,
 				A0A22CA129DA2B76003F9ED1 /* EmptyResponse.swift in Sources */,
+				A03645EF29E89DAD00D524BB /* BranchViewController+Layout.swift in Sources */,
 				A03645BB29E6ECD300D524BB /* MessageCell.swift in Sources */,
 				A03645CC29E7573000D524BB /* LoadingCell.swift in Sources */,
+				A03645FB29E9573F00D524BB /* NOPopoverViewController.swift in Sources */,
 				A01CA28229D0B3B700AEB258 /* UserInteractor.swift in Sources */,
 				A03A1C6929D5269700158E95 /* SettingsUsage.swift in Sources */,
 				A01CA29E29D0E6E600AEB258 /* AuthenticationInteractor+Mock.swift in Sources */,
+				A03645F329E89F2700D524BB /* BranchViewControllerWrapper.swift in Sources */,
 				A009F15129D3EC9A0045F311 /* Message.swift in Sources */,
 				A01CA24529D019C500AEB258 /* ContentView.swift in Sources */,
 				A03645AD29E6E74600D524BB /* CollectionView+Scroll.swift in Sources */,
@@ -1080,6 +1170,7 @@
 				A03A1C7329D5288300158E95 /* SettingsRepo.swift in Sources */,
 				A03A1C6F29D526D700158E95 /* Tokens.swift in Sources */,
 				A03645AF29E6EA0600D524BB /* CollectionView+Cells.swift in Sources */,
+				A03645F129E89DD900D524BB /* BranchViewController+Cells.swift in Sources */,
 				A01CA27329D02E6500AEB258 /* SystemImage.swift in Sources */,
 				A01CA2A129D0E70800AEB258 /* AuthenticationInteractor+API.swift in Sources */,
 				A01CA28429D0B3EB00AEB258 /* UserRepo.swift in Sources */,
@@ -1104,6 +1195,7 @@
 				A009F15429D3ED570045F311 /* AIModel.swift in Sources */,
 				A03645C429E74AF800D524BB /* Image+Create.swift in Sources */,
 				A009F14729D3BE6A0045F311 /* ChatInteractor+API.swift in Sources */,
+				A03645FF29E957AE00D524BB /* NOPopover.swift in Sources */,
 				A009F14C29D3EB630045F311 /* MessageCreateRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

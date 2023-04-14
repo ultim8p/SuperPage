@@ -16,34 +16,31 @@ import Cocoa
 
 class SendMessageToolBar: NOView {
     
-//    private let toolbar: PlatformView = {
-//        let view = PlatformView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.set(backgroundColor: PlatformColor.gray)
-//        return view
-//    }()
-    
     var sendHandler: (() -> Void)?
     
-    let contentView: NOView = {
-        let view = NOView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    var chatModeHandler: (() -> Void)?
+    
+    var systemRoleHandler: (() -> Void)?
+    
+    let contentView: NOView = NOView()
     
     var spinner: NOSpinner!
     
     var widthConstraint: NSLayoutConstraint!
     
-    let sendButton: PlatformButton = {
-        let button = PlatformButton.noButton(systemName: SystemImage.paperplaneFill.rawValue)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    let sendButton: PlatformButton = PlatformButton.noButton(image: .paperplaneFill)
     
-    override init(frame frameRect: PlatformRect) {
-        super.init(frame: frameRect)
-        translatesAutoresizingMaskIntoConstraints = false
+    let chatModeButton: PlatformButton = PlatformButton.noButton(image: .square)
+    
+    let systemRoleButton: PlatformButton = PlatformButton.noButton(image: .paperclip)
+    
+    enum Constant {
+        static let height: CGFloat = 50.0
+        static let buttonSpacing: CGFloat = 16.0
+    }
+    
+    override init() {
+        super.init()
         setupView()
     }
     
@@ -58,51 +55,84 @@ class SendMessageToolBar: NOView {
     
     func setupView() {
         addSubview(contentView)
-        contentView.addSubview(sendButton)
+        contentView.onFull(to: self)
         
-    #if os(macOS)
-        sendButton.target = self
-        sendButton.action = #selector(sendButtonTapped)
-    #elseif os(iOS)
-        sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
-    #endif
-        NSLayoutConstraint.activate([
-            contentView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            contentView.topAnchor.constraint(equalTo: topAnchor),
-            sendButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            sendButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
+        contentView.addSubview(sendButton)
+        sendButton.safeTrail(to: contentView, const: -Constant.buttonSpacing)
+            .top(to: contentView).bottom(to: contentView).width(Constant.height)
+        sendButton.noTarget(self, action: #selector(sendButtonTapped))
         
         spinner = NOSpinner.noSpinner(inView: contentView, centerTo: sendButton)
+        
+        contentView.addSubview(chatModeButton)
+        chatModeButton.safeLead(to: contentView, const: Constant.buttonSpacing)
+            .top(to: contentView).bottom(to: contentView).width(Constant.height)
+        chatModeButton.noTarget(self, action: #selector(chatModeButtonAction))
+        
+        contentView.addSubview(systemRoleButton)
+        systemRoleButton.onRight(to: chatModeButton, const: Constant.buttonSpacing)
+            .top(to: contentView).bottom(to: contentView).width(Constant.height)
+        systemRoleButton.noTarget(self, action: #selector(systemRoleAction))
     }
     
-    static func setup(in view: PlatformView, handler: (() -> Void)?) -> SendMessageToolBar {
-        let toolBar = SendMessageToolBar(frame: .zero)
-        toolBar.sendHandler = handler
-        toolBar.contentView.noBackgroundColor = PlatformColor(named: "toolBarColor")!
+    static func setup(in view: PlatformView) -> SendMessageToolBar {
+        let toolBar = SendMessageToolBar()
         view.addSubview(toolBar)
         
-        NSLayoutConstraint.activate([
-            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: 50),
-        ])
+        toolBar.contentView.noBackgroundColor = SuperColor.toolBar
+        toolBar.onFullBottom(to: view).height(Constant.height)
         
-        toolBar.widthConstraint = toolBar.contentView.widthAnchor.constraint(equalToConstant: NODevice.readableWidth(for: view.bounds.size.width))
-        toolBar.widthConstraint.isActive = true
+        
+//        toolBar.widthConstraint = toolBar.contentView.widthAnchor.constraint(equalToConstant: NODevice.readableWidth(for: view.bounds.size.width))
+//        toolBar.widthConstraint.isActive = true
         
         return toolBar
+    }
+    
+    func onSend(handler: (() -> Void)?) {
+        self.sendHandler = handler
+    }
+    
+    func onChatMode(handler: (() -> Void)?) {
+        self.chatModeHandler = handler
+    }
+    
+    func onSystemRole(handler: (() -> Void)?) {
+        self.systemRoleHandler = handler
     }
         
     @objc private func sendButtonTapped() {
         sendHandler?()
     }
     
+    @objc private func chatModeButtonAction() {
+        chatModeHandler?()
+    }
+    
+    @objc private func systemRoleAction() {
+        systemRoleHandler?()
+    }
+    
     func reloadConstraints() {
-        let width = NODevice.readableWidth(for: self.bounds.size.width)
-        widthConstraint.constant = width
-        reloadLayoutIfNeeded()
+//        let width = NODevice.readableWidth(for: self.bounds.size.width)
+//        widthConstraint.constant = width
+//        noConstraints.width?.constant = bounds.size.width
+//        reloadLayoutIfNeeded()
+    }
+    
+    func set(systemRole: Bool) {
+        systemRoleButton.noSetImage(systemRole ? .paperclipBadgeEllipsis : .paperclip)
+    }
+    
+    func set(chatMode: Bool) {
+        chatModeButton.noSetImage(chatMode ? .checkmarkSquare : .square)
+    }
+    
+    func systemRoleFrame() -> PlatformRect {
+        return PlatformRect(
+            x: contentView.frame.origin.x + systemRoleButton.frame.origin.x,
+            y: 0.0,
+            width: systemRoleButton.bounds.size.width,
+            height: systemRoleButton.bounds.size.height)
     }
 }

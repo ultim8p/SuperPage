@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -15,49 +14,7 @@ import AppKit
 import Cocoa
 #endif
 
-struct ViewControllerWrapper: PlatformViewControlerRepresentable {
-    
-    @Binding var messages: [Message]
-    
-    var sendMessageHandler: ((_ message: String) -> Void)?
-    
-#if os(macOS)
-    typealias NSViewControllerType = ViewController
-    
-    func makeNSViewController(context: Context) -> ViewController {
-        return makeViewController()
-    }
-    
-    func updateNSViewController(_ nsViewController: ViewController, context: Context) {
-        updateViewController(nsViewController, context: context)
-        
-    }
-#elseif os(iOS)
-    typealias UIViewControllerType = ViewController
-    
-    func makeUIViewController(context: Context) -> ViewController {
-        return makeViewController()
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        updateViewController(uiViewController, context: context)
-    }
-#endif
-    
-    func makeViewController() -> ViewController {
-        let viewController = ViewController(messages: messages, localMessages: messages)
-        viewController.sendMessageHandler = sendMessageHandler
-        return viewController
-    }
-    
-    func updateViewController(_ viewController: ViewController, context: Context) {
-        viewController.messages = messages
-        viewController.localMessages = _messages.wrappedValue
-        viewController.sendMessageHandler = sendMessageHandler
-    }
-}
-
-class ViewController: PlatformViewControler {
+class BranchViewController: NOViewController {
     
     // MARK: - UIVariables
     
@@ -74,6 +31,8 @@ class ViewController: PlatformViewControler {
     var shouldScrollToBottom = true
     
     var stateWidthConstraint: NSLayoutConstraint!
+    
+    var systemRoleView: SystemRoleView!
     
     var isLoading = false {
         didSet {
@@ -101,13 +60,52 @@ class ViewController: PlatformViewControler {
         }
     }
     
+    var chatMode: Bool
+    
+    var localChatMode: Bool {
+        didSet {
+            toolBar?.set(chatMode: localChatMode)
+        }
+    }
+    
+    var systemRole: String
+        
+    
+    var localSystemRole: String {
+        didSet {
+            toolBar?.set(systemRole: !localSystemRole.isEmpty)
+        }
+    }
+    
+//    var chatMode: Bool
+    
+//    var localChatMode: Bool
+    
     var sendMessageHandler: ((_ message: String) -> Void)?
+    
+    var saveContextHandler: ((_ systemRole: String, _ chatMode: Bool) -> Void)?
     
     var newMessage: String = ""
     
-    init(messages: [Message], localMessages: [Message]) {
+    var messageCellHeights: [CGFloat] = []
+    
+    var totalMessagesHeights: CGFloat {
+        var total: CGFloat = 0.0
+        for height in messageCellHeights {
+            total += height
+        }
+        return total
+    }
+    
+    init(messages: [Message], localMessages: [Message],
+         chatMode: Bool, localChatMode: Bool,
+         systemRole: String, localSystemRole: String) {
         self.messages = messages
         self.localMessages = localMessages
+        self.chatMode = chatMode
+        self.localChatMode = localChatMode
+        self.systemRole = systemRole
+        self.localSystemRole = localSystemRole
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -121,7 +119,7 @@ class ViewController: PlatformViewControler {
         
         static let minimumNewMessageHeight: CGFloat = 150.0
         
-        
+        static let messageSpace: CGFloat = 10.0
     }
     
     enum Sections: Int, CaseIterable {
@@ -134,9 +132,6 @@ class ViewController: PlatformViewControler {
     }
     
 #if os(macOS)
-    override func loadView() {
-        view = NOView(frame: .zero)
-    }
 #elseif os(iOS)
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animate(alongsideTransition: { context in
@@ -147,55 +142,62 @@ class ViewController: PlatformViewControler {
             })
         })
     }
-    
 #endif
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupToolBar()
-        setupTextView()
-        setupCollectionView()
-        view.reloadLayoutIfNeeded()
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        staticTextView.isHidden = true
-        reloadStateConstraints()
-    #if os(macOS)
-        (view as? NOView)?.noBackgroundColor = PlatformColor(named: "branchScreenBackground")!
-    #elseif os(iOS)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow(notification:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardDidShow(notification:)),
-            name: UIResponder.keyboardDidShowNotification,
-            object: nil)
-        view.backgroundColor = PlatformColor(named: "branchScreenBackground")!
-    #endif
+        setupView()
+        
     }
     
     // MARK: Setup
     
+    func setupView() {
+        setupToolBar()
+        setupTextView()
+        setupCollectionView()
+        
+        view.reloadLayoutIfNeeded()
+        
+        setupPlatform()
+        reloadStateConstraints()
+        
+    }
     
-//    override func viewWillTransition(to newSize: NSSize) {
-//        super.viewWillTransition(to: newSize)
-//        print("VIEW WILL TRANSITION")
-//    }
+    func setupPlatform() {
+#if os(macOS)
+    (view as? NOView)?.noBackgroundColor = SuperColor.branchBackground
+#elseif os(iOS)
+    NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(keyboardWillShow(notification:)),
+        name: UIResponder.keyboardWillShowNotification,
+        object: nil)
+    NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(keyboardDidShow(notification:)),
+        name: UIResponder.keyboardDidShowNotification,
+        object: nil)
+    view.backgroundColor = SuperColor.branchBackground
+#endif
+    }
     
     private func setupToolBar() {
-        toolBar = SendMessageToolBar.setup(in: view, handler: {
-            self.sendNewMessage()
-        })
+        toolBar = SendMessageToolBar.setup(in: view)
+        toolBar.onSend(handler: sendNewMessage)
+        toolBar.onSystemRole {
+            self.showSystemRole()
+        }
+        toolBar.onChatMode {
+            self.localChatMode = !self.localChatMode
+            self.saveContext()
+        }
     }
     
     private func setupTextView() {
         view.addSubview(staticTextView)
         staticTextView.translatesAutoresizingMaskIntoConstraints = false
         staticTextView.backgroundColor = PlatformColor.gray
-        print("VIEW WIDTH: \(view.bounds.size.width)")
         NSLayoutConstraint.activate([
             staticTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             staticTextView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -203,6 +205,31 @@ class ViewController: PlatformViewControler {
         stateWidthConstraint = staticTextView.widthAnchor.constraint(
             equalToConstant: NODevice.readableWidth(for: view.bounds.size.width))
         stateWidthConstraint.isActive = true
+        staticTextView.isHidden = true
+    }
+    
+    private func showSystemRole() {
+        guard systemRoleView == nil else {
+            systemRoleView.popover?.noDismiss(animated: true)
+            return
+        }
+        
+        systemRoleView = SystemRoleView()
+        let fromRect = toolBar.systemRoleFrame()
+        let size = NODevice.popoverSize(for: view.frame.size)
+        systemRoleView.show(in: self, fromRect: fromRect, relativeTo: toolBar.frame, size: size)
+        systemRoleView.onTextChange { text in
+            self.localSystemRole = text
+        }
+        systemRoleView.set(text: localSystemRole)
+        systemRoleView.popover?.onDismiss(handler: {
+            self.saveContext()
+            self.systemRoleView = nil
+        })
+    }
+    
+    func saveContext() {
+        saveContextHandler?(localSystemRole, localChatMode)
     }
     
     private func setupCollectionView() {
@@ -210,33 +237,46 @@ class ViewController: PlatformViewControler {
         collectionView.noRegisterCell(cell: MessageCell.self)
         collectionView.noRegisterCell(cell: LoadingCell.self)
         setupCollectionScrollView()
+        collectionView.dataSource = self
+        collectionView.delegate = self
     }
-
+    
     func setupCollectionScrollView() {
-#if os(macOS)
+    #if os(macOS)
         let scrollView = NSScrollView(frame: .zero)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.documentView = collectionView
         scrollView.drawsBackground = false
         view.addSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: toolBar.topAnchor)
-        ])
-#elseif os(iOS)
+        scrollView.onFullTop(to: view).onTop(to: toolBar)
+    #elseif os(iOS)
         view.addSubview(collectionView)
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: toolBar.topAnchor)
-        ])
-#endif
+        collectionView.onFullTop(to: view).onTop(to: toolBar)
+    #endif
     }
     
     // MARK: State
+    
+    func reloadMessageHeights() {
+        messageCellHeights = []
+        for message in localMessages {
+            staticTextView.noSetText(text: message.text ?? "")
+            let textHeight = staticTextView.targetTextSize.height +
+            MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+            messageCellHeights.append(textHeight)
+        }
+    }
+    
+    func appendCellHeightFor(message: Message) {
+        staticTextView.noSetText(text: message.text ?? "")
+        let textHeight = staticTextView.targetTextSize.height +
+        MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+        messageCellHeights.append(textHeight)
+    }
+    
+    func set(systemRole: String) {
+        localSystemRole = systemRole
+    }
     
     func reloadStateConstraints() {
         toolBar.reloadConstraints()
@@ -251,6 +291,7 @@ class ViewController: PlatformViewControler {
     }
     
     func reloadCells() {
+        reloadMessageHeights()
         view.reloadLayoutIfNeeded()
         reloadStateConstraints()
         collectionView?.reloadData()
@@ -295,120 +336,32 @@ class ViewController: PlatformViewControler {
     func sizeForItem(at indexPath: IndexPath) -> PlatformSize {
         switch Sections(rawValue: indexPath.section)! {
         case .messages:
-            let item = item(at: indexPath)?.text ?? ""
-            staticTextView.noSetText(text: item)
-            let textSize = staticTextView.targetTextSize
-            let cellSize = PlatformSize(width: collectionView.bounds.size.width, height: textSize.height)
-            return cellSize
+            guard indexPath.item < messageCellHeights.count else {
+                return PlatformSize(width: collectionView.bounds.size.width, height: 0.0)
+            }
+            let cellHeight = messageCellHeights[indexPath.item]
+            return PlatformSize(width: collectionView.bounds.size.width, height: cellHeight)
         case .loading:
             return PlatformSize(width: collectionView.bounds.size.width, height: Constant.loadingHeight)
         case .newMessage:
             let item = newMessage
             staticTextView.noSetText(text: item)
-            let textSize = staticTextView.targetTextSize
-            let cellHeight = max(Constant.minimumNewMessageHeight, textSize.height)
+            let textHeight = staticTextView.targetTextSize.height +
+            MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+            
+            var cellHeight = 0.0
+            
+            let cellHeights = totalMessagesHeights + (CGFloat(loadingSectionCount()) * Constant.loadingHeight)
+            
+            let cvHeight = collectionView.collectionHeight
+            if cellHeights < cvHeight {
+                cellHeight = cvHeight - cellHeights
+            }
+            
+            cellHeight = max(textHeight, max(Constant.minimumNewMessageHeight, cellHeight))
+            
             let cellSize = PlatformSize(width: collectionView.bounds.size.width, height: cellHeight)
             return cellSize
-        }
-    }
-}
-
-// MARK: - Actions
-
-extension ViewController {
-    
-    func sendNewMessage() {
-        guard !newMessage.isEmpty else { return }
-        sendMessageHandler?(newMessage)
-        
-        isLoading = true
-        
-        let placeholderMessage = Message(role: .user, text: newMessage)
-        localMessages.append(placeholderMessage)
-        newMessage = ""
-        collectionView.collectionLayout.invalidateLayout()
-        reloadCells()
-        updateCollectionLayoutForMessage(isNew: true)
-    }
-}
-
-// MARK: - CollectionViewDatasource
-
-extension ViewController: PlatformCollectionViewDatasource, PlatformCollectionViewDelegateFlowLayout {
-    
-    func numberOfSections(in collectionView: PlatformCollectionView) -> Int {
-        return Sections.allCases.count
-    }
-    
-    func collectionView(_ collectionView: PlatformCollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Sections(rawValue: section)! {
-        case .messages:
-            return messagesCount()
-        case .loading:
-            return loadingSectionCount()
-        case .newMessage:
-            return newMessageCount()
-        }
-    }
-    
-    #if os(macOS)
-    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        return cellItem(at: indexPath)
-    }
-    
-    func collectionView(
-        _ collectionView: NSCollectionView,
-        layout collectionViewLayout: NSCollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> PlatformSize {
-        return sizeForItem(at: indexPath)
-    }
-    
-    #elseif os(iOS)
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return cellItem(at: indexPath)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> PlatformSize {
-        return sizeForItem(at: indexPath)
-    }
-    #endif
-}
-
-extension ViewController: MessageCellDelegate {
-    
-    func messageCell(_ item: MessageCell, didPerform shortcut: KeyboardShortcut) {
-        switch shortcut {
-        case .commandEnter:
-            sendNewMessage()
-        default:
-            break
-        }
-    }
-    
-    func messageCellWillUpdateMessage(_ item: MessageCell) {
-        wasScrolledToBottom = collectionView.isScrolledToBottom()
-    }
-    
-    func messageCell(_ item: MessageCell, didUpdateMessage message: String) {
-        guard let indexPath = collectionView.indexPath(for: item) else { return }
-        switch Sections(rawValue: indexPath.section)! {
-        case .messages:
-            localMessages[indexPath.item].text = message
-            updateCollectionLayoutForMessage(isNew: false)
-        case .newMessage:
-            newMessage = message
-            updateCollectionLayoutForMessage(isNew: false)
-        default:
-            break
-        }
-    }
-    
-    func updateCollectionLayoutForMessage(isNew: Bool) {
-        collectionView.collectionLayout.invalidateLayout()
-        view.reloadLayoutIfNeeded()
-        if wasScrolledToBottom || isNew {
-            collectionView.scrollToBottom(animated: isNew)
         }
     }
 }
@@ -421,7 +374,7 @@ extension UIView.AnimationCurve {
     }
 }
 
-extension ViewController {
+extension BranchViewController {
     
     @objc func keyboardWillShow(notification: Notification) {
 //        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,

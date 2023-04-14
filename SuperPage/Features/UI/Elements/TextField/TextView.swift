@@ -45,7 +45,7 @@ let codeBottomOffset: CGFloat = 15.0
 
 
 
-
+/*
 class AutoSizingTextView: PlatformTextView {
     
     var commandReturnCallback: (() -> Void)?
@@ -54,12 +54,12 @@ class AutoSizingTextView: PlatformTextView {
         #if os(macOS)
         let box = NSBox()
         box.boxType = .custom
-        box.fillColor = PlatformColor(named: "codeBlock") ?? PlatformColor.clear
+        box.fillColor = SuperColor.codeBlock ?? PlatformColor.clear
         box.cornerRadius = 10
         return box
         #elseif os(iOS)
         let view = PlatformView()
-        view.backgroundColor = PlatformColor(named: "codeBlock")
+        view.backgroundColor = SuperColor.codeBlock
         view.layer.cornerRadius = 10
         return view
         #endif
@@ -91,7 +91,7 @@ class AutoSizingTextView: PlatformTextView {
     ]
     
     private let defaultAttributes: [NSAttributedString.Key: Any] = [
-        .foregroundColor: PlatformColor(named: "codeDefaultText")!,
+        .foregroundColor: SuperColor.defaultText,
         .font: PlatformFont.systemFont(ofSize: 15.0)
     ]
     
@@ -392,3 +392,4 @@ struct ResizableTextView: PlatformViewRepresentable {
 #endif
     }
 }
+*/

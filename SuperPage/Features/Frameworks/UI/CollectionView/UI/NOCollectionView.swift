@@ -45,4 +45,12 @@ class NOCollectionView: PlatformCollectionView {
       }
     }
     #endif
+    
+    var collectionHeight: CGFloat {
+    #if os(macOS)
+        return enclosingScrollView?.frame.size.height ?? 0.0
+    #elseif os(iOS)
+        return frame.size.height
+    #endif
+    }
 }

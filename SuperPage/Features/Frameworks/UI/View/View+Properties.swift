@@ -16,6 +16,16 @@ import Cocoa
 
 class NOView: PlatformView {
     
+    init() {
+        super.init(frame: .zero)
+        translatesAutoresizingMaskIntoConstraints = false
+        noBackgroundColor = .clear
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var noBackgroundColor: PlatformColor = .clear {
         didSet {
     #if os(macOS)

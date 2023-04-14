@@ -33,6 +33,7 @@ typealias PlatformCollectionViewDelegateFlowLayout = NSCollectionViewDelegateFlo
 typealias PlatformCollectionViewFlowLayout = NSCollectionViewFlowLayout
 typealias PlatformCollectionViewLayoutAttributes = NSCollectionViewLayoutAttributes
 typealias PlatformActivityIndicator = NSProgressIndicator
+typealias PlatformScrollView = NSScrollView
 
 #elseif os(iOS)
 typealias PlatformView = UIView
@@ -54,4 +55,6 @@ typealias PlatformCollectionViewDelegateFlowLayout = UICollectionViewDelegateFlo
 typealias PlatformCollectionViewFlowLayout = UICollectionViewFlowLayout
 typealias PlatformCollectionViewLayoutAttributes = UICollectionViewLayoutAttributes
 typealias PlatformActivityIndicator = UIActivityIndicatorView
+typealias PlatformScrollView = UIScrollView
+
 #endif

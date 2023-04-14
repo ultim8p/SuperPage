@@ -14,11 +14,12 @@ import AppKit
 import Cocoa
 #endif
 
+/*
 extension PlatformButton {
     
-    static func noButton(systemName: String) -> PlatformButton {
+    static func noButton(image: SystemImage) -> PlatformButton {
         let button = PlatformButton()
-        let image = PlatformImage.noSymbol(name: systemName)
+        let image = PlatformImage.noSymbol(name: image.rawValue)
     #if os(macOS)
         button.isBordered = false
         button.image = image
@@ -27,4 +28,42 @@ extension PlatformButton {
         #endif
         return button
     }
+    
+    func noSetImage(_ image: SystemImage) {
+        let image = PlatformImage.noSymbol(name: image.rawValue)
+#if os(macOS)
+        self.image = image
+#elseif os(iOS)
+        setImage(image, for: .normal)
+#endif
+    }
 }
+*/
+
+extension PlatformButton {
+    
+    static func noButton(image: SystemImage, tintColor: PlatformColor? = nil, size: CGSize? = nil) -> PlatformButton {
+        let button = PlatformButton()
+        let image = PlatformImage.noSymbol(name: image.rawValue, tintColor: tintColor, size: size)
+        
+        #if os(macOS)
+        button.isBordered = false
+        button.image = image
+        #elseif os(iOS)
+        button.setImage(image, for: .normal)
+        #endif
+        
+        return button
+    }
+    
+    func noSetImage(_ image: SystemImage, tintColor: PlatformColor? = nil, size: CGSize? = nil) {
+        let image = PlatformImage.noSymbol(name: image.rawValue, tintColor: tintColor, size: size)
+        
+        #if os(macOS)
+        self.image = image
+        #elseif os(iOS)
+        setImage(image, for: .normal)
+        #endif
+    }
+}
+

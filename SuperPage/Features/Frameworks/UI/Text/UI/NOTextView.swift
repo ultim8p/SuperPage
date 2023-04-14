@@ -25,11 +25,15 @@ class NOTextView: PlatformTextView, TextFormatting {
     
     // MARK: KeyboardShortcuts
     
+    private var documentScrollView: PlatformScrollView!
+    
     private var shortcutClosureMap: [KeyboardShortcut: (() -> Void)] = [:]
     
     func register(closure: (() -> Void)?, for shortcut: KeyboardShortcut) {
         shortcutClosureMap[shortcut] = closure
     }
+    
+    var macScrollEnabled: Bool = false
     
     // MARK: TextFormatting
     
@@ -60,6 +64,7 @@ class NOTextView: PlatformTextView, TextFormatting {
         guard let pasteboard = UIPasteboard.general.string else { return }
                 insertText(pasteboard)
     #endif
+        didChangeTextViewText()
     }
     
 #if os(macOS)
@@ -90,6 +95,7 @@ class NOTextView: PlatformTextView, TextFormatting {
         textStorage.addLayoutManager(layoutManager)
         let textContainer = NSTextContainer()
         textContainer.widthTracksTextView = true
+        textContainer.heightTracksTextView = true
         layoutManager.addTextContainer(textContainer)
         super.init(frame: frame, textContainer: textContainer)
         
@@ -100,7 +106,6 @@ class NOTextView: PlatformTextView, TextFormatting {
         translatesAutoresizingMaskIntoConstraints = false
         isSelectable = true
         delegate = self
-        font = PlatformFont.systemFont(ofSize: 20)
     #if os(macOS)
         wantsLayer = false
         layer?.backgroundColor = .clear
@@ -112,6 +117,37 @@ class NOTextView: PlatformTextView, TextFormatting {
         textContainerInset = UIEdgeInsets.zero
         isScrollEnabled = false
     #endif
+    }
+    
+    func noEnableScroll() -> PlatformView {
+#if os(macOS)
+        macScrollEnabled = true
+        
+        translatesAutoresizingMaskIntoConstraints = true
+        autoresizingMask = [.width]
+        isHorizontallyResizable = false
+        isVerticallyResizable = true
+        
+//        textContainer?.widthTracksTextView = true
+//        textContainer?.heightTracksTextView = true
+        
+        
+//        textContainer?.containerSize = PlatformSize(width: 200.0, height: 200.0)
+        documentScrollView = PlatformScrollView(frame: .zero)
+        documentScrollView.hasVerticalScroller = true
+        documentScrollView.hasHorizontalScroller = false
+        documentScrollView.borderType = .noBorder
+        documentScrollView.drawsBackground = false
+        documentScrollView.documentView = self
+        
+//        documentScrollView.addSubview(self)
+//        self.onFull(to: documentScrollView)
+        return documentScrollView
+#elseif os(iOS)
+        alwaysBounceVertical = true
+        isScrollEnabled = true
+        return self
+#endif
     }
     
     func noSetText(text: String) {
@@ -143,6 +179,7 @@ class NOTextView: PlatformTextView, TextFormatting {
     
     func didChangeTextViewText() {
         refreshFormat()
+        
         noTextViewDelegate?.noTextViewDidChangeSize(self)
     }
     

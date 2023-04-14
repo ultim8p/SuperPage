@@ -20,7 +20,7 @@ class LottieView: NOView {
 
     init(animationName: String, inView: PlatformView) {
         self.animationView = LottieAnimationView()
-        super.init(frame: .zero)
+        super.init()
         translatesAutoresizingMaskIntoConstraints = false
         inView.addSubview(self)
         self.setup(animationName: animationName)
