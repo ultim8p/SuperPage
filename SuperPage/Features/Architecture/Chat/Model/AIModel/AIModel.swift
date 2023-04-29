@@ -17,14 +17,15 @@ enum AIModel: String, Codable {
         
     case claudeV1dot3 = "claude-v1.3"
     
+    case gpt4 = "gpt-4"
+    
+    case gpt40314 = "gpt-4-0314"
+    
+    case gpt432k = "gpt-4-32k"
+    
+    case gpt432k0314 = "gpt-4-32k-0314"
+    
     var botName: String {
-        switch self {
-        case .gpt35turbo, .gpt35turbo0301:
-            return "GPT 3"
-        case .claudeInstantV1:
-            return "Claude Instant"
-        case .claudeV1dot3:
-            return "Claude"
-        }
+        return rawValue
     }
 }

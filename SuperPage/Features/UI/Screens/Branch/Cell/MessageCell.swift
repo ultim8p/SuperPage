@@ -147,7 +147,9 @@ class MessageCell: PlatformCollectionViewCell, NOTextViewDelegate, ClassNameProt
         hasPlaceholder = false
         reloadPlaceholder()
         
-        let modelString: String = message?.role == .user ? "User" : message?.model?.botName ?? ""
+        let isUser = message?.role == .user
+        let modelString: String = isUser ? "User" : message?.model?.botName ?? ""
+        textView.alpha = isUser ? 1.0 : 0.8
         modelLabel.noSetText(text: modelString)
         modelLabel.height(modelLabel.targetTextSize.height)
     }

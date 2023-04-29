@@ -52,24 +52,3 @@ extension PlatformButton {
     #endif
     }
 }
-
-class NOLabel: PlatformLabel {
-//    func setPlaceholder(text: String) {
-//        let attributedString = NSMutableAttributedString(string: text)
-//        attributedString.addAttribute(.font, value: PlatformFont.systemFont(ofSize: 13.0), range: NSRange(location: 0, length: attributedString.length))
-//        attributedString.addAttribute(.foregroundColor, value: SuperColor.textPlaceholder, range: NSRange(location: 0, length: attributedString.length))
-//    #if os(macOS)
-//        attributedStringValue = attributedString
-//    #elseif os(iOS)
-//        attributedText = attributedString
-//    #endif
-//    }
-//
-//    func no(setText: String?) {
-//    #if os(macOS)
-//        stringValue = setText ?? ""
-//    #elseif os(iOS)
-//        text = setText ?? ""
-//    #endif
-//    }
-}

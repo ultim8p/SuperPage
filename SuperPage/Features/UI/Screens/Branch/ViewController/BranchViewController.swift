@@ -152,6 +152,7 @@ class BranchViewController: NOViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
         localModel = .claudeV1dot3
     }
@@ -199,7 +200,13 @@ class BranchViewController: NOViewController {
             self.saveContext()
         }
         toolBar.onModel {
-            self.localModel = self.localModel == .gpt35turbo ? .claudeV1dot3 : .gpt35turbo
+            if self.localModel == .gpt35turbo {
+                self.localModel = .gpt4
+            } else if self.localModel == .gpt4 {
+                self.localModel = .claudeV1dot3
+            } else if self.localModel == .claudeV1dot3 {
+                self.localModel = .gpt35turbo
+            }
         }
     }
     

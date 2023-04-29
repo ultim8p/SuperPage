@@ -64,7 +64,7 @@ enum TextFormat: TextFormatter {
         case .codeTypes:
             return "\\b([A-Z][a-zA-Z0-9_]+)\\b|^(?=@)\\S+|@\\S+"
         case .codeStrings:
-            return "\"(.*?)\""
+            return "\"(.*?)\"|“(.*?)”|'(.*?)'|‘(.*?)’"
         case .codeComments:
             let pattern1 = "(?<=\\s|^)//[^\\r\\n]*"
             return "\(pattern1)"
