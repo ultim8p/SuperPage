@@ -40,6 +40,21 @@ enum AIModel: String, Codable {
     case calude1dot3 = "claude-1.3"
     
     var botName: String {
+        switch self {
+        case .gpt35turbo, .gpt35turbo0301, .gpt35turbo0613:
+            return "GPT 3"
+        case .gpt4, .gpt40314, .gpt40613:
+            return "GPT 4"
+        case .gpt432k, .gpt432k0314:
+            return "GPT 4 32k"
+        case .claudeInstantV1:
+            return "Claude Instant"
+        case .claudeV1dot3, .calude1dot3:
+            return "Claude 1.3"
+        }
+    }
+    
+    var botNameDebug: String {
         return rawValue
     }
 }
