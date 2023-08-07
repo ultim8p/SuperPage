@@ -53,5 +53,9 @@ extension SuperPageApp {
         userInteractor.inject(env: env)
         chatInteractor.inject(env: env)
         settingsInt.inject(env: env)
+        
+        userInteractor.loadInitialState()
+        env.loadInitialState()
+        chatInteractor.reloadChats()
     }
 }

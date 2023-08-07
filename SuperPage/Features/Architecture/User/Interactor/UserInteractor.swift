@@ -27,4 +27,18 @@ class UserInteractor: ObservableObject {
     func inject(env: EnvironmentInteractor) {
         self.env = env
     }
+    
+    func loadInitialState() {
+        state.user = getUser()
+    }
+    
+    func setUser(_ user: User?) {
+        state.user = user
+        let savingUser = user
+        UserDefaults.standard.setObject(savingUser, forKey: "AuthenticatedUser")
+    }
+    
+    func getUser() -> User? {
+        UserDefaults.standard.getObject(forKey: "AuthenticatedUser")
+    }    
 }

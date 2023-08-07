@@ -15,8 +15,8 @@ extension AuthenticationInteractor {
         Task {
             do {
                 let response = try await repo.postUserAuthenticate(env: env, request: credential.authRequest)
-                userInteractor.state.user = response.user
-                env.state.userCredentials = response.credentials
+                userInteractor.setUser(response.user)
+                env.setUserCredentials(response.credentials)
                 chatInt.reloadChats()
             } catch {
                 print("AUTH ERR: \(error)")
