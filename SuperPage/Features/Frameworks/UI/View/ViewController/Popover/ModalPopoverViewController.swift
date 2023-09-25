@@ -19,9 +19,9 @@ class ModalPopoverViewController: UIViewController {
     
     private let contentViewController: UIViewController
     
-    private let size: PlatformSize
+    private let size: NOSize
         
-    init(contentViewController: UIViewController, size: PlatformSize) {
+    init(contentViewController: UIViewController, size: NOSize) {
         self.contentViewController = contentViewController
         self.size = size
         super.init(nibName: nil, bundle: nil)

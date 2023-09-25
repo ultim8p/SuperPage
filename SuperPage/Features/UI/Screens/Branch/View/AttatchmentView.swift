@@ -1,5 +1,5 @@
 //
-//  SystemRoleView.swift
+//  AttatchmentView.swift
 //  SuperPage
 //
 //  Created by Guerson Perez on 4/13/23.
@@ -14,7 +14,7 @@ import AppKit
 import Cocoa
 #endif
 
-class SystemRoleView: NOViewController, NOPopoverable {
+class AttatchmentView: NOViewController, NOPopoverable {
     
     var popover: NOPopoverViewController?
     
@@ -82,7 +82,7 @@ class SystemRoleView: NOViewController, NOPopoverable {
     }
     
     func setupTextView() {
-        placeholderTextView.formatters = [TextFormat.placeholder]
+        placeholderTextView.formatters = [TextFormat.placeholder(nil)]
         placeholderTextView.isEditable = false
         placeholderTextView.noSetText(text: """
         Add context for the AI to know about the conversation.
@@ -123,7 +123,7 @@ class SystemRoleView: NOViewController, NOPopoverable {
     }
 }
 
-extension SystemRoleView: NOTextViewDelegate {
+extension AttatchmentView: NOTextViewDelegate {
     
     func noTextViewDidChangeSize(_ textView: NOTextView) {
         reloadPlaceholder()

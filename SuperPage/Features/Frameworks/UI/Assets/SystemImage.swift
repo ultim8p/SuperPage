@@ -47,4 +47,6 @@ enum SystemImage: String {
     
     case checkmarkSquare = "checkmark.square"
     case square = "square"
+    
+    case exclamationMarkOctagon = "exclamationmark.octagon"
 }

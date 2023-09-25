@@ -27,27 +27,27 @@ import Cocoa
 
 import Foundation
 
-extension PlatformImage {
+extension NOImage {
     
-    static func noSymbol(name: String, tintColor: PlatformColor? = nil, size: CGSize? = nil) -> PlatformImage? {
+    static func noSymbol(name: String, tintColor: NOColor? = nil, size: CGSize? = nil) -> NOImage? {
         let tintColor = tintColor ?? SuperColor.icon
         
         #if os(iOS)
-        var config: PlatformImage.SymbolConfiguration
+        var config: NOImage.SymbolConfiguration
         if let size = size {
-            config = PlatformImage.SymbolConfiguration(pointSize: size.height, weight: .bold)
+            config = NOImage.SymbolConfiguration(pointSize: size.height, weight: .bold)
         } else {
-            config = PlatformImage.SymbolConfiguration(scale: .large)
+            config = NOImage.SymbolConfiguration(scale: .large)
         }
         
-        var image = PlatformImage(systemName: name, withConfiguration: config)
+        var image = NOImage(systemName: name, withConfiguration: config)
         
         image = image?.withTintColor(tintColor)
         
         
         return image
         #elseif os(macOS)
-        guard let image = PlatformImage(systemSymbolName: name, accessibilityDescription: nil) else { return nil }
+        guard let image = NOImage(systemSymbolName: name, accessibilityDescription: nil) else { return nil }
         let newSize = size ?? CGSize(width: image.size.width * 1.5, height: image.size.height * 1.5)
         
         let tinted = image.resized(to: newSize).tinted(with: tintColor)

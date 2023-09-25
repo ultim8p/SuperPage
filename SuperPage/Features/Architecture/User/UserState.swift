@@ -14,5 +14,4 @@ struct UserState {
     }
     
     var user: User?
-    
 }

@@ -14,6 +14,78 @@ import AppKit
 import Cocoa
 #endif
 
+extension BranchViewController {
+    
+    func item(at indexPath: IndexPath) -> Message? {
+        guard indexPath.item < messages.count else { return nil }
+        return messages[indexPath.item]
+    }
+    
+    func configure(cell: MessageCell, for indexPath: IndexPath) {
+        let item = item(at: indexPath)
+        cell.configure(
+            message: item,
+            editable: false,
+            width: view.bounds.size.width,
+            isSelected: isSelected(message: item)
+        )
+        cell.delegate = self
+    }
+    
+    func cellItem(at indexPath: IndexPath) -> PCollectionViewCell {
+        switch Sections(rawValue: indexPath.section)! {
+        case .messages:
+            let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
+            configure(cell: cell, for: indexPath)
+            return cell
+        case .loading:
+            let cell: LoadingCell = collectionView.noReusableCell(for: indexPath)
+            return cell
+        case .newMessage:
+            let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
+            cell.configure(
+                text: newMessage,
+                editable: !isLoading,
+                width: view.bounds.size.width,
+                showSeparator: hasMessages)
+            cell.delegate = self
+            return cell
+        }
+    }
+    
+    func sizeForItem(at indexPath: IndexPath) -> NOSize {
+        switch Sections(rawValue: indexPath.section)! {
+        case .messages:
+            guard indexPath.item < messageCellHeights.count else {
+                return NOSize(width: collectionView.bounds.size.width, height: 0.0)
+            }
+            let cellHeight = messageCellHeights[indexPath.item]
+            return NOSize(width: collectionView.bounds.size.width, height: cellHeight)
+        case .loading:
+            return NOSize(width: collectionView.bounds.size.width, height: Constant.loadingHeight)
+        case .newMessage:
+            let item = newMessage
+            staticTextView.noSetText(text: item)
+            let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
+            let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+            
+            var cellHeight = 0.0
+            
+            let cellHeights = totalMessagesHeights + (CGFloat(loadingSectionCount()) * Constant.loadingHeight)
+            
+            let cvHeight = collectionView.collectionHeight
+            if cellHeights < cvHeight {
+                cellHeight = cvHeight - cellHeights
+            }
+            
+            cellHeight = max(textHeight, max(Constant.minimumNewMessageHeight, cellHeight))
+            
+            let cellSize = NOSize(width: collectionView.bounds.size.width, height: cellHeight)
+            return cellSize
+        }
+    }
+}
+
 extension BranchViewController: PlatformCollectionViewDatasource, PlatformCollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: PlatformCollectionView) -> Int {
@@ -40,7 +112,7 @@ extension BranchViewController: PlatformCollectionViewDatasource, PlatformCollec
         _ collectionView: NSCollectionView,
         layout collectionViewLayout: NSCollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
-    ) -> PlatformSize {
+    ) -> NOSize {
         return sizeForItem(at: indexPath)
     }
     
@@ -49,7 +121,7 @@ extension BranchViewController: PlatformCollectionViewDatasource, PlatformCollec
         return cellItem(at: indexPath)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> PlatformSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NOSize {
         return sizeForItem(at: indexPath)
     }
     #endif

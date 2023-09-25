@@ -21,7 +21,7 @@ protocol NOTextViewDelegate: AnyObject {
     func noTextViewWillChangeText(_ textView: NOTextView)
 }
 
-class NOTextView: PlatformTextView, TextFormatting {
+class NOTextView: PTextView, TextFormatting {
     
     // MARK: KeyboardShortcuts
     
@@ -40,13 +40,13 @@ class NOTextView: PlatformTextView, TextFormatting {
     var markupRanges: [String : [NSRange]] = [:]
     
     var formatters: [TextFormatter] = [
-        TextFormat.defaultText,
-        TextFormat.defaultCode,
-        TextFormat.codeKeywords,
-        TextFormat.codeTypes,
-        TextFormat.codeVariableNames,
-        TextFormat.codeStrings,
-        TextFormat.codeComments,
+        TextFormat.defaultText(nil),
+        TextFormat.defaultCode(nil),
+        TextFormat.codeKeywords(nil),
+        TextFormat.codeTypes(nil),
+        TextFormat.codeVariableNames(nil),
+        TextFormat.codeStrings(nil),
+        TextFormat.codeComments(nil),
     ]
     
     weak var noTextViewDelegate: NOTextViewDelegate?
@@ -84,6 +84,57 @@ class NOTextView: PlatformTextView, TextFormatting {
         }
         super.keyDown(with: event)
     }
+    
+    // MARK: - MouseActions
+    
+    var trackingArea: NSTrackingArea?
+    
+    typealias HoverHandler = ((_ mouseOn: Bool) -> Void)
+    typealias TapHandler = (() -> Void)
+    
+    var hoverHandler: HoverHandler?
+    var tapHandler: TapHandler?
+    
+    func onHover(_ handler: HoverHandler?) {
+        hoverHandler = handler
+    }
+    
+    func onTap(_ handler: TapHandler?) {
+        tapHandler = handler
+    }
+    
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        
+        if let trackingArea = self.trackingArea {
+            self.removeTrackingArea(trackingArea)
+        }
+        
+        trackingArea = NSTrackingArea(
+            rect: bounds,
+            options: [.mouseEnteredAndExited, .activeAlways],
+            owner: self,
+            userInfo: nil
+        )
+        
+        if let trackingArea = trackingArea {
+            self.addTrackingArea(trackingArea)
+        }
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        hoverHandler?(true)
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        hoverHandler?(false)
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        super.mouseDown(with: event)
+        tapHandler?()
+    }
+    
 #endif
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -106,15 +157,17 @@ class NOTextView: PlatformTextView, TextFormatting {
         translatesAutoresizingMaskIntoConstraints = false
         isSelectable = true
         delegate = self
+        textContainerInset = .zero
     #if os(macOS)
         wantsLayer = false
         layer?.backgroundColor = .clear
         backgroundColor = .clear
+        
+        textContainer?.lineFragmentPadding = 0
     #elseif os(iOS)
         backgroundColor = .clear
         textContainer.lineFragmentPadding = 0
         contentInset = .zero
-        textContainerInset = UIEdgeInsets.zero
         isScrollEnabled = false
     #endif
     }
@@ -159,21 +212,61 @@ class NOTextView: PlatformTextView, TextFormatting {
         didChangeTextViewText()
     }
     
-    
-    var targetTextSize: PlatformSize {
+    func noSetAlignment(_ alignment: NSTextAlignment) {
     #if os(macOS)
-        guard let layoutManager = layoutManager, let textContainer = textContainer else {
-            return .zero
-        }
-
-        layoutManager.textContainerChangedGeometry(textContainer)
-        layoutManager.ensureLayout(for: textContainer)
-        
-        let usedRect = layoutManager.usedRect(for: textContainer)
-        return usedRect.size
+        self.alignment = alignment
     #elseif os(iOS)
-        let contentSize = sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude))
-        return CGSize(width: bounds.width, height: contentSize.height)
+        textAlignment = alignment
+    #endif
+    }
+    
+    func targetTextSize(targetWidth: CGFloat = 0.0) -> NOSize {
+    #if os(macOS)
+        guard
+            let layoutManager = self.layoutManager, let textContainer = self.textContainer
+        else { return .zero }
+
+        // Save existing container size
+        let originalSize = textContainer.containerSize
+
+        // Set the target width
+        textContainer.containerSize = CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude)
+
+        // Ensure layout for the entire range of text
+        let textRange = NSRange(location: 0, length: self.string.utf16.count)
+        layoutManager.ensureLayout(forCharacterRange: textRange)
+
+        // Get the range of glyphs that were laid out
+        let glyphRange = layoutManager.glyphRange(for: textContainer)
+
+        // Calculate the rectangle that fits these glyphs
+        var usedRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+
+     
+
+        // Reset to original container size if needed
+        textContainer.containerSize = originalSize
+
+        return CGSize(width: ceil(usedRect.size.width), height: ceil(usedRect.size.height))
+
+        
+        /*
+                
+                let containerWidth = (targetWidth > 0.0) ? targetWidth : textContainer.containerSize.width
+                
+                layoutManager.ensureLayout(for: textContainer)
+                
+                // Calculate the range of the text that is currently laid out.
+                let range = layoutManager.glyphRange(forBoundingRect: CGRect(x: 0, y: 0, width: containerWidth, height: CGFloat.greatestFiniteMagnitude), in: textContainer)
+                
+                // Compute the rectangle needed to display that text.
+                let rect = layoutManager.boundingRect(forGlyphRange: range, in: textContainer)
+                
+                return CGSize(width: ceil(rect.width), height: ceil(rect.height))
+         */
+    #elseif os(iOS)
+        let contentSize = sizeThatFits(CGSize(width: targetWidth, height: .greatestFiniteMagnitude))
+        return CGSize(width: contentSize.width, height: contentSize.height)
     #endif
     }
     
@@ -193,7 +286,6 @@ class NOTextView: PlatformTextView, TextFormatting {
 extension NOTextView: PlatformTextViewDelegate {
     
     #if os(macOS)
-    
     #elseif os(iOS)
     func textViewDidChange(_ textView: UITextView) {
         didChangeTextViewText()

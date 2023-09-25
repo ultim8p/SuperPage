@@ -7,54 +7,54 @@
 
 import Foundation
 
-enum AIModel: String, Codable {
+struct AIModel: Codable {
     
-    // GPT 3
-    
-    case gpt35turbo = "gpt-3.5-turbo"
-    
-    case gpt35turbo0301 = "gpt-3.5-turbo-0301"
-    
-    case gpt35turbo0613 = "gpt-3.5-turbo-0613"
-    
-    // GPT 4
-    
-    case gpt4 = "gpt-4"
-    
-    case gpt40314 = "gpt-4-0314"
-    
-    case gpt40613 = "gpt-4-0613"
-    
-    case gpt432k = "gpt-4-32k"
-    
-    case gpt432k0314 = "gpt-4-32k-0314"
-    
-    // Claude Instant
-    
-    case claudeInstantV1 = "claude-instant-v1"
+    enum Name: String, Codable, CaseIterable {
         
-    // Claude 1.3
+        // MARK: - OpenAI
+        case gpt35Turbo = "gpt-3.5-turbo"
+        
+        case gpt35Turbo16k = "gpt-3.5-turbo-16k"
+        
+        case gpt4 = "gpt-4"
+        
+        case gpt432k = "gpt-4-32k"
+        
+        // MARK: - Claude
+        case claude = "claude"
+        
+        case claudeInstant = "claude-instant"
+    }
     
-    case claudeV1dot3 = "claude-v1.3"
+    var name: Name?
     
-    case calude1dot3 = "claude-1.3"
+    var version: String?
     
-    var botName: String {
-        switch self {
-        case .gpt35turbo, .gpt35turbo0301, .gpt35turbo0613:
+    var displayName: String? {
+        switch name {
+        case .gpt35Turbo:
             return "GPT 3"
-        case .gpt4, .gpt40314, .gpt40613:
+        case .gpt35Turbo16k:
+            return "GPT 3 16k"
+        case .gpt4:
             return "GPT 4"
-        case .gpt432k, .gpt432k0314:
+        case .gpt432k:
             return "GPT 4 32k"
-        case .claudeInstantV1:
+        case .claudeInstant:
             return "Claude Instant"
-        case .claudeV1dot3, .calude1dot3:
-            return "Claude 1.3"
+        case .claude:
+            return "Claude"
+        default:
+            return nil
         }
     }
     
-    var botNameDebug: String {
-        return rawValue
+    static var allModels: [AIModel] {
+        let allNames = Name.allCases
+        var models: [AIModel] = []
+        for name in allNames {
+            models.append(AIModel(name: name))
+        }
+        return models
     }
 }

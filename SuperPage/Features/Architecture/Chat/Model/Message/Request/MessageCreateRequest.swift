@@ -9,16 +9,18 @@ import Foundation
 
 struct MessagesCreateRequestContext: Codable {
     
-    var branch: BranchReference?
-    
     var systemMessage: String?
     
     var useBranch: Bool?
+    
+    var messageIds: [String]?
 }
 
 struct MessagesCreateRequest: Codable {
     
     var context: MessagesCreateRequestContext?
+    
+    var branch: BranchReference?
     
     var messages: [Message]?
     

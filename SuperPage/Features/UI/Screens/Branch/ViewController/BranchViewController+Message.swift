@@ -18,12 +18,10 @@ extension BranchViewController {
     
     func sendNewMessage() {
         guard !newMessage.isEmpty else { return }
-        sendMessageHandler?(newMessage, localModel)
-        
-        isLoading = true
+        sendMessageHandler?(newMessage, localModel, Array(selectedMessagesIds.keys))
         
         let placeholderMessage = Message(role: .user, text: newMessage)
-        localMessages.append(placeholderMessage)
+        messages.append(placeholderMessage)
         newMessage = ""
         appendCellHeightFor(message: placeholderMessage)
         collectionView.collectionLayout.invalidateLayout()

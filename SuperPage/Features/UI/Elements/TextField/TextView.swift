@@ -38,10 +38,10 @@ extension String {
     }
 }
 
-let codeTopOffset: CGFloat = -15.0
-let codeHeaderHeight: CGFloat = 30.0
-let codeEdgesOffset: CGFloat = 0.0
-let codeBottomOffset: CGFloat = 15.0
+//let codeTopOffset: CGFloat = -15.0
+//let codeHeaderHeight: CGFloat = 30.0
+//let codeEdgesOffset: CGFloat = 0.0
+//let codeBottomOffset: CGFloat = 15.0
 
 
 

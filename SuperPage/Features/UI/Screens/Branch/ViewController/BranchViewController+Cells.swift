@@ -33,7 +33,7 @@ extension BranchViewController: MessageCellDelegate {
         guard let indexPath = collectionView.indexPath(for: item) else { return }
         switch Sections(rawValue: indexPath.section)! {
         case .messages:
-            localMessages[indexPath.item].text = message
+            messages[indexPath.item].text = message
             updateCollectionLayoutForMessage(isNew: false)
         case .newMessage:
             newMessage = message
@@ -41,6 +41,11 @@ extension BranchViewController: MessageCellDelegate {
         default:
             break
         }
+    }
+    
+    func messageCellDidTap(_ item: MessageCell) {
+        guard let indexPath = collectionView.indexPath(for: item) else { return }
+        toggleSelection(at: indexPath)
     }
     
     func updateCollectionLayoutForMessage(isNew: Bool) {

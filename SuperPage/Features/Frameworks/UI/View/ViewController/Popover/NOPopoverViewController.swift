@@ -35,7 +35,7 @@ class NOPopoverViewController: PlatformViewControler {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func show(in viewController: PlatformViewControler, fromRect: PlatformRect, relativeTo: PlatformRect, size: PlatformSize) {
+    func show(in viewController: PlatformViewControler, fromRect: PlatformRect, relativeTo: PlatformRect, size: NOSize) {
         #if os(macOS)
         contentViewController.view.setFrameSize(size)
         let newPopover = NSPopover()

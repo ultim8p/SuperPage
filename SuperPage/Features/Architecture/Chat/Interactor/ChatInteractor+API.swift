@@ -7,9 +7,11 @@
 
 import Foundation
 
+// MARK: - Chat
+
 extension ChatInteractor {
     
-    // MARK: - GET
+    // MARK: GET
     
     func reloadChats() {
         Task {
@@ -22,49 +24,7 @@ extension ChatInteractor {
         }
     }
     
-    func getBranches(chat: Chat) {
-        let chatRequest = Chat(_id: chat.id)
-        Task {
-            do {
-                let response = try await repo.getChatsBranchesAllMe(env: env, chat: chatRequest)
-                guard let items = response.items else{ return }
-                self.setBranches(response: items, for: chat)
-            }
-            catch {
-                print("GET BRANCHS ERR: \(error)")
-            }
-        }
-    }
-    
-    func getMessages(branch: Branch) {
-        Task {
-            do {
-                let branchRequest = Branch(_id: branch._id)
-                let response = try await repo.getChatsBranchesMessagesAllMe(env: env, branch: branchRequest)
-                guard branch._id == response.items?.first?.branch?._id else { return }
-                guard let messages = response.items else { return }
-                self.messages = messages
-            }
-            catch {
-                print("GET MESSGS ERR: \(error)")
-            }
-        }
-    }
-    
-    // MARK: - POST
-    
-    func createBranch(name: String?, chat: Chat) {
-        Task {
-            do {
-                let branchRequest = Branch(chat: chat, name: name)
-                let response = try await repo.postChatsBranchesCreate(env: env, branch: branchRequest)
-                addBranch(response: response, to: chat)
-            }
-            catch {
-                print("CREATE BRANCH ERR: \(error)")
-            }
-        }
-    }
+    // MARK: POST
     
     func createChat(name: String?) {
         Task {
@@ -77,26 +37,23 @@ extension ChatInteractor {
         }
     }
     
-    func postCreateMessage(text: String, model: AIModel, branch: Branch, independentMessages: Bool, systemMessage: String) {
-        let system: String? = systemMessage.isEmpty ? nil : systemMessage
-        let context = MessagesCreateRequestContext(
-            branch: BranchReference(_id: branch._id),
-            systemMessage: system,
-            useBranch: !independentMessages)
-        var request = MessagesCreateRequest(context: context)
-        request.messages = [Message(role: .user, text: text)]
-        request.model = model
+    func editChat(name: String, chat: Chat) {
+        setState(chat: chat, state: .loading)
         Task {
             do {
-                let response = try await repo.postChatsBranchesMessagesCreate(env: env, reques: request)
-                messages.append(contentsOf: response.items ?? [])
+                let request = Chat(_id: chat._id, name: name)
+                let result = try await repo.editChat(env: env, chat: request)
+                setState(chat: chat, state: .ok)
+                guard result.result == .ok else { return }
+                setChat(name: name, chat: chat)
             } catch {
-                print("CREATE MESSAGE ERR: \(error)")
+                setState(chat: chat, state: .error(error))
+                print("EDIT CHAT ERR: \(error)")
             }
         }
     }
     
-    // MARK: - DELETE
+    // MARK: DELETE
     
     func deleteChat(chat: Chat) {
         Task {
@@ -109,55 +66,154 @@ extension ChatInteractor {
             }
         }
     }
+}
+
+// MARK: - Branch
+
+extension ChatInteractor {
     
-    func deleteBranch(branch: Branch) {
+    // MARK: GET
+    
+    func getBranches(chat: Chat) {
+        let chatRequest = Chat(_id: chat.id)
+        setState(chat: chat, state: .loading)
         Task {
             do {
-                let response = try await repo.deleteBranch(env: env, branch: branch)
-                guard response.result == .ok else { return }
-                remove(branch: branch)
-            } catch {
-                print("DELETE CHAT ERR: \(error)")
+                let response = try await repo.getChatsBranchesAllMe(env: env, chat: chatRequest)
+                setState(chat: chat, state: .ok)
+                guard let items = response.items else { return }
+                setBranches(response: items)
+            }
+            catch {
+                setState(chat: chat, state: .error(error))
             }
         }
     }
     
-    func deleteMessage(message: Message) {
+    // MARK: POST
+    
+    func createBranch(name: String?, chat: Chat) {
+        setState(chat: chat, state: .loading)
         Task {
             do {
-                let response = try await repo.deleteMessage(env: env, message: message)
-                guard response.result == .ok else { return }
-                print("DELETE SUCESS: \(response.toDictionary())")
-            } catch {
-                print("DELETE CHAT ERR: \(error)")
+                let branchRequest = Branch(chat: chat, name: name)
+                let response = try await repo.postChatsBranchesCreate(env: env, branch: branchRequest)
+                setState(chat: chat, state: .ok)
+                addBranch(response)
             }
-        }
-    }
-    
-    // MARK: EDIT
-    
-    func editChat(name: String, chat: Chat) {
-        Task {
-            do {
-                let request = Chat(_id: chat._id, name: name)
-                let result = try await repo.editChat(env: env, chat: request)
-                guard result.result == .ok else { return }
-                setChat(name: name, chat: chat)
-            } catch {
-                print("EDIT CHAT ERR: \(error)")
+            catch {
+                setState(chat: chat, state: .error(error))
             }
         }
     }
     
     func editBranch(name: String, branch: Branch) {
+        setState(branch: branch, loadingState: .loading)
         Task {
             do {
                 let request = Branch(_id: branch._id, name: name)
                 let result = try await repo.editBranch(env: env, branch: request)
+                setState(branch: branch, loadingState: .ok)
                 guard result.result == .ok else { return }
                 setBranch(name: name, branch: branch)
             } catch {
-                print("EDIT BRANCH ERR: \(error)")
+                setState(branch: branch, state: .ok)
+            }
+        }
+    }
+    
+    // MARK: DELETE
+    
+    func deleteBranch(branch: Branch) {
+        setState(chatId: branch.chat?._id, state: .loading)
+        Task {
+            do {
+                let response = try await repo.deleteBranch(env: env, branch: branch)
+                setState(chatId: branch.chat?._id, state: .ok)
+                guard response.result == .ok else { return }
+                remove(branch: branch)
+            } catch {
+                setState(chatId: branch.chat?._id, state: .error(error))
+            }
+        }
+    }
+}
+
+// MARK: - Message
+
+extension ChatInteractor {
+    
+    // MARK: GET
+    
+    func getMessages(branch: Branch) {
+        setState(branch: branch, loadingState: .loading)
+        Task {
+            do {
+                let branchRequest = Branch(_id: branch._id)
+                let response = try await repo.getChatsBranchesMessagesAllMe(env: env, branch: branchRequest)
+                setState(branch: branch, loadingState: .ok)
+                guard let messages = response.items else { return }
+                setMessages(messages: messages, branch: branch)
+            }
+            catch {
+                setState(branch: branch, loadingState: .ok)
+                print("LOADING MESSAGES ERROR: \(error)")
+            }
+        }
+    }
+    
+    // MARK: DELETE
+    
+    func deleteMessage(message: Message) {
+        setState(branch: message.branch, loadingState: .loading)
+        Task {
+            do {
+                let response = try await repo.deleteMessage(env: env, message: message)
+                setState(branch: message.branch, loadingState: .ok)
+                guard response.result == .ok else { return }
+                removeMessage(message: message)
+            } catch {
+                setState(branch: message.branch, loadingState: .ok)
+                print("DELETE CHAT ERR: \(error)")
+            }
+        }
+    }
+    
+    // MARK: POST
+    
+    func postCreateMessage(
+        text: String,
+        model: AIModel,
+        branch: Branch,
+        messageIds: [String]?
+    ) {
+//        let system: String? = systemMessage.isEmpty ? nil : systemMessage
+        let context = MessagesCreateRequestContext(
+            messageIds: messageIds
+        )
+        var request = MessagesCreateRequest(context: context)
+        request.messages = [Message(role: .user, text: text)]
+        request.model = model
+        request.branch = BranchReference(_id: branch._id)
+        
+        setState(branch: branch, state: .creatingMessage, loadingState: .loading)
+        Task {
+            do {
+                let response = try await repo.postChatsBranchesMessagesCreate(env: env, reques: request)
+                guard let messages = response.items, !messages.isEmpty else {
+                    setState(branch: branch, state: .ok, loadingState: .ok)
+                    return
+                }
+                setState(branch: branch, state: .ok, loadingState: .ok)
+                setError(branch: branch, createMessageError: nil)
+                addMessage(messages: messages, branch: branch)
+            }  catch let error as NoError {
+                print("ERROR CREATING BRANCH: \(error)\nCODE: \(error.code?.rawValue)")
+                setState(branch: branch, state: .ok, loadingState: .ok)
+                setError(branch: branch, createMessageError: error)
+            } catch {
+                setState(branch: branch, state: .ok , loadingState: .error(error))
+                print("CREATE MESSAGE ERR: \(error)")
             }
         }
     }

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -32,50 +34,38 @@ class BranchViewController: NOViewController {
     
     var stateWidthConstraint: NSLayoutConstraint!
     
-    var systemRoleView: SystemRoleView!
+    var systemRoleView: AttatchmentView!
     
-    var localModel: AIModel = .gpt35turbo {
-        didSet {
-            toolBar.set(aiModel: localModel)
-        }
-    }
+    var models = AIModel.allModels
+    var localModel = AIModel.allModels.first!
     
-    var isLoading = false {
-        didSet {
-            toolBar?.set(loading: isLoading)
-        }
-    }
+    var errorView = ErrorView()
+    
+    var selectedMessagesIndexPaths: [IndexPath: Bool] = [:]
+    var selectedMessagesIds: [String: Bool] = [:]
     
     // MARK: - StateVariables
     
-//    var branch: Branch
+    var chatInteractor: ChatInteractor
     
-    var messages: [Message] {
-        didSet {
-            isLoading = false
+    private var _selectedBranchId: Branch.ID?
+    var selectedBranchId: Branch.ID? {
+        get {
+            return _selectedBranchId
         }
-    }
-    
-    var localMessages: [Message] {
-        didSet {
-            reloadCells()
-            view.reloadLayoutIfNeeded()
-            if localMessages.count > 0 && shouldScrollToBottom {
-                loadInitialState()
+        set {
+            if let newValue, _selectedBranchId != newValue, _selectedBranchId != nil {
+                loadBranch(newValue)
             }
+            _selectedBranchId = newValue
         }
     }
     
-    var chatMode: Bool
+    var branch: Branch?
     
-    var localChatMode: Bool {
-        didSet {
-            toolBar?.set(chatMode: localChatMode)
-        }
-    }
+    var messages: [Message] = []
     
     var systemRole: String
-        
     
     var localSystemRole: String {
         didSet {
@@ -83,17 +73,15 @@ class BranchViewController: NOViewController {
         }
     }
     
-//    var chatMode: Bool
+    var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
     
-//    var localChatMode: Bool
-    
-    var sendMessageHandler: ((_ message: String, _ model: AIModel) -> Void)?
-    
-    var saveContextHandler: ((_ systemRole: String, _ chatMode: Bool) -> Void)?
+    var saveContextHandler: ((_ systemRole: String) -> Void)?
     
     var newMessage: String = ""
     
     var messageCellHeights: [CGFloat] = []
+    
+    private var cancellables: Set<AnyCancellable> = []
     
     var totalMessagesHeights: CGFloat {
         var total: CGFloat = 0.0
@@ -103,16 +91,16 @@ class BranchViewController: NOViewController {
         return total
     }
     
-    init(messages: [Message], localMessages: [Message],
-         chatMode: Bool, localChatMode: Bool,
-         systemRole: String, localSystemRole: String) {
-        self.messages = messages
-        self.localMessages = localMessages
-        self.chatMode = chatMode
-        self.localChatMode = localChatMode
+    init(
+         systemRole: String, localSystemRole: String,
+         selectedBranchId: Branch.ID?,
+         chatInteractor: ChatInteractor
+    ) {
         self.systemRole = systemRole
         self.localSystemRole = localSystemRole
+        self.chatInteractor = chatInteractor
         super.init(nibName: nil, bundle: nil)
+        self.selectedBranchId = selectedBranchId
     }
     
     required init?(coder: NSCoder) {
@@ -154,7 +142,9 @@ class BranchViewController: NOViewController {
         super.viewDidLoad()
         
         setupView()
-        localModel = .claudeV1dot3
+        
+        bindViewModel()
+        loadBranch(selectedBranchId)
     }
     
     // MARK: Setup
@@ -163,12 +153,78 @@ class BranchViewController: NOViewController {
         setupToolBar()
         setupTextView()
         setupCollectionView()
-        
+        setupPopUps()
         view.reloadLayoutIfNeeded()
         
         setupPlatform()
         reloadStateConstraints()
+    }
+    
+    func setupPopUps() {
+        view.addSubview(errorView)
+        errorView
+            .safeTop(to: view, const: 10.0)
+            .centerX(to: view)
+            .width(500.0)
+//        errorView.isHidden = true
+    }
+    
+    func bindViewModel() {
+        chatInteractor.$chats.sink { [weak self] chats in
+            self?.didUpdateChats(chats)
+        }.store(in: &cancellables)
+    }
+    
+    func didUpdateChats(_ chats: [Chat]) {
+        guard
+            let branch = chats.branch(for: branch)?.branch
+        else { return }
         
+        guard hasChanges(for: branch) else { return }
+        let messagesChanged = messagesChanged(for: branch)
+        
+        self.branch = branch
+        
+        messages = branch.messages ?? []
+        
+        reloadCells()
+        reloadToolBarState()
+        reloadErrorState()
+//        selectDefaultMessages()
+        
+        if messagesChanged {
+            self.scrollToBottom()
+        }
+    }
+    
+    func reloadErrorState() {
+        print("SHOWING ERR: \(hasError)")
+        errorView.isHidden = !hasError
+        errorView.configure(error: branch?.createMessageError)
+    }
+    
+    func hasChanges(for branch: Branch) -> Bool {
+        stateChanged(for: branch) ||
+        messagesChanged(for: branch) ||
+        loadingStateChanged(for: branch) ||
+        createErrorChanged(for: branch)
+    }
+    
+    func stateChanged(for branch: Branch) -> Bool {
+        branch.state != self.branch?.state
+    }
+    
+    func loadingStateChanged(for branch: Branch) -> Bool {
+        branch.loadingState != self.branch?.loadingState
+    }
+    
+    func messagesChanged(for branch: Branch) -> Bool {
+        branch.messages?.count ?? 0 != messages.count ||
+        branch.messages?.last?._id != messages.last?._id
+    }
+    
+    func createErrorChanged(for branch: Branch) -> Bool {
+        branch.createMessageError != self.branch?.createMessageError
     }
     
     func setupPlatform() {
@@ -192,35 +248,44 @@ class BranchViewController: NOViewController {
     private func setupToolBar() {
         toolBar = SendMessageToolBar.setup(in: view)
         toolBar.onSend(handler: sendNewMessage)
+        
         toolBar.onSystemRole {
             self.showSystemRole()
         }
-        toolBar.onChatMode {
-            self.localChatMode = !self.localChatMode
-            self.saveContext()
-        }
-        toolBar.onModel {
-            if self.localModel == .gpt35turbo {
-                self.localModel = .gpt4
-            } else if self.localModel == .gpt4 {
-                self.localModel = .claudeV1dot3
-            } else if self.localModel == .claudeV1dot3 {
-                self.localModel = .gpt35turbo
+        
+        toolBar.messagesSelected {
+            if self.hasMessageSelection {
+                self.deselectMessages()
+                self.saveContext()
+            } else {
+                self.selectDefaultMessages()
             }
         }
+        toolBar.onModel { [weak self] in
+            guard let self else { return }
+            guard !models.isEmpty else { return }
+
+            if let currentIndex = models.firstIndex(where: { $0.name == self.localModel.name }) {
+                if currentIndex == models.count - 1 {
+                    self.localModel = models[0]
+                } else {
+                    self.localModel = models[currentIndex + 1]
+                }
+            }
+            
+            self.reloadToolBarState()
+        }
+    }
+    
+    var textWidth: CGFloat {
+        NODevice.readableWidth(for: view.bounds.size.width)
     }
     
     private func setupTextView() {
         view.addSubview(staticTextView)
         staticTextView.translatesAutoresizingMaskIntoConstraints = false
-        staticTextView.backgroundColor = PlatformColor.gray
-        NSLayoutConstraint.activate([
-            staticTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            staticTextView.topAnchor.constraint(equalTo: view.topAnchor),
-        ])
-        stateWidthConstraint = staticTextView.widthAnchor.constraint(
-            equalToConstant: NODevice.readableWidth(for: view.bounds.size.width))
-        stateWidthConstraint.isActive = true
+        staticTextView.backgroundColor = NOColor.gray
+        staticTextView.lead(to: view).top(to: view)
         staticTextView.isHidden = true
     }
     
@@ -230,7 +295,7 @@ class BranchViewController: NOViewController {
             return
         }
         
-        systemRoleView = SystemRoleView()
+        systemRoleView = AttatchmentView()
         let fromRect = toolBar.systemRoleFrame()
         let size = NODevice.popoverSize(for: view.frame.size)
         systemRoleView.show(in: self, fromRect: fromRect, relativeTo: toolBar.frame, size: size)
@@ -245,7 +310,7 @@ class BranchViewController: NOViewController {
     }
     
     func saveContext() {
-        saveContextHandler?(localSystemRole, localChatMode)
+        saveContextHandler?(localSystemRole)
     }
     
     private func setupCollectionView() {
@@ -258,26 +323,113 @@ class BranchViewController: NOViewController {
     }
     
     func setupCollectionScrollView() {
-    #if os(macOS)
+#if os(macOS)
         let scrollView = NSScrollView(frame: .zero)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.documentView = collectionView
         scrollView.drawsBackground = false
         view.addSubview(scrollView)
         scrollView.onFullTop(to: view).onTop(to: toolBar)
-    #elseif os(iOS)
+#elseif os(iOS)
         view.addSubview(collectionView)
         collectionView.onFullTop(to: view).onTop(to: toolBar)
-    #endif
+#endif
     }
     
     // MARK: State
     
+    var isLoading: Bool {
+        branch?.loadingState == .loading
+    }
+    
+    var isCreating: Bool {
+        branch?.state == .creatingMessage
+    }
+    
+//    var error: Error? {
+//        switch branch?.state ?? .none {
+//        case let .error(error):
+//            return error
+//        default:
+//            return nil
+//        }
+//    }
+//
+//    var hasError: Bool {
+//        error != nil
+//    }
+    
+    func isSelected(at indexPath: IndexPath) -> Bool {
+        guard let hasMessage = selectedMessagesIndexPaths[indexPath] else { return false }
+        return hasMessage
+    }
+    
+    func isSelected(message: Message?) -> Bool {
+        guard let id = message?._id, let hasMessage = selectedMessagesIds[id] else { return false }
+        return hasMessage
+    }
+    
+    func toggleSelection(at indexPath: IndexPath) {
+        guard let message = item(at: indexPath), let id = message._id else { return }
+        
+        if selectedMessagesIndexPaths[indexPath] == true {
+            selectedMessagesIndexPaths.removeValue(forKey: indexPath)
+            selectedMessagesIds.removeValue(forKey: id)
+        } else {
+            selectedMessagesIndexPaths[indexPath] = true
+            selectedMessagesIds[id] = true
+        }
+        
+        reloadToolBarState()
+    }
+    
+    
+    var hasMessageSelection: Bool {
+        selectedMessagesIds.count > 0
+    }
+    
+    func deselectMessages() {
+        selectedMessagesIndexPaths = [:]
+        selectedMessagesIds = [:]
+        reloadToolBarState()
+        reloadCells()
+    }
+    
+    func selectDefaultMessages() {
+        guard
+            messages.count >= 2
+        else { return }
+        let message1 = messages[messagesCount() - 1]
+        let message2 = messages[messagesCount() - 2]
+         
+        selectedMessagesIds[message1.id] = true
+        selectedMessagesIds[message2.id] = true
+        selectedMessagesIndexPaths[IndexPath(item: messagesCount() - 1, section: Sections.messages.rawValue)] = true
+        selectedMessagesIndexPaths[IndexPath(item: messagesCount() - 2, section: Sections.messages.rawValue)] = true
+        
+        reloadCells()
+        reloadToolBarState()
+    }
+    
+    func reloadItem(at indexPath: IndexPath) {
+        let visibleItems = collectionView.visibleItems()
+        for visibleItem in visibleItems {
+            guard
+                let visibleIndexPath = collectionView.indexPath(for: visibleItem),
+                visibleIndexPath == indexPath,
+                let messageCell = visibleItem as? MessageCell
+            else { continue }
+            configure(cell: messageCell, for: visibleIndexPath)
+        }
+    }
+    
     func reloadMessageHeights() {
         messageCellHeights = []
-        for message in localMessages {
+        let maxWidth = textWidth
+        for message in messages {
             staticTextView.noSetText(text: message.text ?? "")
-            let textHeight = staticTextView.targetTextSize.height +
+            let textSize = staticTextView.targetTextSize(targetWidth: maxWidth)
+            let textHeight = textSize.height +
             MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
             messageCellHeights.append(textHeight)
         }
@@ -285,8 +437,8 @@ class BranchViewController: NOViewController {
     
     func appendCellHeightFor(message: Message) {
         staticTextView.noSetText(text: message.text ?? "")
-        let textHeight = staticTextView.targetTextSize.height +
-        MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+        let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
+        let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
         messageCellHeights.append(textHeight)
     }
     
@@ -296,14 +448,41 @@ class BranchViewController: NOViewController {
     
     func reloadStateConstraints() {
         toolBar.reloadConstraints()
-        stateWidthConstraint.constant = NODevice.readableWidth(for: view.bounds.size.width)
     }
     
-    func loadInitialState() {
+    func loadBranch(_ branchId: Branch.ID?) {
+        print("Will load branch")
+        guard let branchId else {
+            clearState()
+            return
+        }
         
-        self.collectionView?.scrollToBottom()
-//        let cell = cellItem(at: IndexPath(item: 0, section: Sections.newMessage.rawValue))
-//        cell.textView.noBecomeFirstResponder()
+        guard branchId != branch?._id, let branch = chatInteractor.branch(id: branchId) else { return }
+        print("DID SELECT NEW BRANCH: \(branchId)")
+        
+        self.branch = branch
+        messages = branch.messages ?? []
+        selectedMessagesIndexPaths = [:]
+        selectedMessagesIds = [:]
+        
+        reloadToolBarState()
+        reloadCells()
+        scrollToBottom()
+        reloadErrorState()
+//        selectDefaultMessages()
+        
+        chatInteractor.getMessages(branch: branch)
+    }
+    
+    func scrollToBottom() {
+        collectionView?.scrollToBottom()
+    }
+    
+    func clearState() {
+        branch = nil
+        messages = []
+        reloadToolBarState()
+        reloadCells()
     }
     
     func reloadCells() {
@@ -314,71 +493,32 @@ class BranchViewController: NOViewController {
         view.reloadLayoutIfNeeded()
     }
     
+    func reloadToolBarState() {
+        toolBar.set(loading: isLoading || isCreating)
+        toolBar.set(aiModel: localModel)
+        toolBar.updateMessageSelection(count: messagesCount(), selectedCount: selectedMessagesIds.count)
+    }
+    
+    // MARK: - Datasource
+    
+    var hasError: Bool {
+        branch?.createMessageError != nil
+    }
+    
+    var hasMessages: Bool {
+        messages.count > 0
+    }
+    
     func messagesCount() -> Int {
-        return localMessages.count
+        return messages.count
     }
     
     func newMessageCount() -> Int {
-        return 1
+        return isLoading || isCreating ? 0 : 1
     }
     
     func loadingSectionCount() -> Int {
-        return isLoading ? 1 : 0
-    }
-    
-    func item(at indexPath: IndexPath) -> Message? {
-        guard indexPath.item < localMessages.count else { return nil }
-        return localMessages[indexPath.item]
-    }
-    
-    func cellItem(at indexPath: IndexPath) -> PlatformCollectionViewCell {
-        switch Sections(rawValue: indexPath.section)! {
-        case .messages:
-            let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
-            cell.configure(message: item(at: indexPath), editable: false, width: view.bounds.size.width)
-            cell.delegate = self
-            return cell
-        case .loading:
-            let cell: LoadingCell = collectionView.noReusableCell(for: indexPath)
-            return cell
-        case .newMessage:
-            let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
-            cell.configure(text: newMessage, editable: !isLoading, width: view.bounds.size.width)
-            cell.delegate = self
-            return cell
-        }
-    }
-    
-    func sizeForItem(at indexPath: IndexPath) -> PlatformSize {
-        switch Sections(rawValue: indexPath.section)! {
-        case .messages:
-            guard indexPath.item < messageCellHeights.count else {
-                return PlatformSize(width: collectionView.bounds.size.width, height: 0.0)
-            }
-            let cellHeight = messageCellHeights[indexPath.item]
-            return PlatformSize(width: collectionView.bounds.size.width, height: cellHeight)
-        case .loading:
-            return PlatformSize(width: collectionView.bounds.size.width, height: Constant.loadingHeight)
-        case .newMessage:
-            let item = newMessage
-            staticTextView.noSetText(text: item)
-            let textHeight = staticTextView.targetTextSize.height +
-            MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
-            
-            var cellHeight = 0.0
-            
-            let cellHeights = totalMessagesHeights + (CGFloat(loadingSectionCount()) * Constant.loadingHeight)
-            
-            let cvHeight = collectionView.collectionHeight
-            if cellHeights < cvHeight {
-                cellHeight = cvHeight - cellHeights
-            }
-            
-            cellHeight = max(textHeight, max(Constant.minimumNewMessageHeight, cellHeight))
-            
-            let cellSize = PlatformSize(width: collectionView.bounds.size.width, height: cellHeight)
-            return cellSize
-        }
+        return isCreating || isLoading ? 1 : 0
     }
 }
 

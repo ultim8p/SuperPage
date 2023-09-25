@@ -12,7 +12,7 @@ import UIKit
 import AppKit
 #endif
 
-extension PlatformTextView {
+extension PTextView {
     
     var noText: String {
     #if os(macOS)
@@ -23,7 +23,7 @@ extension PlatformTextView {
     }
 }
 
-extension PlatformTextView {
+extension PTextView {
     
     func noEmptyText() {
     #if os(macOS)
@@ -38,7 +38,7 @@ extension PlatformTextView {
     }
 }
 
-extension PlatformTextView {
+extension PTextView {
     
     func noBecomeFirstResponder() {
     #if os(macOS)

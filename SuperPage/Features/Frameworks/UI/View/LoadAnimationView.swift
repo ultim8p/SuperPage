@@ -24,7 +24,7 @@ class NOSpinner: PlatformActivityIndicator {
             return indicator
         #elseif os(iOS)
             let indicator = NOSpinner(style: .medium)
-            indicator.color = PlatformColor.gray
+            indicator.color = NOColor.gray
             indicator.startAnimating()
             return indicator
         #endif

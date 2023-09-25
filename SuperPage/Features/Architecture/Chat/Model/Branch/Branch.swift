@@ -29,12 +29,23 @@ struct Branch: Codable, Identifiable {
     
     var name: String?
     
+    var state: BranchState?
+    
+    var createMessageError: NoError?
+    
+    // MARK: - Local
+    
+    var loadingState: ModelState?
+    
+    var messages: [Message]?
+    
     init(_id: String? = nil,
          dateCreated: Date? = nil,
          dateUpdated: Date? = nil,
          user: User? = nil,
          chat: Chat? = nil,
          branch: BranchReference? = nil,
+         loadingState: ModelState? = nil,
          message: MessageReference? = nil,
          name: String? = nil) {
         self._id = _id
@@ -43,6 +54,7 @@ struct Branch: Codable, Identifiable {
         self.user = user
         self.chat = chat
         self.branch = branch
+        self.loadingState = loadingState
         self.message = message
         self.name = name
     }

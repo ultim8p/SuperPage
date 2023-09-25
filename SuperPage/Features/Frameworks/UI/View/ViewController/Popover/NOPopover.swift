@@ -18,12 +18,12 @@ protocol NOPopoverable {
     
     var popover: NOPopoverViewController? { get set }
     
-    mutating func show(in viewController: PlatformViewControler, fromRect: PlatformRect, relativeTo: PlatformRect, size: PlatformSize)
+    mutating func show(in viewController: PlatformViewControler, fromRect: PlatformRect, relativeTo: PlatformRect, size: NOSize)
 }
 
 extension NOPopoverable where Self: PlatformViewControler {
     
-    mutating func show(in viewController: PlatformViewControler, fromRect: PlatformRect, relativeTo: PlatformRect, size: PlatformSize) {
+    mutating func show(in viewController: PlatformViewControler, fromRect: PlatformRect, relativeTo: PlatformRect, size: NOSize) {
         popover = NOPopoverViewController(contentViewController: self)
         popover?.show(in: viewController, fromRect: fromRect, relativeTo: relativeTo, size: size)
     }

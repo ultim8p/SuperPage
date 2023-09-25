@@ -14,7 +14,7 @@ import AppKit
 import Cocoa
 #endif
 
-extension PlatformCollectionViewCell {
+extension PCollectionViewCell {
     var noContentView: PlatformView {
     #if os(macOS)
         return view

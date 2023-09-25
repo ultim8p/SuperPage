@@ -86,7 +86,18 @@ extension PlatformView {
     @discardableResult
     func width(_ const: CGFloat) -> PlatformView {
         self.translatesAutoresizingMaskIntoConstraints = false
+        noConstraints.width?.isActive = false
         let constraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: const)
+        noConstraints.width = constraint
+        NSLayoutConstraint.activate([constraint])
+        return self
+    }
+    
+    @discardableResult
+    func width(to view: PlatformView, multiplier: CGFloat) -> PlatformView {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        noConstraints.width?.isActive = false
+        let constraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: multiplier, constant: 0)
         noConstraints.width = constraint
         NSLayoutConstraint.activate([constraint])
         return self
@@ -95,6 +106,7 @@ extension PlatformView {
     @discardableResult
     func height(_ const: CGFloat) -> PlatformView {
         self.translatesAutoresizingMaskIntoConstraints = false
+        noConstraints.height?.isActive = false
         let constraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: const)
         noConstraints.height = constraint
         NSLayoutConstraint.activate([constraint])
@@ -178,7 +190,18 @@ extension UIView {
     @discardableResult
     func width(_ const: CGFloat) -> UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
+        noConstraints.width?.isActive = false
         let constraint = self.widthAnchor.constraint(equalToConstant: const)
+        noConstraints.width = constraint
+        constraint.isActive = true
+        return self
+    }
+    
+    @discardableResult
+    func width(to view: PlatformView, multiplier: CGFloat) -> PlatformView {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        noConstraints.width?.isActive = false
+        let constraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: multiplier, constant: 0)
         noConstraints.width = constraint
         NSLayoutConstraint.activate([constraint])
         return self
@@ -187,6 +210,7 @@ extension UIView {
     @discardableResult
     func height(_ const: CGFloat) -> UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
+        noConstraints.height?.isActive = false
         let constraint = self.heightAnchor.constraint(equalToConstant: const)
         noConstraints.height = constraint
         NSLayoutConstraint.activate([constraint])

@@ -11,7 +11,7 @@ import NoAPI
 extension APIResponse {
     
     func baseValidation() throws -> Self {
-        return try validate(type: APIResponseError.self)
+        return try validate(type: NoError.self)
     }
     
     @MainActor

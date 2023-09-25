@@ -14,7 +14,7 @@ import AppKit
 import Cocoa
 #endif
 
-class LoadingCell: PlatformCollectionViewCell, ClassNameProtocol {
+class LoadingCell: PCollectionViewCell, ClassNameProtocol {
     
     var loadingView: LottieView!
     

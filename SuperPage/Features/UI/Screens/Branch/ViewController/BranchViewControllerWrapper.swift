@@ -17,15 +17,15 @@ import Cocoa
 
 struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
-    @Binding var messages: [Message]
-    
     @Binding var systemRole: String
     
-    @Binding var chatMode: Bool
+    @Binding var selectedBranchId: Branch.ID?
     
-    var sendMessageHandler: ((_ message: String, _ model: AIModel) -> Void)?
+    @ObservedObject var chatInteractor: ChatInteractor
     
-    var saveContextHandler: ((_ systemRole: String, _ chatMode: Bool) -> Void)?
+    var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
+    
+    var saveContextHandler: ((_ systemRole: String) -> Void)?
     
 #if os(macOS)
     typealias NSViewControllerType = BranchViewController
@@ -52,21 +52,19 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
     func makeViewController() -> BranchViewController {
         let viewController = BranchViewController(
-            messages: messages, localMessages: messages,
-            chatMode: chatMode, localChatMode: chatMode,
-            systemRole: systemRole, localSystemRole: systemRole)
+            systemRole: systemRole, localSystemRole: systemRole,
+            selectedBranchId: selectedBranchId,
+            chatInteractor: chatInteractor
+        )
         viewController.sendMessageHandler = sendMessageHandler
         viewController.saveContextHandler = saveContextHandler
         return viewController
     }
     
     func updateViewController(_ viewController: BranchViewController, context: Context) {
-        viewController.messages = messages
-        viewController.localMessages = _messages.wrappedValue
+        viewController.selectedBranchId = selectedBranchId
         viewController.sendMessageHandler = sendMessageHandler
         viewController.saveContextHandler = saveContextHandler
-        viewController.chatMode = chatMode
-        viewController.localChatMode = _chatMode.wrappedValue
         viewController.systemRole = systemRole
         viewController.localSystemRole = _systemRole.wrappedValue
     }

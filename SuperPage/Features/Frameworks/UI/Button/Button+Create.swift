@@ -16,9 +16,9 @@ import Cocoa
 
 extension PlatformButton {
     
-    static func noButton(image: SystemImage, tintColor: PlatformColor? = nil, size: CGSize? = nil) -> PlatformButton {
+    static func noButton(image: SystemImage, tintColor: NOColor? = nil, size: CGSize? = nil) -> PlatformButton {
         let button = PlatformButton()
-        let image = PlatformImage.noSymbol(name: image.rawValue, tintColor: tintColor, size: size)
+        let image = NOImage.noSymbol(name: image.rawValue, tintColor: tintColor, size: size)
         
         #if os(macOS)
         button.isBordered = false
@@ -30,8 +30,8 @@ extension PlatformButton {
         return button
     }
     
-    func noSetImage(_ image: SystemImage, tintColor: PlatformColor? = nil, size: CGSize? = nil) {
-        let image = PlatformImage.noSymbol(name: image.rawValue, tintColor: tintColor, size: size)
+    func noSetImage(_ image: SystemImage, tintColor: NOColor? = nil, size: CGSize? = nil) {
+        let image = NOImage.noSymbol(name: image.rawValue, tintColor: tintColor, size: size)
         
         #if os(macOS)
         self.image = image
@@ -42,7 +42,7 @@ extension PlatformButton {
     
     func no(setTitle: String) {
         let attributedString = NSMutableAttributedString(string: setTitle)
-        attributedString.addAttribute(.font, value: PlatformFont.systemFont(ofSize: 16.0), range: NSRange(location: 0, length: attributedString.length))
+        attributedString.addAttribute(.font, value: NOFont.systemFont(ofSize: 16.0), range: NSRange(location: 0, length: attributedString.length))
         attributedString.addAttribute(.foregroundColor, value: SuperColor.icon, range: NSRange(location: 0, length: attributedString.length))
     #if os(macOS)
         attributedTitle = attributedString

@@ -27,6 +27,7 @@ extension APIRequestable {
             .setPort(env.state.port)
             .setMethod(method)
             .addBaseHeaders()
+            .setTimeout(interval: TimeInterval(60.0 * 10.0))
         if let path = path {
             request = request.addPath(path.description)
         }

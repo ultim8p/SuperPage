@@ -16,7 +16,7 @@ import Cocoa
 
 extension PlatformCollectionView {
     
-    func noRegisterCell<T: PlatformCollectionViewCell & ClassNameProtocol>(cell: T.Type) {
+    func noRegisterCell<T: PCollectionViewCell & ClassNameProtocol>(cell: T.Type) {
     #if os(macOS)
         register(T.self, forItemWithIdentifier: T.userInterfaceItemIdentifier)
     #elseif os(iOS)
@@ -24,7 +24,7 @@ extension PlatformCollectionView {
     #endif
     }
 
-    func noReusableCell<T: PlatformCollectionViewCell & ClassNameProtocol>(for indexPath: IndexPath) -> T {
+    func noReusableCell<T: PCollectionViewCell & ClassNameProtocol>(for indexPath: IndexPath) -> T {
     #if os(macOS)
         guard let cell = makeItem(
             withIdentifier: T.userInterfaceItemIdentifier,

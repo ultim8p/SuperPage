@@ -23,26 +23,34 @@ protocol TextFormatter {
 }
 
 enum TextFormat: TextFormatter {
+        
+    enum Constant {
+        static let defaultFontSize: CGFloat = 12.0
+    }
     
     // General
     
-    case defaultText
+    case defaultText(_ fontSize: CGFloat?)
     
-    case placeholder
+    case placeholder(_ fontSize: CGFloat?)
     
     // Code
     
-    case defaultCode
+    case defaultCode(_ fontSize: CGFloat?)
     
-    case codeKeywords
+    case codeKeywords(_ fontSize: CGFloat?)
     
-    case codeTypes
+    case codeTypes(_ fontSize: CGFloat?)
     
-    case codeStrings
+    case codeStrings(_ fontSize: CGFloat?)
     
-    case codeComments
+    case codeComments(_ fontSize: CGFloat?)
     
-    case codeVariableNames
+    case codeVariableNames(_ fontSize: CGFloat?)
+    
+    // Interactable
+    
+    case action(_ fontSize: CGFloat?)
     
     var markupRegex: String? {
         switch self {
@@ -73,50 +81,57 @@ enum TextFormat: TextFormatter {
             return "[\(prefixCharacters)](?<=[\(prefixCharacters)])[a-zA-Z0-9\(prefixCharacters)]+.*?(?=[^a-zA-Z0-9\(prefixCharacters)]|$)"
         case .placeholder:
             return nil
+        case .action:
+            return nil
         }
     }
     
     var attribtues: [NSAttributedString.Key : Any]? {
         switch self {
-        case .defaultText:
+        case let .defaultText(fontSize):
             return [
                 .foregroundColor: SuperColor.defaultText,
-                .font: PlatformFont.systemFont(ofSize: 14.0),
+                .font: NOFont.systemFont(ofSize: fontSize ?? Constant.defaultFontSize),
             ]
-        case .placeholder:
+        case let .placeholder(fontSize):
             return [
                 .foregroundColor: SuperColor.textPlaceholder,
-                .font: PlatformFont.systemFont(ofSize: 14.0),
+                .font: NOFont.systemFont(ofSize: fontSize ?? Constant.defaultFontSize),
             ]
-        case .defaultCode:
+        case let .defaultCode(fontSize):
             return [
                 .foregroundColor: SuperColor.defaultText,
-                .font: PlatformFont(name: "Menlo-Regular", size: 13)!,
+                .font: NOFont(name: "Menlo-Regular", size: fontSize ?? Constant.defaultFontSize)!,
             ]
-        case .codeKeywords:
+        case let .codeKeywords(fontSize):
             return [
-                .foregroundColor: PlatformColor(red: 255.0/255.0, green: 83.0/255.0, blue: 160.0/255.0, alpha: 1.0),
-                .font: PlatformFont(name: "Menlo-Bold", size: 13)!,
+                .foregroundColor: NOColor(red: 255.0/255.0, green: 83.0/255.0, blue: 160.0/255.0, alpha: 1.0),
+                .font: NOFont(name: "Menlo-Bold", size: fontSize ?? Constant.defaultFontSize)!,
             ]
-        case .codeTypes:
+        case let .codeTypes(fontSize):
             return [
-                .foregroundColor: PlatformColor(red: 197.0/255.0, green: 124.0/255.0, blue: 255.0/255.0, alpha: 1.0),
-                .font: PlatformFont(name: "Menlo-Regular", size: 13)!,
+                .foregroundColor: NOColor(red: 197.0/255.0, green: 124.0/255.0, blue: 255.0/255.0, alpha: 1.0),
+                .font: NOFont(name: "Menlo-Regular", size: fontSize ?? Constant.defaultFontSize)!,
             ]
-        case .codeStrings:
+        case let .codeStrings(fontSize):
             return [
-                .foregroundColor: PlatformColor(red: 250.0/255.0, green: 99.0/255.0, blue: 49.0/255.0, alpha: 1.0),
-                .font: PlatformFont(name: "Menlo-Regular", size: 13)!,
+                .foregroundColor: NOColor(red: 250.0/255.0, green: 99.0/255.0, blue: 49.0/255.0, alpha: 1.0),
+                .font: NOFont(name: "Menlo-Regular", size: fontSize ?? Constant.defaultFontSize)!,
             ]
-        case .codeComments:
+        case let .codeComments(fontSize):
             return [
-                .foregroundColor: PlatformColor(red: 100.0/255.0, green: 100.0/255.0, blue: 100.0/255.0, alpha: 1.0),
-                .font: PlatformFont(name: "Menlo-Italic", size: 13)!,
+                .foregroundColor: NOColor(red: 100.0/255.0, green: 100.0/255.0, blue: 100.0/255.0, alpha: 1.0),
+                .font: NOFont(name: "Menlo-Italic", size: fontSize ?? Constant.defaultFontSize)!,
             ]
-        case .codeVariableNames:
+        case let .codeVariableNames(fontSize):
             return [
-                .foregroundColor: PlatformColor(red: 29.0/255.0, green: 190.0/255.0, blue: 249.0/255.0, alpha: 1.0),
-                .font: PlatformFont(name: "Menlo-Regular", size: 13)!,
+                .foregroundColor: NOColor(red: 29.0/255.0, green: 190.0/255.0, blue: 249.0/255.0, alpha: 1.0),
+                .font: NOFont(name: "Menlo-Regular", size: fontSize ?? Constant.defaultFontSize)!,
+            ]
+        case let .action(fontSize):
+            return [
+                .foregroundColor: SuperColor.icon,
+                .font: NOFont(name: "Menlo-Bold", size: fontSize ?? Constant.defaultFontSize)!,
             ]
         }
     }

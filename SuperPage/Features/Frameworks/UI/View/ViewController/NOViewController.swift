@@ -16,7 +16,7 @@ import Cocoa
 
 class NOViewController: PlatformViewControler {
     
-    func noSet(backgroundColor: PlatformColor) {
+    func noSet(backgroundColor: NOColor) {
     #if os(macOS)
         (view as? NOView)?.noBackgroundColor = backgroundColor
     #elseif os(iOS)

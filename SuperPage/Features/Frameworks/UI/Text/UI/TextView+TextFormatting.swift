@@ -12,7 +12,7 @@ import UIKit
 import AppKit
 #endif
 
-extension TextFormatting where Self: PlatformTextView {
+extension TextFormatting where Self: NOTextView {
     
     func refreshFormat() {
         markupRanges = [:]

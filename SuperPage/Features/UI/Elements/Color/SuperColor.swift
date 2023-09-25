@@ -6,54 +6,90 @@
 //
 
 import Foundation
+import SwiftUI
+
+extension Color {
+    static var branchBackground: Color {
+        return Color("branchBackground")
+    }
+    
+    static var homeBackground: Color {
+        return Color("homeBackground")
+    }
+    
+    static var alert: Color {
+        return Color("alert")
+    }
+    
+    static var icon: Color {
+        return Color("icon")
+    }
+}
 
 class SuperColor {
     
-    
-    static var lineSeparator: PlatformColor {
-        return PlatformColor(named: "lineSeparator")!
+    static var lineSeparator: NOColor {
+        return NOColor(named: "lineSeparator")!
     }
     
     // TOOLBAR
     
-    static var toolBar: PlatformColor {
-        return PlatformColor(named: "toolBarColor")!
+    static var toolBar: NOColor {
+        return NOColor(named: "toolBarColor")!
     }
     
-    static var icon: PlatformColor {
-        return PlatformColor(named: "icon")!
+    static var icon: NOColor {
+        return NOColor(named: "icon")!
     }
     
     // TEXT
     
-    static var defaultText: PlatformColor {
-        return PlatformColor(named: "codeDefaultText")!
+    static var defaultText: NOColor {
+        return NOColor(named: "codeDefaultText")!
     }
     
-    static var textPlaceholder: PlatformColor {
-        return PlatformColor(named: "textPlaceholder")!
+    static var textPlaceholder: NOColor {
+        return NOColor(named: "textPlaceholder")!
     }
     
     // BACKGROUND
     
-    static var popupBackground: PlatformColor {
-        return PlatformColor(named: "popupBackground")!
+    static var popupBackground: NOColor {
+        return NOColor(named: "popupBackground")!
     }
     
-    static var userMessageBackground: PlatformColor {
-        return PlatformColor(named: "userMessageBackground")!
+    static var userMessageBackground: NOColor {
+        return NOColor(named: "userMessageBackground")!
+    }
+    
+    static var homeBackground: NOColor {
+        return NOColor(named: "homeBackground")!
+    }
+    
+    static var branchBackground: NOColor {
+        return NOColor(named: "branchBackground")!
     }
     
     // CODE
-    static var codeDefaultText: PlatformColor {
-        return PlatformColor(named: "codeDefaultText")!
+    static var codeDefaultText: NOColor {
+        return NOColor(named: "codeDefaultText")!
     }
     
-    static var codeBlock: PlatformColor {
-        return PlatformColor(named: "codeBlock")!
+    static var codeBlock: NOColor {
+        return NOColor(named: "codeBlock")!
     }
     
-    static var branchBackground: PlatformColor {
-        return PlatformColor(named: "branchBackground")!
+    // INDICATORS
+    
+    static var indicatorUser: NOColor {
+        return NOColor(named: "indicatorUser")!
+    }
+    
+    static var indicatorAIModel: NOColor {
+        return NOColor(named: "indicatorAIModel")!
+    }
+    
+    static var alert: NOColor {
+        return NOColor(named: "alert")!
     }
 }

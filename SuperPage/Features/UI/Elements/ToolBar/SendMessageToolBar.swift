@@ -18,7 +18,7 @@ class SendMessageToolBar: NOView {
     
     var sendHandler: (() -> Void)?
     
-    var chatModeHandler: (() -> Void)?
+    var messagesSelectedHandler: (() -> Void)?
     
     var systemRoleHandler: (() -> Void)?
     
@@ -32,14 +32,22 @@ class SendMessageToolBar: NOView {
     
     let sendButton: PlatformButton = PlatformButton.noButton(image: .paperplaneFill)
     
-    let chatModeButton: PlatformButton = PlatformButton.noButton(image: .square)
+    let messagesSelectedButton: PlatformButton = PlatformButton.noButton(image: .square)
     
-    let systemRoleButton: PlatformButton = PlatformButton.noButton(image: .paperclip)
+    let attatchmentButton: PlatformButton = PlatformButton.noButton(image: .paperclip)
     
     let modelButton: PlatformButton = PlatformButton()
     
+    let messagesCountLabel = NOTextView(frame: .zero, textContainer: nil)
+    
+    var messagesCount: Int = 0
+    var selectedMessagesCount: Int = 0
+    
+    var model: AIModel?
+    
     enum Constant {
         static let height: CGFloat = 50.0
+        static let contentHeight: CGFloat = 50.0
         static let buttonSpacing: CGFloat = 16.0
     }
     
@@ -59,29 +67,40 @@ class SendMessageToolBar: NOView {
     
     func setupView() {
         addSubview(contentView)
-        contentView.onFull(to: self)
+        contentView.lead(to: self).bottom(to: self).trail(to: self).height(Constant.contentHeight)
         
         contentView.addSubview(sendButton)
         sendButton.safeTrail(to: contentView, const: -Constant.buttonSpacing)
-            .top(to: contentView).bottom(to: contentView).width(Constant.height)
+            .top(to: contentView).bottom(to: contentView).width(Constant.contentHeight)
         sendButton.noTarget(self, action: #selector(sendButtonTapped))
+        
+        contentView.addSubview(modelButton)
+        modelButton.onLeft(to: sendButton, const: 0.0)
+            .top(to: contentView).bottom(to: contentView)
+        modelButton.noTarget(self, action: #selector(modelButtonAction))
         
         spinner = NOSpinner.noSpinner(inView: contentView, centerTo: sendButton)
         
-        contentView.addSubview(chatModeButton)
-        chatModeButton.safeLead(to: contentView, const: Constant.buttonSpacing)
-            .top(to: contentView).bottom(to: contentView).width(Constant.height)
-        chatModeButton.noTarget(self, action: #selector(chatModeButtonAction))
+        contentView.addSubview(attatchmentButton)
+        attatchmentButton
+            .safeLead(to: contentView, const: 0.0)
+            .top(to: contentView)
+            .bottom(to: contentView)
+            .width(Constant.contentHeight)
+        attatchmentButton.noTarget(self, action: #selector(systemRoleAction))
         
-        contentView.addSubview(systemRoleButton)
-        systemRoleButton.onRight(to: chatModeButton, const: 0.0)
-            .top(to: contentView).bottom(to: contentView).width(Constant.height)
-        systemRoleButton.noTarget(self, action: #selector(systemRoleAction))
+        contentView.addSubview(messagesSelectedButton)
+        messagesSelectedButton
+            .onRight(to: attatchmentButton, const: 0.0)
+            .top(to: contentView).bottom(to: contentView).width(Constant.contentHeight)
+        messagesSelectedButton.noTarget(self, action: #selector(messagesSelectedButtonAction))
         
-        contentView.addSubview(modelButton)
-        modelButton.onRight(to: systemRoleButton, const: 0.0)
-            .top(to: contentView).bottom(to: contentView)
-        modelButton.noTarget(self, action: #selector(modelButtonAction))
+        contentView.addSubview(messagesCountLabel)
+        messagesCountLabel.isEditable = false
+        messagesCountLabel.isSelectable = false
+        messagesCountLabel.noSetAlignment(.left)
+        messagesCountLabel.formatters = [TextFormat.action(14)]
+        messagesCountLabel.onRight(to: messagesSelectedButton, const: -12.0).centerY(to: contentView)
     }
     
     static func setup(in view: PlatformView) -> SendMessageToolBar {
@@ -94,12 +113,29 @@ class SendMessageToolBar: NOView {
         return toolBar
     }
     
+    func updateMessageSelection(count: Int, selectedCount: Int) {
+        self.messagesCount = count
+        self.selectedMessagesCount = selectedCount
+        reloadProgressState()
+    }
+    
+    func reloadProgressState() {
+        let msgsSize = messagesCountLabel.targetTextSize(targetWidth: bounds.size.width)
+        messagesCountLabel.noSetText(text: "\(selectedMessagesCount) messages")
+        messagesCountLabel.height(msgsSize.height).width(msgsSize.width)
+        let hasSelectedMessages = selectedMessagesCount > 0
+        let hasMessages = messagesCount > 0
+        messagesCountLabel.isHidden = !hasSelectedMessages
+        messagesSelectedButton.noSetImage(hasSelectedMessages ? .checkmarkSquare : .square)
+        messagesSelectedButton.isHidden = !hasMessages
+    }
+    
     func onSend(handler: (() -> Void)?) {
         self.sendHandler = handler
     }
     
-    func onChatMode(handler: (() -> Void)?) {
-        self.chatModeHandler = handler
+    func messagesSelected(handler: (() -> Void)?) {
+        self.messagesSelectedHandler = handler
     }
     
     func onSystemRole(handler: (() -> Void)?) {
@@ -114,8 +150,8 @@ class SendMessageToolBar: NOView {
         sendHandler?()
     }
     
-    @objc private func chatModeButtonAction() {
-        chatModeHandler?()
+    @objc private func messagesSelectedButtonAction() {
+        messagesSelectedHandler?()
     }
     
     @objc private func systemRoleAction() {
@@ -131,22 +167,20 @@ class SendMessageToolBar: NOView {
     }
     
     func set(systemRole: Bool) {
-        systemRoleButton.noSetImage(systemRole ? .paperclipBadgeEllipsis : .paperclip)
-    }
-    
-    func set(chatMode: Bool) {
-        chatModeButton.noSetImage(chatMode ? .checkmarkSquare : .square)
+        attatchmentButton.noSetImage(systemRole ? .paperclipBadgeEllipsis : .paperclip)
     }
     
     func set(aiModel: AIModel) {
-        modelButton.no(setTitle: "🤖 \(aiModel.botName)")
+        model = aiModel
+        reloadProgressState()
+        modelButton.no(setTitle: "🤖 \(aiModel.displayName ?? "")")
     }
     
     func systemRoleFrame() -> PlatformRect {
         return PlatformRect(
-            x: contentView.frame.origin.x + systemRoleButton.frame.origin.x,
+            x: contentView.frame.origin.x + attatchmentButton.frame.origin.x,
             y: 0.0,
-            width: systemRoleButton.bounds.size.width,
-            height: systemRoleButton.bounds.size.height)
+            width: attatchmentButton.bounds.size.width,
+            height: attatchmentButton.bounds.size.height)
     }
 }
