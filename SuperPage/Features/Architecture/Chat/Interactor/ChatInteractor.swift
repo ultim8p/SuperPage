@@ -159,3 +159,29 @@ extension ChatInteractor {
         chats.remove(at: chatIndex)
     }
 }
+
+// MARK: - Draft
+
+extension ChatInteractor {
+    
+    func draft(for branch: Branch?) -> MessageDraft? {
+        guard let branchId = branch?._id else { return nil }
+        return drafts[branchId]
+    }
+    
+    func save(draft: MessageDraft) {
+        guard let branchId = draft.branch?._id else { return }
+        if let existingDraft = drafts[branchId] {
+            if draft.dateCreated ?? Date() > existingDraft.dateUpdated ?? Date() {
+                drafts[branchId] = draft
+            }
+        } else {
+            drafts[branchId] = draft
+        }
+    }
+    
+    func deleteDraft(branchId: String?) {
+        guard let branchId else { return }
+        drafts[branchId] = nil
+    }
+}
