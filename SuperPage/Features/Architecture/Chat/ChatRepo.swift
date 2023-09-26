@@ -32,6 +32,8 @@ enum ChatPath: APIPath {
     
     case postBranchEdit
     
+    case getMessageDraftsBranch
+    
     var description: String {
         switch self {
         case .getChatsAllMe:
@@ -56,6 +58,8 @@ enum ChatPath: APIPath {
             return "/v1/chats/edit"
         case .postBranchEdit:
             return "/v1/branches/edit"
+        case .getMessageDraftsBranch:
+            return "/v1/messagedrafts/branch"
         }
     }
 }
@@ -81,6 +85,12 @@ class ChatRepo {
     func getChatsBranchesMessagesAllMe(env: EnvironmentInteractor, branch: Branch)
     async throws -> ListResponse<Message> {
         return try await branch.request(env, method:. get, path: ChatPath.getChatsBranchesMessagesAllMe)
+            .authenticate(env: env)
+            .responseValue()
+    }
+    
+    func getMessageDraftsBranch(env: EnvironmentInteractor, branch: Branch) async throws -> MessageDraft {
+        return try await branch.request(env, method: .get, path: ChatPath.getMessageDraftsBranch)
             .authenticate(env: env)
             .responseValue()
     }

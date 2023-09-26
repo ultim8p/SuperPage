@@ -63,6 +63,8 @@ class BranchViewController: NOViewController {
     
     var branch: Branch?
     
+    var draft: MessageDraft?
+    
     var messages: [Message] = []
     
     var systemRole: String
@@ -120,6 +122,8 @@ class BranchViewController: NOViewController {
         
         case messages
         
+        case drafts
+        
         case loading
         
         case newMessage
@@ -166,12 +170,15 @@ class BranchViewController: NOViewController {
             .safeTop(to: view, const: 10.0)
             .centerX(to: view)
             .width(500.0)
-//        errorView.isHidden = true
     }
     
     func bindViewModel() {
         chatInteractor.$chats.sink { [weak self] chats in
             self?.didUpdateChats(chats)
+        }.store(in: &cancellables)
+        
+        chatInteractor.$drafts.sink { [weak self] drafts in
+            self?.didUpdate(drafts: drafts)
         }.store(in: &cancellables)
     }
     
@@ -184,8 +191,11 @@ class BranchViewController: NOViewController {
         let messagesChanged = messagesChanged(for: branch)
         
         self.branch = branch
-        
         messages = branch.messages ?? []
+        
+        if hasDraft && hasError {
+            newMessage = draft?.messages?.first?.text ?? ""
+        }
         
         reloadCells()
         reloadToolBarState()
@@ -197,17 +207,45 @@ class BranchViewController: NOViewController {
         }
     }
     
-    func reloadErrorState() {
-        print("SHOWING ERR: \(hasError)")
-        errorView.isHidden = !hasError
-        errorView.configure(error: branch?.createMessageError)
-    }
-    
     func hasChanges(for branch: Branch) -> Bool {
         stateChanged(for: branch) ||
         messagesChanged(for: branch) ||
         loadingStateChanged(for: branch) ||
         createErrorChanged(for: branch)
+    }
+    
+    func didUpdate(drafts: [String: MessageDraft]) {
+        guard
+            let branchId = branch?._id,
+            let draft = drafts[branchId]
+        else {
+            if self.draft != nil {
+                self.draft = nil
+                reloadCells()
+            }
+            return
+        }
+        
+        guard hasChanges(for: draft) else { return }
+        
+        self.draft = draft
+        if branch?.state != .creatingMessage {
+            newMessage = draft.messages?.first?.text ?? ""
+        }
+        reloadCells()
+    }
+    
+    func hasChanges(for draft: MessageDraft) -> Bool {
+        self.draft?._id != draft._id ||
+        self.draft?.messages?.count != draft.messages?.count ||
+        self.draft?.messages?.first?.text != draft.messages?.first?.text
+    }
+    
+    
+    
+    func reloadErrorState() {
+        errorView.isHidden = !hasError
+        errorView.configure(error: branch?.createMessageError)
     }
     
     func stateChanged(for branch: Branch) -> Bool {
@@ -261,6 +299,7 @@ class BranchViewController: NOViewController {
                 self.selectDefaultMessages()
             }
         }
+        
         toolBar.onModel { [weak self] in
             guard let self else { return }
             guard !models.isEmpty else { return }
@@ -451,17 +490,18 @@ class BranchViewController: NOViewController {
     }
     
     func loadBranch(_ branchId: Branch.ID?) {
-        print("Will load branch")
         guard let branchId else {
             clearState()
             return
         }
         
         guard branchId != branch?._id, let branch = chatInteractor.branch(id: branchId) else { return }
-        print("DID SELECT NEW BRANCH: \(branchId)")
         
         self.branch = branch
         messages = branch.messages ?? []
+        draft = chatInteractor.draft(for: branch)
+        newMessage = draft?.messages?.first?.text ?? ""
+        
         selectedMessagesIndexPaths = [:]
         selectedMessagesIds = [:]
         
@@ -469,8 +509,8 @@ class BranchViewController: NOViewController {
         reloadCells()
         scrollToBottom()
         reloadErrorState()
-//        selectDefaultMessages()
         
+        chatInteractor.getDraft(branch: branch)
         chatInteractor.getMessages(branch: branch)
     }
     
@@ -480,6 +520,7 @@ class BranchViewController: NOViewController {
     
     func clearState() {
         branch = nil
+        draft = nil
         messages = []
         reloadToolBarState()
         reloadCells()
@@ -509,16 +550,24 @@ class BranchViewController: NOViewController {
         messages.count > 0
     }
     
+    var hasDraft: Bool {
+        draft?.messages?.count ?? 0 > 0
+    }
+    
     func messagesCount() -> Int {
-        return messages.count
+        messages.count
     }
     
     func newMessageCount() -> Int {
-        return isLoading || isCreating ? 0 : 1
+        isLoading || isCreating ? 0 : 1
     }
     
     func loadingSectionCount() -> Int {
-        return isCreating || isLoading ? 1 : 0
+        isCreating || isLoading ? 1 : 0
+    }
+    
+    func draftSectionCount() -> Int {
+        isCreating && hasDraft ? 1 : 0
     }
 }
 

@@ -196,7 +196,14 @@ extension ChatInteractor {
         request.model = model
         request.branch = BranchReference(_id: branch._id)
         
+        let draft = MessageDraft(
+            branch: Branch(_id: branch._id),
+            messages: [
+                Message(role: .user, text: text)
+            ]
+        )
         setState(branch: branch, state: .creatingMessage, loadingState: .loading)
+        save(draft: draft)
         Task {
             do {
                 let response = try await repo.postChatsBranchesMessagesCreate(env: env, reques: request)
@@ -204,17 +211,31 @@ extension ChatInteractor {
                     setState(branch: branch, state: .ok, loadingState: .ok)
                     return
                 }
+                
+                deleteDraft(branchId: branch._id)
                 setState(branch: branch, state: .ok, loadingState: .ok)
                 setError(branch: branch, createMessageError: nil)
                 addMessage(messages: messages, branch: branch)
             }  catch let error as NoError {
-                print("ERROR CREATING BRANCH: \(error)\nCODE: \(error.code?.rawValue)")
                 setState(branch: branch, state: .ok, loadingState: .ok)
                 setError(branch: branch, createMessageError: error)
             } catch {
                 setState(branch: branch, state: .ok , loadingState: .error(error))
-                print("CREATE MESSAGE ERR: \(error)")
             }
+        }
+    }
+}
+
+// MARK: - Draft
+
+extension ChatInteractor {
+    func getDraft(branch: Branch) {
+        let request = Branch(_id: branch._id)
+        Task {
+            do {
+                let draft = try await repo.getMessageDraftsBranch(env: env, branch: request)
+                save(draft: draft)
+            } catch { }
         }
     }
 }

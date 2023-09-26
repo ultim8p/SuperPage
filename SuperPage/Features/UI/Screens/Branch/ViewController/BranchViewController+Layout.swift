@@ -38,6 +38,15 @@ extension BranchViewController {
             let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
             configure(cell: cell, for: indexPath)
             return cell
+        case .drafts:
+            let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
+            cell.configure(
+                text: draft?.messages?.first?.text ?? "",
+                editable: false,
+                width: view.bounds.size.width,
+                showSeparator: true
+            )
+            return cell
         case .loading:
             let cell: LoadingCell = collectionView.noReusableCell(for: indexPath)
             return cell
@@ -61,6 +70,14 @@ extension BranchViewController {
             }
             let cellHeight = messageCellHeights[indexPath.item]
             return NOSize(width: collectionView.bounds.size.width, height: cellHeight)
+        case .drafts:
+            guard let draftText = draft?.messages?.first?.text else {
+                return NOSize(width: collectionView.bounds.size.width, height: 0.0)
+            }
+            staticTextView.noSetText(text: draftText)
+            let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
+            let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+            return NOSize(width: collectionView.bounds.size.width, height: textHeight)
         case .loading:
             return NOSize(width: collectionView.bounds.size.width, height: Constant.loadingHeight)
         case .newMessage:
@@ -96,6 +113,8 @@ extension BranchViewController: PlatformCollectionViewDatasource, PlatformCollec
         switch Sections(rawValue: section)! {
         case .messages:
             return messagesCount()
+        case .drafts:
+            return draftSectionCount()
         case .loading:
             return loadingSectionCount()
         case .newMessage:
