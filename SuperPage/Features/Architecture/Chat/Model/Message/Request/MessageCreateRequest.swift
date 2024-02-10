@@ -9,10 +9,6 @@ import Foundation
 
 struct MessagesCreateRequestContext: Codable {
     
-    var systemMessage: String?
-    
-    var useBranch: Bool?
-    
     var messageIds: [String]?
 }
 

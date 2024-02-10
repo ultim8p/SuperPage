@@ -18,30 +18,65 @@ struct BranchRow: View {
     
     @Binding var branchContextMenu: Branch
     
-    @Binding var showEditBranch: Bool
-    
     @Binding var showBranchDeleteAlert: Bool
     
-    // MARK: LocalVariables
+    // MARK: Environment
     
-    @State var systemRole: String = ""
+    @Environment(\.colorScheme) var colorScheme
+    
+    var editPressed: (() -> Void)?
     
     var body: some View {
         HStack {
-            FileRow(
-                name: branch.name ?? "No name",
-                folder: false,
-                isExpanded: false,
-                loading: branch.loadingState == .loading || branch.state == .creatingMessage,
-                hasError: branch.createMessageError != nil
-            )
-        }
-        .contextMenu {
-            Button("Rename Page") {
-                branchContextMenu = branch
-                showEditBranch = true
+            let hasError = branch.createMessageError != nil
+            let loading = branch.loadingState == .loading || branch.state == .creatingMessage
+            let name = branch.name ?? "No name"
+            
+            let imageName: String = hasError ?
+            SystemImage.exclamationMarkOctagon.rawValue :
+            branch.hasPromptText ?
+            SystemImage.docBadgeEllipsis.rawValue :
+            SystemImage.doc.rawValue
+            
+            let font: Font = .body
+            let darkMode = colorScheme == .dark
+            let color: Color = darkMode ?
+            Color(CGColor(gray: 0.7, alpha: 1)) :
+            Color(red: 0.0, green: 0.0, blue: 0.0)
+        
+            if let emoji = branch.promptEmoj {
+                Text(emoji)
+                    .font(.body)
+                    .padding(.leading, -3.0)
+                    .padding(.trailing, -2.0)
+            } else {
+                let iconColor: Color = hasError ? .red : .cyan
+                Image(systemName: imageName)
+                    .foregroundColor(iconColor)
+                    .font(font)
             }
-            Button("Delete Page") {
+            
+            Text(name)
+                .font(font)
+                .foregroundColor(color)
+            Spacer()
+            if loading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .frame(width: 20.0, height: 20.0)
+                #if os(macOS)
+                    .scaleEffect(0.5)
+                #endif
+            }
+        }
+        .padding(.leading, 24)
+        .contextMenu {
+            Button("Edit") {
+                branchContextMenu = branch
+//                showEditBranch = true
+                editPressed?()
+            }
+            Button("Delete") {
                 branchContextMenu = branch
                 showBranchDeleteAlert = true
             }
@@ -66,7 +101,6 @@ struct BranchRow_Previews: PreviewProvider {
         BranchRow(
             branch: .constant(Branch(name: "Test Page")),
             branchContextMenu: .constant(Branch()),
-            showEditBranch: .constant(false),
             showBranchDeleteAlert: .constant(false))
         .environmentObject(ChatInteractor.mock)
     }

@@ -32,7 +32,6 @@ struct HomeToolBar: View {
             } label: {
                 Image(systemName: SystemImage.folderBadgePlus.rawValue)
                     .foregroundColor(.cyan)
-                        
             }
             .buttonStyle(ButtonIconStyle())
             Spacer()

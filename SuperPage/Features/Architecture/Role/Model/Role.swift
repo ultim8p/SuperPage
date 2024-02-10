@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct Role: Codable {
+    
+    var tags: [Tag]?
+    
+    var text: String?
+}

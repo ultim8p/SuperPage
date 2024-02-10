@@ -23,8 +23,9 @@ enum AuthPath: APIPath {
 
 class AuthenticationRepo {
     
-    func postUserAuthenticate(env: EnvironmentInteractor,
-                              request: SignInRequest
+    func postUserAuthenticate(
+        env: EnvironmentInteractor,
+        request: SignInRequest
     ) async throws -> SignInResponse {
         return try await request.request(
             env, method: .post, path: AuthPath.postSignIn

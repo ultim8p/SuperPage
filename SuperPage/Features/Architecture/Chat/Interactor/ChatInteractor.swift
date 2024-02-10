@@ -116,6 +116,12 @@ extension ChatInteractor {
         self.chats = chats
     }
     
+    func updateBranch(branch: Branch) {
+        var chats = self.chats
+        chats.update(branch: branch)
+        self.chats = chats
+    }
+    
     // MARK: Messages
     
     func setMessages(messages: [Message], branch: Branch) {

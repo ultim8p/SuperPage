@@ -146,8 +146,8 @@ class ChatRepo {
             .responseValue()
     }
     
-    func editBranch(env: EnvironmentInteractor, branch: Branch) async throws -> EmptyResponse {
-        let request = Branch(_id: branch._id, name: branch.name)
+    func editBranch(env: EnvironmentInteractor, branch: Branch) async throws -> Branch {
+        let request = Branch(_id: branch._id, promptRole: branch.promptRole, name: branch.name)
         return try await request.request(env, method: .post, path: ChatPath.postBranchEdit)
             .authenticate(env: env)
             .responseValue()

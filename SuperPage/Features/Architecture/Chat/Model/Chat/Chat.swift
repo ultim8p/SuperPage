@@ -101,6 +101,20 @@ extension Array where Element == Chat {
         }
     }
     
+    mutating func update(branch: Branch?) {
+        guard
+            let branch,
+            var branchQ = self.branch(for: branch)
+        else { return }
+        branchQ.branch.name = branch.name
+        branchQ.branch.dateUpdated = branch.dateUpdated
+        branchQ.branch.promptRole = branch.promptRole
+        branchQ.branch.createMessageError = branch.createMessageError
+        branchQ.branch.state = branch.state
+        branchQ.branch.loadingState = .ok
+        self[branchQ.chatIndex].branches?[branchQ.branchIndex] = branchQ.branch
+    }
+    
     mutating func setError(branch: Branch?, createMessageError: NoError?) {
         guard
             let branch = branch,

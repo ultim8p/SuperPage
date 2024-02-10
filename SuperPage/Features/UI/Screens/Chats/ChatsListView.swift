@@ -38,6 +38,16 @@ struct ChatsListView: View {
     
     @State var showEditBranch: Bool = false
     
+    // MARK: Editing
+    
+    @State var editingName: String = ""
+    
+    @State var editingRole: String = ""
+    
+    @State var editingEmoji: String? = nil
+    
+    @State var editingBranch: Branch = Branch()
+    
     var body: some View {
         List(chatInt.chats, selection: $selectedBranchId) { chat in
                 ChatRow(chat: .constant(chat),
@@ -48,10 +58,18 @@ struct ChatsListView: View {
                 
                 if chat.expanded ?? false {
                     ForEach(chat.branches ?? []) { branch in
-                        BranchRow(branch: .constant(branch),
-                                  branchContextMenu: $branchContextMenu,
-                                  showEditBranch: $showEditBranch,
-                                  showBranchDeleteAlert: $showBranchDeleteAlert)
+                        BranchRow(
+                            branch: .constant(branch),
+                            branchContextMenu: $branchContextMenu,
+                            showBranchDeleteAlert: $showBranchDeleteAlert,
+                            editPressed: {
+                                self.editingName = branch.name ?? ""
+                                self.editingRole = branch.promptRole?.text ?? ""
+                                self.editingEmoji = branch.promptEmoj ?? ""
+                                self.editingBranch = branch
+                                self.showEditBranch = true
+                            }
+                        )
                     }
                 }
             
@@ -66,10 +84,20 @@ struct ChatsListView: View {
                 }
         }
         .sheet(isPresented: $showEditBranch) {
-            NameEditView(presented: $showEditBranch, placeholder: "Page name...", title: "Edit Page name")
-                .onSubmitName { name in
-                    chatInt.editBranch(name: name, branch: branchContextMenu)
+            BranchEditView(
+                name: $editingName, role: $editingRole, emoji: $editingEmoji) { name, role, emoji in
+                    var tags: [Tag]?
+                    if let emoji {
+                        tags = [Tag(type: .emoji, value: emoji)]
+                    }
+                    let role = Role(tags: tags, text: role)
+                    chatInt.editBranch(branch: editingBranch, name: name, promptRole: role)
                 }
+            //            NameEditView(presented: $showEditBranch, placeholder: "Page name...", title: "Edit Page name")
+            //                .onSubmitName { name in
+            //                    chatInt.editBranch(name: name, branch: branchContextMenu)
+            //                }
+            //        }
         }
     }
 }

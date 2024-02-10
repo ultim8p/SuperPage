@@ -183,6 +183,7 @@ class BranchViewController: NOViewController {
     }
     
     func didUpdateChats(_ chats: [Chat]) {
+        print("DID UPDATE CHATS")
         guard
             let branch = chats.branch(for: branch)?.branch
         else { return }
@@ -194,7 +195,7 @@ class BranchViewController: NOViewController {
         messages = branch.messages ?? []
         
         if hasDraft && hasError {
-            newMessage = draft?.messages?.first?.text ?? ""
+            newMessage = draft?.messages?.first?.fullTextValue() ?? ""
         }
         
         reloadCells()
@@ -230,7 +231,7 @@ class BranchViewController: NOViewController {
         
         self.draft = draft
         if branch?.state != .creatingMessage {
-            newMessage = draft.messages?.first?.text ?? ""
+            newMessage = draft.messages?.first?.fullTextValue() ?? ""
         }
         reloadCells()
     }
@@ -238,7 +239,7 @@ class BranchViewController: NOViewController {
     func hasChanges(for draft: MessageDraft) -> Bool {
         self.draft?._id != draft._id ||
         self.draft?.messages?.count != draft.messages?.count ||
-        self.draft?.messages?.first?.text != draft.messages?.first?.text
+        self.draft?.messages?.first?.fullTextValue() != draft.messages?.first?.fullTextValue()
     }
     
     
@@ -322,7 +323,6 @@ class BranchViewController: NOViewController {
     
     private func setupTextView() {
         view.addSubview(staticTextView)
-        staticTextView.translatesAutoresizingMaskIntoConstraints = false
         staticTextView.backgroundColor = NOColor.gray
         staticTextView.lead(to: view).top(to: view)
         staticTextView.isHidden = true
@@ -466,7 +466,7 @@ class BranchViewController: NOViewController {
         messageCellHeights = []
         let maxWidth = textWidth
         for message in messages {
-            staticTextView.noSetText(text: message.text ?? "")
+            staticTextView.noSetText(text: message.fullTextValue() ?? "")
             let textSize = staticTextView.targetTextSize(targetWidth: maxWidth)
             let textHeight = textSize.height +
             MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
@@ -475,7 +475,7 @@ class BranchViewController: NOViewController {
     }
     
     func appendCellHeightFor(message: Message) {
-        staticTextView.noSetText(text: message.text ?? "")
+        staticTextView.noSetText(text: message.fullTextValue() ?? "")
         let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
         let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
         messageCellHeights.append(textHeight)
@@ -500,7 +500,7 @@ class BranchViewController: NOViewController {
         self.branch = branch
         messages = branch.messages ?? []
         draft = chatInteractor.draft(for: branch)
-        newMessage = draft?.messages?.first?.text ?? ""
+        newMessage = draft?.messages?.first?.fullTextValue() ?? ""
         
         selectedMessagesIndexPaths = [:]
         selectedMessagesIds = [:]
@@ -512,6 +512,9 @@ class BranchViewController: NOViewController {
         
         chatInteractor.getDraft(branch: branch)
         chatInteractor.getMessages(branch: branch)
+        
+//        let role = Role(tags: [Tag(type: .emoji, value: "👨‍💻")], text: "Reply every message with a funny hummor")
+//        chatInteractor.editBranch(branch: branch, name: branch.name, promptRole: role)
     }
     
     func scrollToBottom() {

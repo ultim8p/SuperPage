@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 extension Color {
+    
     static var branchBackground: Color {
         return Color("branchBackground")
     }
@@ -23,6 +24,22 @@ extension Color {
     
     static var icon: Color {
         return Color("icon")
+    }
+    
+    static var lineSeparator: Color {
+        return Color("lineSeparator")
+    }
+    
+    static var spDefaultText: Color {
+        return Color("codeDefaultText")
+    }
+    
+    static var spPlaceholder: Color {
+        return Color("textPlaceholder")
+    }
+    
+    static var spAction: Color {
+        return Color("action")
     }
 }
 
@@ -91,5 +108,9 @@ class SuperColor {
     
     static var alert: NOColor {
         return NOColor(named: "alert")!
+    }
+    
+    static var action: NOColor {
+        return NOColor(named: "action")!
     }
 }

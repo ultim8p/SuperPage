@@ -38,9 +38,7 @@
 		A01CA27029D02E4F00AEB258 /* NavLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA26829D02D3C00AEB258 /* NavLink.swift */; };
 		A01CA27129D02E4F00AEB258 /* NavBarPreferenceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA26B29D02D3C00AEB258 /* NavBarPreferenceKeys.swift */; };
 		A01CA27329D02E6500AEB258 /* SystemImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA26429D02D2200AEB258 /* SystemImage.swift */; };
-		A01CA27829D0405100AEB258 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA27729D0405100AEB258 /* AppState.swift */; };
 		A01CA27A29D0422100AEB258 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA27929D0422100AEB258 /* User.swift */; };
-		A01CA27C29D09B3900AEB258 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA27B29D09B3900AEB258 /* DIContainer.swift */; };
 		A01CA28229D0B3B700AEB258 /* UserInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA28129D0B3B700AEB258 /* UserInteractor.swift */; };
 		A01CA28429D0B3EB00AEB258 /* UserRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA28329D0B3EB00AEB258 /* UserRepo.swift */; };
 		A01CA28629D0B50800AEB258 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA28529D0B50800AEB258 /* UserState.swift */; };
@@ -53,7 +51,7 @@
 		A01CA2A829D0E79700AEB258 /* APIPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A329D0E78500AEB258 /* APIPath.swift */; };
 		A01CA2A929D0E79700AEB258 /* APIBaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A629D0E78500AEB258 /* APIBaseRequest.swift */; };
 		A01CA2AA29D0E79700AEB258 /* Encodable+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A729D0E78500AEB258 /* Encodable+Request.swift */; };
-		A01CA2AB29D0E79700AEB258 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A229D0E78500AEB258 /* APIResponse.swift */; };
+		A01CA2AB29D0E79700AEB258 /* APIResponse+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A229D0E78500AEB258 /* APIResponse+Validation.swift */; };
 		A01CA2AC29D0E79700AEB258 /* APIRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A429D0E78500AEB258 /* APIRequestBuilder.swift */; };
 		A01CA2AD29D0E79700AEB258 /* APIRequest+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2A529D0E78500AEB258 /* APIRequest+Auth.swift */; };
 		A01CA2B229D0E95800AEB258 /* Date+Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA2B129D0E95500AEB258 /* Date+Formatter.swift */; };
@@ -124,12 +122,27 @@
 		A057F5032A81412B0084E4F6 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057F5022A81412B0084E4F6 /* ChatRow.swift */; };
 		A057F5052A8145FE0084E4F6 /* BranchRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057F5042A8145FE0084E4F6 /* BranchRow.swift */; };
 		A057F5092A8174640084E4F6 /* UserDefaults+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057F5082A8174640084E4F6 /* UserDefaults+Helpers.swift */; };
+		A08230522B74844900350016 /* MessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230512B74844900350016 /* MessageContent.swift */; };
+		A08230542B74855E00350016 /* MessageContentImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230532B74855E00350016 /* MessageContentImage.swift */; };
+		A08230562B759D4900350016 /* NOTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230552B759D4900350016 /* NOTextViewCell.swift */; };
+		A08230582B75AD4900350016 /* NOTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230572B75AD4900350016 /* NOTextEditor.swift */; };
+		A082305A2B75CFF200350016 /* NOSWUITextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230592B75CFF200350016 /* NOSWUITextEditor.swift */; };
+		A082305F2B75FE3E00350016 /* SuperTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A082305E2B75FE3E00350016 /* SuperTextField.swift */; };
+		A08230612B760AE500350016 /* SuperTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230602B760AE500350016 /* SuperTextEditor.swift */; };
+		A08230642B760BB500350016 /* EmojiPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230632B760BB500350016 /* EmojiPickerView.swift */; };
+		A08230662B760BE700350016 /* EmojiSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230652B760BE700350016 /* EmojiSelectView.swift */; };
+		A08230692B760DAB00350016 /* BarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230682B760DAB00350016 /* BarButton.swift */; };
 		A0A22CA129DA2B76003F9ED1 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */; };
 		A0A22CA429DA500E003F9ED1 /* FileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A22CA329DA500E003F9ED1 /* FileRow.swift */; };
 		A0BAD8522AB781800051DE73 /* BranchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BAD8512AB781800051DE73 /* BranchState.swift */; };
 		A0BAD8552AB7DE3F0051DE73 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BAD8542AB7DE3F0051DE73 /* ErrorView.swift */; };
 		A0EEA8082ABF4F8700C137A3 /* UnkownCaseRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA8072ABF4F8700C137A3 /* UnkownCaseRepresentable.swift */; };
 		A0EEA80D2AC0FF0800C137A3 /* MessageDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA80C2AC0FF0800C137A3 /* MessageDraft.swift */; };
+		A0EEA8152AC2328600C137A3 /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA8142AC2328600C137A3 /* Role.swift */; };
+		A0EEA8172AC232E900C137A3 /* EmojiList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA8162AC232E900C137A3 /* EmojiList.swift */; };
+		A0EEA8192AC2331E00C137A3 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA8182AC2331E00C137A3 /* Tag.swift */; };
+		A0EEA81B2AC2333C00C137A3 /* TagType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA81A2AC2333C00C137A3 /* TagType.swift */; };
+		A0EEA81D2AC2825E00C137A3 /* BranchEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EEA81C2AC2825E00C137A3 /* BranchEditView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -166,9 +179,7 @@
 		A01CA26929D02D3C00AEB258 /* NavBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarContentView.swift; sourceTree = "<group>"; };
 		A01CA26A29D02D3C00AEB258 /* NavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarView.swift; sourceTree = "<group>"; };
 		A01CA26B29D02D3C00AEB258 /* NavBarPreferenceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarPreferenceKeys.swift; sourceTree = "<group>"; };
-		A01CA27729D0405100AEB258 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		A01CA27929D0422100AEB258 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		A01CA27B29D09B3900AEB258 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		A01CA28129D0B3B700AEB258 /* UserInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInteractor.swift; sourceTree = "<group>"; };
 		A01CA28329D0B3EB00AEB258 /* UserRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepo.swift; sourceTree = "<group>"; };
 		A01CA28529D0B50800AEB258 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
@@ -178,7 +189,7 @@
 		A01CA29B29D0E08C00AEB258 /* SignInRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInRequest.swift; sourceTree = "<group>"; };
 		A01CA29D29D0E6E600AEB258 /* AuthenticationInteractor+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticationInteractor+Mock.swift"; sourceTree = "<group>"; };
 		A01CA2A029D0E70800AEB258 /* AuthenticationInteractor+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticationInteractor+API.swift"; sourceTree = "<group>"; };
-		A01CA2A229D0E78500AEB258 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
+		A01CA2A229D0E78500AEB258 /* APIResponse+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIResponse+Validation.swift"; sourceTree = "<group>"; };
 		A01CA2A329D0E78500AEB258 /* APIPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPath.swift; sourceTree = "<group>"; };
 		A01CA2A429D0E78500AEB258 /* APIRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestBuilder.swift; sourceTree = "<group>"; };
 		A01CA2A529D0E78500AEB258 /* APIRequest+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIRequest+Auth.swift"; sourceTree = "<group>"; };
@@ -249,12 +260,27 @@
 		A057F5022A81412B0084E4F6 /* ChatRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRow.swift; sourceTree = "<group>"; };
 		A057F5042A8145FE0084E4F6 /* BranchRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchRow.swift; sourceTree = "<group>"; };
 		A057F5082A8174640084E4F6 /* UserDefaults+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Helpers.swift"; sourceTree = "<group>"; };
+		A08230512B74844900350016 /* MessageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContent.swift; sourceTree = "<group>"; };
+		A08230532B74855E00350016 /* MessageContentImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentImage.swift; sourceTree = "<group>"; };
+		A08230552B759D4900350016 /* NOTextViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOTextViewCell.swift; sourceTree = "<group>"; };
+		A08230572B75AD4900350016 /* NOTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOTextEditor.swift; sourceTree = "<group>"; };
+		A08230592B75CFF200350016 /* NOSWUITextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOSWUITextEditor.swift; sourceTree = "<group>"; };
+		A082305E2B75FE3E00350016 /* SuperTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperTextField.swift; sourceTree = "<group>"; };
+		A08230602B760AE500350016 /* SuperTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperTextEditor.swift; sourceTree = "<group>"; };
+		A08230632B760BB500350016 /* EmojiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerView.swift; sourceTree = "<group>"; };
+		A08230652B760BE700350016 /* EmojiSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiSelectView.swift; sourceTree = "<group>"; };
+		A08230682B760DAB00350016 /* BarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarButton.swift; sourceTree = "<group>"; };
 		A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		A0A22CA329DA500E003F9ED1 /* FileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRow.swift; sourceTree = "<group>"; };
 		A0BAD8512AB781800051DE73 /* BranchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchState.swift; sourceTree = "<group>"; };
 		A0BAD8542AB7DE3F0051DE73 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		A0EEA8072ABF4F8700C137A3 /* UnkownCaseRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnkownCaseRepresentable.swift; sourceTree = "<group>"; };
 		A0EEA80C2AC0FF0800C137A3 /* MessageDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDraft.swift; sourceTree = "<group>"; };
+		A0EEA8142AC2328600C137A3 /* Role.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
+		A0EEA8162AC232E900C137A3 /* EmojiList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiList.swift; sourceTree = "<group>"; };
+		A0EEA8182AC2331E00C137A3 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		A0EEA81A2AC2333C00C137A3 /* TagType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagType.swift; sourceTree = "<group>"; };
+		A0EEA81C2AC2825E00C137A3 /* BranchEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,7 +322,6 @@
 			isa = PBXGroup;
 			children = (
 				A0EEA80B2AC0FE3F00C137A3 /* MessageDraft */,
-				A009F15229D3ED4F0045F311 /* AIModel */,
 				A009F14D29D3EB7A0045F311 /* Branch */,
 				A009F14929D3EB510045F311 /* Message */,
 				A009F14829D3EB4A0045F311 /* Chat */,
@@ -330,6 +355,8 @@
 				A009F14A29D3EB580045F311 /* Request */,
 				A009F15029D3EC9A0045F311 /* Message.swift */,
 				A009F15929D3EECD0045F311 /* MessageReference.swift */,
+				A08230512B74844900350016 /* MessageContent.swift */,
+				A08230532B74855E00350016 /* MessageContentImage.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -403,7 +430,6 @@
 			children = (
 				A03A1C6A29D526A300158E95 /* Usage */,
 				A01CA27E29D0B39A00AEB258 /* Architecture */,
-				A01CA27629D0404A00AEB258 /* Data */,
 				A01CA26C29D02E1300AEB258 /* UI */,
 				A01CA26129D02D0700AEB258 /* Frameworks */,
 				A01CA25E29D0289700AEB258 /* App */,
@@ -500,18 +526,12 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
-		A01CA27629D0404A00AEB258 /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				A01CA27729D0405100AEB258 /* AppState.swift */,
-				A01CA27B29D09B3900AEB258 /* DIContainer.swift */,
-			);
-			path = Data;
-			sourceTree = "<group>";
-		};
 		A01CA27E29D0B39A00AEB258 /* Architecture */ = {
 			isa = PBXGroup;
 			children = (
+				A0EEA8112AC2323A00C137A3 /* Role */,
+				A0EEA8102AC22BD700C137A3 /* Tag */,
+				A009F15229D3ED4F0045F311 /* AIModel */,
 				A03A1C6229D525E800158E95 /* Settings */,
 				A009F13529D3B9740045F311 /* Chat */,
 				A01CA2AE29D0E8E000AEB258 /* Environment */,
@@ -579,7 +599,7 @@
 				A01CA2A429D0E78500AEB258 /* APIRequestBuilder.swift */,
 				A01CA2A529D0E78500AEB258 /* APIRequest+Auth.swift */,
 				A01CA2A729D0E78500AEB258 /* Encodable+Request.swift */,
-				A01CA2A229D0E78500AEB258 /* APIResponse.swift */,
+				A01CA2A229D0E78500AEB258 /* APIResponse+Validation.swift */,
 				A01CA2A329D0E78500AEB258 /* APIPath.swift */,
 				A01CA2C529D0F01400AEB258 /* APIRequest+Response.swift */,
 				A01CA2C729D0F05B00AEB258 /* APIResponseError.swift */,
@@ -600,6 +620,7 @@
 		A01CA2AE29D0E8E000AEB258 /* Environment */ = {
 			isa = PBXGroup;
 			children = (
+				A08D6D862AD946DE009B200E /* State */,
 				A01CA2B329D0E9DC00AEB258 /* Interactor */,
 			);
 			path = Environment;
@@ -624,7 +645,6 @@
 			isa = PBXGroup;
 			children = (
 				A01CA2B429D0E9EE00AEB258 /* EnvironmentInteractor.swift */,
-				A01CA2B629D0EA2A00AEB258 /* EnvironmentState.swift */,
 				A01CA2C329D0EC8F00AEB258 /* EnvironmentInteractor+Mock.swift */,
 			);
 			path = Interactor;
@@ -663,6 +683,7 @@
 		A036458E29E6A99C00D524BB /* Text */ = {
 			isa = PBXGroup;
 			children = (
+				A082305D2B75FE2A00350016 /* TextField */,
 				A036459629E6B35100D524BB /* Regex */,
 				A036459529E6B34E00D524BB /* UI */,
 				A036459229E6A9D900D524BB /* Fromatter */,
@@ -694,6 +715,9 @@
 				A03645A629E6D95C00D524BB /* TextView+Extensions.swift */,
 				A03645A829E6D9DD00D524BB /* TextView+TextFormatting.swift */,
 				A03645B029E6EA2300D524BB /* KeyboardShortcut.swift */,
+				A08230552B759D4900350016 /* NOTextViewCell.swift */,
+				A08230572B75AD4900350016 /* NOTextEditor.swift */,
+				A08230592B75CFF200350016 /* NOSWUITextEditor.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -994,6 +1018,8 @@
 		A03A1C8229D75ADB00158E95 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				A08230672B760D9F00350016 /* Button */,
+				A08230622B760BA600350016 /* Emoji */,
 				A0BAD8532AB7DE310051DE73 /* PopUps */,
 				A03645E929E8973900D524BB /* Color */,
 				A0A22CA229DA4FFD003F9ED1 /* ListItems */,
@@ -1006,8 +1032,10 @@
 		A03A1C8329D75AE300158E95 /* TextField */ = {
 			isa = PBXGroup;
 			children = (
+				A082305E2B75FE3E00350016 /* SuperTextField.swift */,
 				A03A1C8729D76D2B00158E95 /* FieldNameTextField.swift */,
 				A01236AA29E2C43000DF14C4 /* TextView.swift */,
+				A08230602B760AE500350016 /* SuperTextEditor.swift */,
 			);
 			path = TextField;
 			sourceTree = "<group>";
@@ -1037,6 +1065,38 @@
 			path = Defaults;
 			sourceTree = "<group>";
 		};
+		A082305D2B75FE2A00350016 /* TextField */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = TextField;
+			sourceTree = "<group>";
+		};
+		A08230622B760BA600350016 /* Emoji */ = {
+			isa = PBXGroup;
+			children = (
+				A08230632B760BB500350016 /* EmojiPickerView.swift */,
+				A08230652B760BE700350016 /* EmojiSelectView.swift */,
+			);
+			path = Emoji;
+			sourceTree = "<group>";
+		};
+		A08230672B760D9F00350016 /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				A08230682B760DAB00350016 /* BarButton.swift */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
+		A08D6D862AD946DE009B200E /* State */ = {
+			isa = PBXGroup;
+			children = (
+				A01CA2B629D0EA2A00AEB258 /* EnvironmentState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
 		A0A22CA229DA4FFD003F9ED1 /* ListItems */ = {
 			isa = PBXGroup;
 			children = (
@@ -1051,6 +1111,7 @@
 			isa = PBXGroup;
 			children = (
 				A0BAD8542AB7DE3F0051DE73 /* ErrorView.swift */,
+				A0EEA81C2AC2825E00C137A3 /* BranchEditView.swift */,
 			);
 			path = PopUps;
 			sourceTree = "<group>";
@@ -1061,6 +1122,40 @@
 				A0EEA80C2AC0FF0800C137A3 /* MessageDraft.swift */,
 			);
 			path = MessageDraft;
+			sourceTree = "<group>";
+		};
+		A0EEA8102AC22BD700C137A3 /* Tag */ = {
+			isa = PBXGroup;
+			children = (
+				A0EEA8132AC2325C00C137A3 /* Model */,
+			);
+			path = Tag;
+			sourceTree = "<group>";
+		};
+		A0EEA8112AC2323A00C137A3 /* Role */ = {
+			isa = PBXGroup;
+			children = (
+				A0EEA8122AC2325700C137A3 /* Model */,
+			);
+			path = Role;
+			sourceTree = "<group>";
+		};
+		A0EEA8122AC2325700C137A3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A0EEA8142AC2328600C137A3 /* Role.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A0EEA8132AC2325C00C137A3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A0EEA8162AC232E900C137A3 /* EmojiList.swift */,
+				A0EEA8182AC2331E00C137A3 /* Tag.swift */,
+				A0EEA81A2AC2333C00C137A3 /* TagType.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1145,11 +1240,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A01CA2AD29D0E79700AEB258 /* APIRequest+Auth.swift in Sources */,
+				A0EEA81B2AC2333C00C137A3 /* TagType.swift in Sources */,
 				A03645EB29E8974D00D524BB /* SuperColor.swift in Sources */,
+				A08230542B74855E00350016 /* MessageContentImage.swift in Sources */,
 				A03645F829E8B02A00D524BB /* NOContainerView.swift in Sources */,
 				A01CA28629D0B50800AEB258 /* UserState.swift in Sources */,
 				A01CA29929D0C43000AEB258 /* AuthenticationState.swift in Sources */,
 				A036459429E6AA1D00D524BB /* TextFormatter.swift in Sources */,
+				A08230522B74844900350016 /* MessageContent.swift in Sources */,
 				A0EEA8082ABF4F8700C137A3 /* UnkownCaseRepresentable.swift in Sources */,
 				A009F14129D3BA7A0045F311 /* ChatInteractor.swift in Sources */,
 				A036459129E6A9AE00D524BB /* Platform.swift in Sources */,
@@ -1160,7 +1258,7 @@
 				A01CA26F29D02E4F00AEB258 /* NavBarView.swift in Sources */,
 				A03645BD29E7115200D524BB /* NOView.swift in Sources */,
 				A036459829E6B35D00D524BB /* String+Regex.swift in Sources */,
-				A01CA2AB29D0E79700AEB258 /* APIResponse.swift in Sources */,
+				A01CA2AB29D0E79700AEB258 /* APIResponse+Validation.swift in Sources */,
 				A03645A929E6D9DD00D524BB /* TextView+TextFormatting.swift in Sources */,
 				A009F13F29D3BA0F0045F311 /* ChatState.swift in Sources */,
 				A01CA2B529D0E9EE00AEB258 /* EnvironmentInteractor.swift in Sources */,
@@ -1177,6 +1275,7 @@
 				A03645B129E6EA2300D524BB /* KeyboardShortcut.swift in Sources */,
 				A009F15C29D4088F0045F311 /* ChatsListView.swift in Sources */,
 				A03645F629E8AF1E00D524BB /* NOViewController.swift in Sources */,
+				A0EEA8152AC2328600C137A3 /* Role.swift in Sources */,
 				A01CA29729D0C42600AEB258 /* AuthenticationRepo.swift in Sources */,
 				A036459A29E6B43300D524BB /* TextFormatting.swift in Sources */,
 				A01CA2C629D0F01400AEB258 /* APIRequest+Response.swift in Sources */,
@@ -1193,16 +1292,17 @@
 				A01CA2B229D0E95800AEB258 /* Date+Formatter.swift in Sources */,
 				A009F13B29D3B9ED0045F311 /* ListResponse.swift in Sources */,
 				A01CA27A29D0422100AEB258 /* User.swift in Sources */,
-				A01CA27C29D09B3900AEB258 /* DIContainer.swift in Sources */,
 				A03645DC29E77C8900D524BB /* Device+Additions.swift in Sources */,
 				A036459C29E6D7D500D524BB /* NOTextView.swift in Sources */,
 				A01236AB29E2C43000DF14C4 /* TextView.swift in Sources */,
 				A01CA25B29D020BF00AEB258 /* AppleSignInButton.swift in Sources */,
+				A08230662B760BE700350016 /* EmojiSelectView.swift in Sources */,
 				A03645ED29E89D7300D524BB /* BranchViewController+Message.swift in Sources */,
 				A01CA29C29D0E08C00AEB258 /* SignInRequest.swift in Sources */,
 				A036460129E957DA00D524BB /* Button+Actions.swift in Sources */,
 				A009F15E29D410150045F311 /* BranchDetailScreen.swift in Sources */,
 				A0A22CA129DA2B76003F9ED1 /* EmptyResponse.swift in Sources */,
+				A08230562B759D4900350016 /* NOTextViewCell.swift in Sources */,
 				A03645EF29E89DAD00D524BB /* BranchViewController+Layout.swift in Sources */,
 				A03645BB29E6ECD300D524BB /* MessageCell.swift in Sources */,
 				A03645CC29E7573000D524BB /* LoadingCell.swift in Sources */,
@@ -1215,11 +1315,14 @@
 				A009F15129D3EC9A0045F311 /* Message.swift in Sources */,
 				A01CA24529D019C500AEB258 /* ContentView.swift in Sources */,
 				A03645AD29E6E74600D524BB /* CollectionView+Scroll.swift in Sources */,
+				A0EEA8192AC2331E00C137A3 /* Tag.swift in Sources */,
 				A009F15A29D3EECD0045F311 /* MessageReference.swift in Sources */,
 				A01CA2B729D0EA2A00AEB258 /* EnvironmentState.swift in Sources */,
 				A03645C129E748C600D524BB /* SendMessageToolBar.swift in Sources */,
+				A08230612B760AE500350016 /* SuperTextEditor.swift in Sources */,
 				A01CA2A829D0E79700AEB258 /* APIPath.swift in Sources */,
 				A03A1C8A29D76E6200158E95 /* BranchCreationView.swift in Sources */,
+				A082305A2B75CFF200350016 /* NOSWUITextEditor.swift in Sources */,
 				A01CA2CA29D0F3A800AEB258 /* SignInResponse.swift in Sources */,
 				A03645A529E6D86500D524BB /* ClassNameProtocol.swift in Sources */,
 				A0EEA80D2AC0FF0800C137A3 /* MessageDraft.swift in Sources */,
@@ -1230,13 +1333,16 @@
 				A03A1C7329D5288300158E95 /* SettingsRepo.swift in Sources */,
 				A03A1C6F29D526D700158E95 /* Tokens.swift in Sources */,
 				A03645AF29E6EA0600D524BB /* CollectionView+Cells.swift in Sources */,
+				A08230642B760BB500350016 /* EmojiPickerView.swift in Sources */,
 				A03645F129E89DD900D524BB /* BranchViewController+Cells.swift in Sources */,
 				A01CA27329D02E6500AEB258 /* SystemImage.swift in Sources */,
 				A01CA2A129D0E70800AEB258 /* AuthenticationInteractor+API.swift in Sources */,
 				A01CA28429D0B3EB00AEB258 /* UserRepo.swift in Sources */,
+				A08230692B760DAB00350016 /* BarButton.swift in Sources */,
 				A009F15629D3EDD70045F311 /* ChatRole.swift in Sources */,
-				A01CA27829D0405100AEB258 /* AppState.swift in Sources */,
 				A01CA29529D0C41C00AEB258 /* AuthenticationInteractor.swift in Sources */,
+				A0EEA81D2AC2825E00C137A3 /* BranchEditView.swift in Sources */,
+				A082305F2B75FE3E00350016 /* SuperTextField.swift in Sources */,
 				A057F5032A81412B0084E4F6 /* ChatRow.swift in Sources */,
 				A009F14F29D3EB890045F311 /* Branch.swift in Sources */,
 				A03645CF29E7707100D524BB /* LottieView.swift in Sources */,
@@ -1245,6 +1351,7 @@
 				A01CA2AC29D0E79700AEB258 /* APIRequestBuilder.swift in Sources */,
 				A01CA2A929D0E79700AEB258 /* APIBaseRequest.swift in Sources */,
 				A01CA2BC29D0EB0200AEB258 /* UserInteractor+API.swift in Sources */,
+				A08230582B75AD4900350016 /* NOTextEditor.swift in Sources */,
 				A009F14529D3BABD0045F311 /* ChatInteractor+Mock.swift in Sources */,
 				A0BAD8552AB7DE3F0051DE73 /* ErrorView.swift in Sources */,
 				A03645BF29E7117500D524BB /* CollectionViewCell+Properties.swift in Sources */,
@@ -1255,6 +1362,7 @@
 				A01CA27029D02E4F00AEB258 /* NavLink.swift in Sources */,
 				A0A22CA429DA500E003F9ED1 /* FileRow.swift in Sources */,
 				A01CA24329D019C500AEB258 /* SuperPageApp.swift in Sources */,
+				A0EEA8172AC232E900C137A3 /* EmojiList.swift in Sources */,
 				A03A1C8829D76D2B00158E95 /* FieldNameTextField.swift in Sources */,
 				A009F15429D3ED570045F311 /* AIModel.swift in Sources */,
 				A03645C429E74AF800D524BB /* Image+Create.swift in Sources */,

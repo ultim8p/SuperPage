@@ -17,9 +17,11 @@ enum SystemImage: String {
     
     case xmark = "xmark"
     
+    case doc = "doc"
     case docPlaintext = "doc.plaintext"
     case docAppend = "doc.append"
     case docText = "doc.text"
+    case docBadgeEllipsis = "doc.badge.ellipsis"
     
     case textMagnifyingGlass = "text.magnifyingglass"
     
@@ -49,4 +51,6 @@ enum SystemImage: String {
     case square = "square"
     
     case exclamationMarkOctagon = "exclamationmark.octagon"
+    
+    case faceDashedFill = "face.dashed.fill"
 }

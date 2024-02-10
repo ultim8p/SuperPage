@@ -27,7 +27,7 @@ struct Message: Codable, Identifiable {
     
     var role: ChatRole?
     
-    var text: String?
+    var content: [MessageContent]?
     
     var model: AIModel?
     
@@ -38,7 +38,7 @@ struct Message: Codable, Identifiable {
          chat: Chat? = nil,
          branch: Branch? = nil,
          role: ChatRole? = nil,
-         text: String? = nil,
+         content: [MessageContent]? = nil,
          model: AIModel? = nil) {
         self._id = _id
         self.dateCreated = dateCreated
@@ -47,7 +47,48 @@ struct Message: Codable, Identifiable {
         self.chat = chat
         self.branch = branch
         self.role = role
-        self.text = text
+        self.content = content
         self.model = model
+    }
+    
+    func fullTextValue() -> String? {
+        content?.first?.texts?.first
+    }
+}
+
+extension Message {
+    
+    static func create(role: ChatRole?, text: String?, model: AIModel? = nil) -> Message {
+        
+        var messagesContent: [MessageContent] = []
+        if let text {
+            messagesContent.append(MessageContent(type: .text, texts: [text]))
+        }
+        
+        return Message(
+            role: role,
+            content: messagesContent,
+            model: model
+        )
+    }
+    
+    var hasText: Bool {
+        let textContent = content?.first(where: { !($0.texts?.first?.isEmpty ?? true) })
+        return textContent != nil
+    }
+}
+
+extension Message {
+    
+    mutating func updateFirstContent(text: String?) {
+        guard let text else { return }
+        var contents = content ?? []
+        var obj = contents.first ?? MessageContent(type: .text, texts: [text])
+        if contents.isEmpty {
+            contents.append(obj)
+        } else {
+            contents[0] = obj
+        }
+        self.content = contents
     }
 }

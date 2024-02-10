@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct Tag: Codable {
+    
+    var type: TagType?
+    
+    var value: String?
+}

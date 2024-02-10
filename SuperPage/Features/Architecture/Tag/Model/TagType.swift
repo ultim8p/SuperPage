@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum TagType: String, Codable {
+    
+    case emoji
+}

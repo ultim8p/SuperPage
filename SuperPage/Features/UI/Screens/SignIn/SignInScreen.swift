@@ -25,7 +25,7 @@ struct SignInScreen: View {
 }
 
 struct SignInScreen_Previews: PreviewProvider {
-    
+     
     static var previews: some View {
         SignInScreen()
             .environmentObject(UserInteractor.mock)

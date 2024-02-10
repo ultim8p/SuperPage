@@ -195,7 +195,7 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
         isInput = false
         isTapped = isSelected
         selectedBar.isHidden = !isTapped
-        textView.noSetText(text: message?.text ?? "")
+        textView.noSetText(text: message?.fullTextValue() ?? "")
         textView.isEditable = false
         textView.isSelectable = true
         reloadConstraints(width: width)

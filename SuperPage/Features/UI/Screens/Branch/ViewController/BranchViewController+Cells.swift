@@ -33,7 +33,7 @@ extension BranchViewController: MessageCellDelegate {
         guard let indexPath = collectionView.indexPath(for: item) else { return }
         switch Sections(rawValue: indexPath.section)! {
         case .messages:
-            messages[indexPath.item].text = message
+            messages[indexPath.item].updateFirstContent(text: message)
             updateCollectionLayoutForMessage(isNew: false)
         case .newMessage:
             newMessage = message

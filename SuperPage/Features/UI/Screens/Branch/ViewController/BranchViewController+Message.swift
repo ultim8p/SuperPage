@@ -17,13 +17,24 @@ import Cocoa
 extension BranchViewController {
     
     func sendNewMessage() {
-        guard !newMessage.isEmpty else { return }
-        sendMessageHandler?(newMessage, localModel, Array(selectedMessagesIds.keys))
+        guard !newMessage.isEmpty, let branch else { return }
         
-        let placeholderMessage = Message(role: .user, text: newMessage)
-        messages.append(placeholderMessage)
+        let draftMessage = Message.create(role: .user, text: newMessage)
+        draft = MessageDraft(branch: branch, messages: [draftMessage])
+        
+        chatInteractor.postCreateMessage(
+            text: newMessage,
+            model: localModel,
+            branch: branch,
+            messageIds: Array(selectedMessagesIds.keys)
+        )
+        
+//        let placeholderMessage = Message(role: .user, text: newMessage)
+//        messages.append(placeholderMessage)
+//        appendCellHeightFor(message: placeholderMessage)
+        
+        
         newMessage = ""
-        appendCellHeightFor(message: placeholderMessage)
         collectionView.collectionLayout.invalidateLayout()
         reloadCells()
         updateCollectionLayoutForMessage(isNew: true)

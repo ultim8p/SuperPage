@@ -18,6 +18,8 @@ struct HomeScreen: View {
     @State private var showChatCreation = false
     @State private var showBranchCreation = false
     
+    @State private var showTest = false
+    
     @State private var chatContextMenu: Chat = Chat()
     
     // Selected Chat
@@ -51,13 +53,6 @@ struct HomeScreen: View {
                             saveSettings(systemRole: systemRole, branch: branch)
                         }
                     )
-                    .onChange(of: selectedBranchId) { _ in
-    //                            chatInt.messages = []
-    //                            chatInt.getMessages(branch: branch)
-//                        let settings = chatInt.branchSettings(id: branch.id)
-//                        chatMode = settings["isOn"] as? Bool ?? false
-//                        systemRole = settings["sysRole"] as? String ?? ""
-                    }
                 } else {
                     let hasChats = !chatInt.chats.isEmpty
                     let emptyStateText = hasChats ?
@@ -67,6 +62,12 @@ struct HomeScreen: View {
                 }
             }
             .toolbarBackground(Color.branchBackground, for: .windowToolbar)
+        }
+        .sheet(isPresented: $showTest) {
+            NameEditView(presented: $showTest, placeholder: "Folder name...", title: "Edit Folder name")
+                .onSubmitName { name in
+                    chatInt.editChat(name: name, chat: chatContextMenu)
+                }
         }
         
 //        ZStack {

@@ -107,15 +107,15 @@ extension ChatInteractor {
         }
     }
     
-    func editBranch(name: String, branch: Branch) {
+    func editBranch(branch: Branch, name: String?, promptRole: Role?) {
         setState(branch: branch, loadingState: .loading)
         Task {
             do {
-                let request = Branch(_id: branch._id, name: name)
-                let result = try await repo.editBranch(env: env, branch: request)
+                let request = Branch(_id: branch._id, promptRole: promptRole, name: name)
+                let updatedBranch = try await repo.editBranch(env: env, branch: request)
                 setState(branch: branch, loadingState: .ok)
-                guard result.result == .ok else { return }
-                setBranch(name: name, branch: branch)
+//
+                updateBranch(branch: updatedBranch)
             } catch {
                 setState(branch: branch, state: .ok)
             }
@@ -192,14 +192,15 @@ extension ChatInteractor {
             messageIds: messageIds
         )
         var request = MessagesCreateRequest(context: context)
-        request.messages = [Message(role: .user, text: text)]
+        let creatingMessage = Message.create(role: .user, text: text)
+        request.messages = [creatingMessage]
         request.model = model
         request.branch = BranchReference(_id: branch._id)
         
         let draft = MessageDraft(
             branch: Branch(_id: branch._id),
             messages: [
-                Message(role: .user, text: text)
+                Message.create(role: .user, text: text)
             ]
         )
         setState(branch: branch, state: .creatingMessage, loadingState: .loading)

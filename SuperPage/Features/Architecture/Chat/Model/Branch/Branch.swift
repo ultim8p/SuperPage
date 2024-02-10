@@ -27,6 +27,8 @@ struct Branch: Codable, Identifiable {
     
     var message: MessageReference?
     
+    var promptRole: Role?
+    
     var name: String?
     
     var state: BranchState?
@@ -47,7 +49,9 @@ struct Branch: Codable, Identifiable {
          branch: BranchReference? = nil,
          loadingState: ModelState? = nil,
          message: MessageReference? = nil,
-         name: String? = nil) {
+         promptRole: Role? = nil,
+         name: String? = nil,
+         createMessageError: NoError? = nil) {
         self._id = _id
         self.dateCreated = dateCreated
         self.dateUpdated = dateUpdated
@@ -56,6 +60,31 @@ struct Branch: Codable, Identifiable {
         self.branch = branch
         self.loadingState = loadingState
         self.message = message
+        self.promptRole = promptRole
         self.name = name
+        self.createMessageError = createMessageError
+    }
+}
+
+extension Branch {
+    
+    var promptText: String? {
+        promptRole?.text
+    }
+    
+    var promptEmoj: String? {
+        promptRole?.tags?.first?.value
+    }
+    
+    var hasPromptText: Bool {
+        promptText != nil
+    }
+    
+    var hasPromptEmoji: Bool {
+        promptEmoj != nil
+    }
+    
+    var hasMessages: Bool {
+        messages?.count ?? 0 > 0
     }
 }

@@ -41,7 +41,7 @@ extension BranchViewController {
         case .drafts:
             let cell: MessageCell = collectionView.noReusableCell(for: indexPath)
             cell.configure(
-                text: draft?.messages?.first?.text ?? "",
+                text: draft?.messages?.first?.content?.first?.texts?.first ?? "",
                 editable: false,
                 width: view.bounds.size.width,
                 showSeparator: true
@@ -71,7 +71,7 @@ extension BranchViewController {
             let cellHeight = messageCellHeights[indexPath.item]
             return NOSize(width: collectionView.bounds.size.width, height: cellHeight)
         case .drafts:
-            guard let draftText = draft?.messages?.first?.text else {
+            guard let draftText = draft?.messages?.first?.fullTextValue() else {
                 return NOSize(width: collectionView.bounds.size.width, height: 0.0)
             }
             staticTextView.noSetText(text: draftText)
