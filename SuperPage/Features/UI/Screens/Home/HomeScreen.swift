@@ -10,6 +10,8 @@ import SwiftUI
 
 struct HomeScreen: View {
     
+    @EnvironmentObject var navigationManager: NavigationManager
+    
     @EnvironmentObject var chatInt: ChatInteractor
     
     @State var chatName: String = ""
@@ -30,12 +32,21 @@ struct HomeScreen: View {
     
     var body: some View {
         ZStack {
+            Button(action: {
+                guard let selectedBranchId else { return }
+                navigationManager.editingBranch = chatInt.branch(id: selectedBranchId)
+            }, label: {})
+            .buttonStyle(.borderless)
+            .keyboardShortcut("e", modifiers: .command)
+            
             NavigationSplitView {
                 ChatsListView(
                     branchName: $branchName,
                     showBranchCreation: $showBranchCreation,
                     chatContextMenu: $chatContextMenu,
-                    selectedBranchId: $selectedBranchId)
+                    selectedBranchId: $selectedBranchId,
+                    selectedChat: .constant(nil)
+                )
                 Spacer()
                 HomeToolBar(showChatCreation: $showChatCreation)
             } detail: {

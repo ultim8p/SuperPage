@@ -12,6 +12,8 @@ struct SuperTextEditor: View {
     @Binding var text: String
     @Binding var placeholder: String
     
+    var onShortcut: KeyboardShortcutHandler?
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
@@ -20,8 +22,10 @@ struct SuperTextEditor: View {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.lineSeparator, lineWidth: 1) // Apply a white stroke with desired lineWidth
                 )
-            NOSWUITextEditor(text: $text, placeholder: $placeholder)
-                .padding(5)
+            NOSWUITextEditor(text: $text, placeholder: $placeholder, onShortcut: { shortcut in
+                onShortcut?(shortcut)
+            })
+            .padding(5)
         }
     }
 }

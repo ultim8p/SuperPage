@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+//final class BranchEditViewModel {
+//    
+//    @Binding var name: String
+//    @Binding var role: String
+//    @Binding var emoji: String?
+//    @State var placeholder: String = "Give a personality to the Page by describe how you woult like it to respond, it can be as complex as specific as you wish.\nExamples:\n  - Act as a senior software developer.\n  - Respond by translating every message into French.\n  - Make all responses no longer than a paragraph."
+//    
+//    init(name: String, role: String, emoji: String? = nil, placeholder: String) {
+//        self._name = name
+//        self._role = role
+//        self._emoji = emoji
+//        self._placeholder = placeholder
+//    }
+//}
+
 struct BranchEditView: View {
     
     @EnvironmentObject var chatInteractor: ChatInteractor
@@ -15,18 +30,21 @@ struct BranchEditView: View {
     
     @State private var showingEmojiPicker = false
     
-    @Binding private var name: String
-    @Binding private var role: String
-    @Binding private var emoji: String?
-    @State private var placeholder: String = "Give a personality to the Page by describe how you woult like it to respond, it can be as complex as specific as you wish.\nExamples:\n  - Act as a senior software developer.\n  - Respond by translating every message into French.\n  - Make all responses no longer than a paragraph."
+    var isCreating: Bool = false
+    
+    @State private var name: String
+    @State private var role: String
+    @State private var emoji: String?
+    @State private var placeholder: String = "Give a personality to the Page by describe how you would like it to respond, it can be as complex or specific as you wish.\nExamples:\n  - Act as a senior software developer.\n  - Respond by translating every message into French.\n  - Make all responses no longer than a paragraph."
     
     typealias EditedHandler = ((_ name: String?, _ role: String?, _ emoji: String?) -> Void)
     var editedHandler: EditedHandler?
     
-    init(name: Binding<String>, role: Binding<String>, emoji: Binding<String?>, editedHandler: EditedHandler? = nil) {
-        _name = name
-        _role = role
-        _emoji = emoji
+    init(isCreating: Bool, name: String?, role: String?, emoji: String?, editedHandler: EditedHandler? = nil) {
+        self.isCreating = isCreating
+        self._name = State(initialValue: name ?? "")
+        self._role = State(initialValue: role ?? "")
+        self._emoji = State(initialValue: emoji)
         self.editedHandler = editedHandler
     }
     
@@ -60,19 +78,24 @@ struct BranchEditView: View {
                 
                 VStack {
                     Text("Personality")
-                    SuperTextEditor(text: $role, placeholder: $placeholder)
+                    SuperTextEditor(text: $role, placeholder: $placeholder) { shortcut in
+                        switch shortcut {
+                        case .commandEnter:
+                            didSave()
+                        default:
+                            break
+                        }
+                    }
                 }
                 .padding(.leading)
                 .padding(.trailing)
-                
                 
                 HStack {
                     BarButton(backgroundColor: .alert, titleColor: .spDefaultText, title: "Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }
-                    BarButton(backgroundColor: .spAction, titleColor: .spDefaultText, title: "Save") {
+                    BarButton(backgroundColor: .spAction, titleColor: .spDefaultText, title: isCreating ? "Create" : "Save") {
                         didSave()
-                        presentationMode.wrappedValue.dismiss()
                     }
                 }
                 .padding()
@@ -86,6 +109,8 @@ struct BranchEditView: View {
         let savedName = name.isEmpty ? nil : name
         let savedRole = role.isEmpty ? nil : role
         editedHandler?(savedName, savedRole, emoji)
+        presentationMode.wrappedValue.dismiss()
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

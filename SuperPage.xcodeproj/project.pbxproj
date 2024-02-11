@@ -122,6 +122,7 @@
 		A057F5032A81412B0084E4F6 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057F5022A81412B0084E4F6 /* ChatRow.swift */; };
 		A057F5052A8145FE0084E4F6 /* BranchRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057F5042A8145FE0084E4F6 /* BranchRow.swift */; };
 		A057F5092A8174640084E4F6 /* UserDefaults+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057F5082A8174640084E4F6 /* UserDefaults+Helpers.swift */; };
+		A06CCFDB2B78645300ADEC48 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06CCFDA2B78645300ADEC48 /* NavigationManager.swift */; };
 		A08230522B74844900350016 /* MessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230512B74844900350016 /* MessageContent.swift */; };
 		A08230542B74855E00350016 /* MessageContentImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230532B74855E00350016 /* MessageContentImage.swift */; };
 		A08230562B759D4900350016 /* NOTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230552B759D4900350016 /* NOTextViewCell.swift */; };
@@ -260,6 +261,7 @@
 		A057F5022A81412B0084E4F6 /* ChatRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRow.swift; sourceTree = "<group>"; };
 		A057F5042A8145FE0084E4F6 /* BranchRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchRow.swift; sourceTree = "<group>"; };
 		A057F5082A8174640084E4F6 /* UserDefaults+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Helpers.swift"; sourceTree = "<group>"; };
+		A06CCFDA2B78645300ADEC48 /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		A08230512B74844900350016 /* MessageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContent.swift; sourceTree = "<group>"; };
 		A08230532B74855E00350016 /* MessageContentImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentImage.swift; sourceTree = "<group>"; };
 		A08230552B759D4900350016 /* NOTextViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOTextViewCell.swift; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 		A01CA27E29D0B39A00AEB258 /* Architecture */ = {
 			isa = PBXGroup;
 			children = (
+				A06CCFD92B78644600ADEC48 /* Navigation */,
 				A0EEA8112AC2323A00C137A3 /* Role */,
 				A0EEA8102AC22BD700C137A3 /* Tag */,
 				A009F15229D3ED4F0045F311 /* AIModel */,
@@ -1065,6 +1068,14 @@
 			path = Defaults;
 			sourceTree = "<group>";
 		};
+		A06CCFD92B78644600ADEC48 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				A06CCFDA2B78645300ADEC48 /* NavigationManager.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 		A082305D2B75FE2A00350016 /* TextField */ = {
 			isa = PBXGroup;
 			children = (
@@ -1334,6 +1345,7 @@
 				A03A1C6F29D526D700158E95 /* Tokens.swift in Sources */,
 				A03645AF29E6EA0600D524BB /* CollectionView+Cells.swift in Sources */,
 				A08230642B760BB500350016 /* EmojiPickerView.swift in Sources */,
+				A06CCFDB2B78645300ADEC48 /* NavigationManager.swift in Sources */,
 				A03645F129E89DD900D524BB /* BranchViewController+Cells.swift in Sources */,
 				A01CA27329D02E6500AEB258 /* SystemImage.swift in Sources */,
 				A01CA2A129D0E70800AEB258 /* AuthenticationInteractor+API.swift in Sources */,

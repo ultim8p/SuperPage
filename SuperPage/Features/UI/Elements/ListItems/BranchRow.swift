@@ -14,6 +14,8 @@ struct BranchRow: View {
     
     @Binding var branch: Branch
     
+    @Binding var selectedBranchId: Branch.ID?
+    
     // MARK: Actions
     
     @Binding var branchContextMenu: Branch
@@ -26,50 +28,74 @@ struct BranchRow: View {
     
     var editPressed: (() -> Void)?
     
+    var selectionHandler: (() -> Void)?
+    
     var body: some View {
-        HStack {
-            let hasError = branch.createMessageError != nil
-            let loading = branch.loadingState == .loading || branch.state == .creatingMessage
-            let name = branch.name ?? "No name"
+        let isSelected = selectedBranchId == branch.id
+        ZStack {
+            HStack(spacing: 0) {
+                let hasError = branch.createMessageError != nil
+                let loading = branch.loadingState == .loading || branch.state == .creatingMessage
+                let name = branch.name ?? "No name"
+                
+                let imageName: String = hasError ?
+                SystemImage.exclamationMarkOctagon.rawValue :
+                branch.hasPromptText ?
+                SystemImage.docBadgeEllipsis.rawValue :
+                SystemImage.doc.rawValue
+                
+                let font: Font = .system(size: 14, weight: .regular)
+                let color: Color = .spDefaultText
             
-            let imageName: String = hasError ?
-            SystemImage.exclamationMarkOctagon.rawValue :
-            branch.hasPromptText ?
-            SystemImage.docBadgeEllipsis.rawValue :
-            SystemImage.doc.rawValue
-            
-            let font: Font = .body
-            let darkMode = colorScheme == .dark
-            let color: Color = darkMode ?
-            Color(CGColor(gray: 0.7, alpha: 1)) :
-            Color(red: 0.0, green: 0.0, blue: 0.0)
-        
-            if let emoji = branch.promptEmoj {
-                Text(emoji)
-                    .font(.body)
-                    .padding(.leading, -3.0)
-                    .padding(.trailing, -2.0)
-            } else {
-                let iconColor: Color = hasError ? .red : .cyan
-                Image(systemName: imageName)
-                    .foregroundColor(iconColor)
+                ZStack {
+                    if let emoji = branch.promptEmoj {
+                        Text(emoji)
+                            .font(font)
+                    } else {
+                        let iconColor: Color = hasError ? .red : .cyan
+                        Image(systemName: imageName)
+                            .foregroundColor(iconColor)
+                            .font(font)
+                    }
+                }
+                .frame(width: 22.0, height: 22.0)
+                
+                
+                Text(name)
                     .font(font)
+                    .foregroundStyle(color)
+                Spacer()
+                if loading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .frame(width: 20.0, height: 20.0)
+                    #if os(macOS)
+                        .scaleEffect(0.4)
+                    #endif
+                }
             }
-            
-            Text(name)
-                .font(font)
-                .foregroundColor(color)
-            Spacer()
-            if loading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    .frame(width: 20.0, height: 20.0)
-                #if os(macOS)
-                    .scaleEffect(0.5)
-                #endif
-            }
+            .padding(.leading, 30)
+            .padding(.trailing, 12)
         }
-        .padding(.leading, 24)
+        .frame(maxWidth: .infinity)
+        .frame(height: 22.0)
+        .background(
+            Group {
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 6)
+                        .strokeBorder(Color.spAction, lineWidth: 1) // Use strokeBorder for the border line
+                        .padding(.leading, 8)
+                        .padding(.trailing, 8)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    Color.clear
+                }
+            }
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            selectionHandler?()
+        }
         .contextMenu {
             Button("Edit") {
                 branchContextMenu = branch
@@ -100,8 +126,10 @@ struct BranchRow_Previews: PreviewProvider {
     static var previews: some View {
         BranchRow(
             branch: .constant(Branch(name: "Test Page")),
+            selectedBranchId: .constant(nil),
             branchContextMenu: .constant(Branch()),
-            showBranchDeleteAlert: .constant(false))
+            showBranchDeleteAlert: .constant(false)
+        )
         .environmentObject(ChatInteractor.mock)
     }
 }

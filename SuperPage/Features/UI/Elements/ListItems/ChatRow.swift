@@ -16,26 +16,45 @@ struct ChatRow: View {
     
     @Binding var chatContextMenu: Chat
     
+    @Binding var selectedChatId: Chat.ID?
+    
     @Binding var showBranchCreation: Bool
     
     @Binding var showEditChat: Bool
     
     @Binding var showChatDeleteAlert: Bool
     
+    var selectionHandler: (() -> Void)?
+    
     var body: some View {
         let expanded = chat.expanded ?? false
+        let isSelected = selectedChatId == chat.id
+        
         FileRow(
             name: chat.name ?? "No name",
-            folder: true,
             isExpanded: expanded,
             loading: chat.state == .loading,
             hasError: false
         )
+        .frame(maxWidth: .infinity)
+        .frame(height: 22.0)
+        .background(
+            Group {
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.spAction)
+                        .padding(.leading, 8)
+                        .padding(.trailing, 8)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    Color.clear
+                }
+            }
+        )
+    
         .contentShape(Rectangle())
         .onTapGesture {
-            withAnimation {
-                chatInt.toggleExpand(chat: chat)
-            }
+            selectionHandler?()
         }
         .contextMenu {
             Button("Create Page") {
@@ -69,9 +88,11 @@ struct ChatRow_Previews: PreviewProvider {
         ChatRow(
             chat: .constant(Chat(name: "Test Chat")),
             chatContextMenu: .constant(Chat()),
+            selectedChatId: .constant(nil),
             showBranchCreation: .constant(false),
             showEditChat: .constant(false),
-            showChatDeleteAlert: .constant(false))
+            showChatDeleteAlert: .constant(false)
+        )
             .environmentObject(ChatInteractor.mock)
     }
 }

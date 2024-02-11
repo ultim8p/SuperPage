@@ -38,8 +38,14 @@ extension Color {
         return Color("textPlaceholder")
     }
     
+    // Highlights
+    
     static var spAction: Color {
         return Color("action")
+    }
+    
+    static var spActionSecondary: Color {
+        return Color("actionSecondary")
     }
 }
 

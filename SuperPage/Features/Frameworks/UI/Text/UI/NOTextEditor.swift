@@ -17,6 +17,8 @@ import Cocoa
 protocol NOTextEditorDelegate: AnyObject {
     
     func noTextEditor(_ editor: NOTextEditor, didChangeText text: String)
+    
+    func noTextEditor(_ editor: NOTextEditor, didPerform shortcut: KeyboardShortcut)
 }
 
 class NOTextEditor: PlatformView {
@@ -191,6 +193,7 @@ extension NOTextEditor: NOTextViewCellDelegate {
         case .commandN:
             break
         }
+        delegate?.noTextEditor(self, didPerform: shortcut)
     }
     
     func noTextViewCellWillUpdateMessage(_ cell: NOTextViewCell) {

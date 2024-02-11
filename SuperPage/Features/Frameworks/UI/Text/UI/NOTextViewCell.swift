@@ -70,6 +70,10 @@ class NOTextViewCell: PCollectionViewCell, ClassNameProtocol {
             .trail(to: noContentView)
             .bottom(to: noContentView)
             .top(to: noContentView)
+        
+        textView.register(closure: {
+            self.delegate?.noTextViewCell(self, didPerform: .commandEnter)
+        }, for: .commandEnter)
     }
     
     func reloadPlaceholder() {

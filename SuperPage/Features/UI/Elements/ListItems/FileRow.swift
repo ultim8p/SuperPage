@@ -11,7 +11,6 @@ import SwiftUI
 struct FileRow: View {
     
     let name: String
-    let folder: Bool
     let isExpanded: Bool
     let loading: Bool
     let hasError: Bool
@@ -20,42 +19,45 @@ struct FileRow: View {
     
     var body: some View {
         
-        let leadingSpace: CGFloat = folder ? 0.0 : 24
-        
-        HStack {
-            let imageName: String = hasError ?
-            SystemImage.exclamationMarkOctagon.rawValue :
-            folder ?
-            SystemImage.folder.rawValue :
-            SystemImage.docText.rawValue
-            
-            let font: Font = .body
-            let darkMode = colorScheme == .dark
-            let color: Color = darkMode ?
-            folder ? .white : Color(CGColor(gray: 0.7, alpha: 1)) :
-            folder ? .black : Color(red: 0.0, green: 0.0, blue: 0.0)
-            if folder {
+        ZStack {
+            HStack {
                 Image(systemName: SystemImage.chevronRight.rawValue)
+                    .font(.system(size: 10, weight: .bold))
                     .rotationEffect(Angle(degrees: isExpanded ? 90.0 : 0.0))
+                Spacer()
             }
-            let iconColor: Color = hasError ? .red : .cyan
-            Image(systemName: imageName)
-                .foregroundColor(iconColor)
-                .font(font)
-            Text(name)
-                .font(font)
-                .foregroundColor(color)
-            Spacer()
-            if loading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    .frame(width: 20.0, height: 20.0)
-                #if os(macOS)
-                    .scaleEffect(0.5)
-                #endif
+            .padding(.leading, 10)
+            
+            HStack(spacing: 0) {
+                let imageName: String = hasError ?
+                SystemImage.exclamationMarkOctagon.rawValue : SystemImage.folder.rawValue
+                
+                let font: Font = .system(size: 14, weight: .regular)
+                let color: Color = .spDefaultText
+                
+                let iconColor: Color = hasError ? .red : .cyan
+                Image(systemName: imageName)
+                    .foregroundColor(iconColor)
+                    .font(font)
+                    .frame(width: 22.0, height: 22.0)
+                Text(name)
+                    .font(font)
+                    .foregroundStyle(color)
+                    .padding(.leading, 2)
+                Spacer()
+                if loading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .frame(width: 20.0, height: 20.0)
+                    #if os(macOS)
+                        .scaleEffect(0.4)
+                    #endif
+                }
             }
+            .padding(.leading, 22)
+            .padding(.trailing, 12)
         }
-        .padding(.leading, leadingSpace)
+        .padding(.leading, 8)
     }
     
 }
@@ -63,6 +65,6 @@ struct FileRow: View {
 struct FileRow_Previews: PreviewProvider {
                             
     static var previews: some View {
-        FileRow(name: "Test File", folder: false, isExpanded: true, loading: false, hasError: false)
+        FileRow(name: "Test File", isExpanded: true, loading: false, hasError: false)
     }
 }

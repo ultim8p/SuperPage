@@ -12,6 +12,8 @@ struct ChatsListView: View {
     
     // MARK: Environment
     
+    @EnvironmentObject var navigationManager: NavigationManager
+    
     @EnvironmentObject var chatInt: ChatInteractor
     
     // MARK: Branch
@@ -21,8 +23,6 @@ struct ChatsListView: View {
     @Binding var showBranchCreation: Bool
     
     @Binding var chatContextMenu: Chat
-    
-    @Binding var selectedBranchId: Chat.ID?
     
     // MARK: Modals
     
@@ -38,66 +38,60 @@ struct ChatsListView: View {
     
     @State var showEditBranch: Bool = false
     
-    // MARK: Editing
+    // MARK: Selection
     
-    @State var editingName: String = ""
+    @Binding var selectedBranchId: Branch.ID?
     
-    @State var editingRole: String = ""
+    @State var selectedChatId: Chat.ID?
     
-    @State var editingEmoji: String? = nil
-    
-    @State var editingBranch: Branch = Branch()
+    @Binding var selectedChat: Chat?
     
     var body: some View {
-        List(chatInt.chats, selection: $selectedBranchId) { chat in
-                ChatRow(chat: .constant(chat),
+        ZStack {
+            ScrollView {
+                ForEach(chatInt.chats) { chat in
+                    ChatRow(
+                        chat: .constant(chat),
                         chatContextMenu: $chatContextMenu,
+                        selectedChatId: $selectedChatId,
                         showBranchCreation: $showBranchCreation,
                         showEditChat: $showEditChat,
-                        showChatDeleteAlert: $showChatDeleteAlert)
-                
-                if chat.expanded ?? false {
-                    ForEach(chat.branches ?? []) { branch in
-                        BranchRow(
-                            branch: .constant(branch),
-                            branchContextMenu: $branchContextMenu,
-                            showBranchDeleteAlert: $showBranchDeleteAlert,
-                            editPressed: {
-                                self.editingName = branch.name ?? ""
-                                self.editingRole = branch.promptRole?.text ?? ""
-                                self.editingEmoji = branch.promptEmoj ?? ""
-                                self.editingBranch = branch
-                                self.showEditBranch = true
+                        showChatDeleteAlert: $showChatDeleteAlert,
+                        selectionHandler: {
+                            withAnimation {
+                                selectedChat = chat
+                                selectedChatId = chat.id
+                                chatInt.toggleExpand(chat: chat)
                             }
-                        )
+                        }
+                    )
+                    
+                    if chat.expanded ?? false {
+                        ForEach(chat.branches ?? []) { branch in
+                            BranchRow(
+                                branch: .constant(branch),
+                                selectedBranchId: $selectedBranchId,
+                                branchContextMenu: $branchContextMenu,
+                                showBranchDeleteAlert: $showBranchDeleteAlert,
+                                editPressed: {
+                                    navigationManager.editingBranch = branch
+                                },
+                                selectionHandler: {
+                                    selectedBranchId = branch.id
+                                }
+                            )
+                        }
                     }
                 }
-            
+            }
         }
+        .clipped()
         .background(Color.homeBackground)
-        .listRowInsets(.init())
-        .listRowBackground(Color.clear)
         .sheet(isPresented: $showEditChat) {
             NameEditView(presented: $showEditChat, placeholder: "Folder name...", title: "Edit Folder name")
                 .onSubmitName { name in
                     chatInt.editChat(name: name, chat: chatContextMenu)
                 }
-        }
-        .sheet(isPresented: $showEditBranch) {
-            BranchEditView(
-                name: $editingName, role: $editingRole, emoji: $editingEmoji) { name, role, emoji in
-                    var tags: [Tag]?
-                    if let emoji {
-                        tags = [Tag(type: .emoji, value: emoji)]
-                    }
-                    let role = Role(tags: tags, text: role)
-                    chatInt.editBranch(branch: editingBranch, name: name, promptRole: role)
-                }
-            //            NameEditView(presented: $showEditBranch, placeholder: "Page name...", title: "Edit Page name")
-            //                .onSubmitName { name in
-            //                    chatInt.editBranch(name: name, branch: branchContextMenu)
-            //                }
-            //        }
         }
     }
 }
@@ -203,12 +197,6 @@ struct ChatsListView: View {
                     chatInt.editChat(name: name, chat: chatContextMenu)
                 }
         }
-        .sheet(isPresented: $showEditBranch) {
-            NameEditView(presented: $showEditBranch, placeholder: "Page name...", title: "Edit Page name")
-                .onSubmitName { name in
-                    chatInt.editBranch(name: name, branch: branchContextMenu)
-                }
-        }
     }
 }
 */
@@ -222,7 +210,9 @@ struct ChatsList_Previews: PreviewProvider {
             branchName: .constant(""),
             showBranchCreation: .constant(false),
             chatContextMenu: .constant(Chat()),
-            selectedBranchId: .constant(nil))
+            selectedBranchId: .constant(nil),
+            selectedChat: .constant(nil)
+        )
         .environmentObject(ChatInteractor.mock)
     }
 }

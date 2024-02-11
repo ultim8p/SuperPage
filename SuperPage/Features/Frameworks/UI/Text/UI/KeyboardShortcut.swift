@@ -14,6 +14,8 @@ import AppKit
 import Cocoa
 #endif
 
+typealias KeyboardShortcutHandler = ((_ shortcut: KeyboardShortcut) -> Void)
+
 enum KeyboardShortcut {
     
     case commandP
