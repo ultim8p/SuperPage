@@ -26,34 +26,42 @@ struct HomeScreen: View {
     
     // Selected Chat
     
-    @State var selectedBranchId: Branch.ID?
-    
     @State var systemRole: String = ""
     
     var body: some View {
         ZStack {
             Button(action: {
-                guard let selectedBranchId else { return }
+                guard let selectedBranchId = navigationManager.selectedBranchId else { return }
                 navigationManager.editingBranch = chatInt.branch(id: selectedBranchId)
             }, label: {})
             .buttonStyle(.borderless)
             .keyboardShortcut("e", modifiers: .command)
+            
+            Button(action: {
+                guard
+                    let chatId = navigationManager.selectedChatId,
+                    let chat = chatInt.chat(for: chatId)?.chat
+                else { return }
+                navigationManager.fromChatCreatingBranch = chat
+            }, label: {})
+            .buttonStyle(.borderless)
+            .keyboardShortcut("p", modifiers: .command)
             
             NavigationSplitView {
                 ChatsListView(
                     branchName: $branchName,
                     showBranchCreation: $showBranchCreation,
                     chatContextMenu: $chatContextMenu,
-                    selectedBranchId: $selectedBranchId,
                     selectedChat: .constant(nil)
                 )
                 Spacer()
                 HomeToolBar(showChatCreation: $showChatCreation)
             } detail: {
-                if let selectedBranchId, let branch = chatInt.branch(id: selectedBranchId) {
+                if let selectedBranchId = navigationManager.selectedBranchId,
+                   let branch = chatInt.branch(id: selectedBranchId) {
                     BranchViewControllerWrapper(
                         systemRole: $systemRole,
-                        selectedBranchId: $selectedBranchId,
+                        selectedBranchId: $navigationManager.selectedBranchId,
                         chatInteractor: chatInt,
                         sendMessageHandler: { message, model, messageIds in
                             print("should send msg")
@@ -74,12 +82,49 @@ struct HomeScreen: View {
             }
             .toolbarBackground(Color.branchBackground, for: .windowToolbar)
         }
-        .sheet(isPresented: $showTest) {
-            NameEditView(presented: $showTest, placeholder: "Folder name...", title: "Edit Folder name")
-                .onSubmitName { name in
-                    chatInt.editChat(name: name, chat: chatContextMenu)
-                }
-        }
+        
+        .sheet(
+            item: $navigationManager.editingBranch,
+            onDismiss: {},
+            content: { branch in
+                BranchEditView(
+                    isCreating: branch._id == nil,
+                    name: branch.name,
+                    role: branch.promptRole?.text,
+                    emoji: branch.promptEmoj,
+                    editedHandler: { name, role, emoji in
+                        guard branch._id != nil else { return }
+                        var tags: [Tag]?
+                        if let emoji {
+                            tags = [Tag(type: .emoji, value: emoji)]
+                        }
+                        let role = Role(tags: tags, text: role)
+                        chatInt.editBranch(branch: branch, name: name, promptRole: role)
+                    }
+                )
+            }
+        )
+        .sheet(
+            item: $navigationManager.fromChatCreatingBranch,
+            onDismiss: {},
+            content: { chat in
+                BranchCreateView(
+                    selectedChatId: chat.id) { name, role, emoji in
+                        var tags: [Tag]?
+                        if let emoji {
+                            tags = [Tag(type: .emoji, value: emoji)]
+                        }
+                        let role = Role(tags: tags, text: role)
+                        chatInt.createBranch(name: name, promptRole: role, chat: chat)
+                    }
+            }
+        )
+//        .sheet(isPresented: $showTest) {
+//            NameEditView(presented: $showTest, placeholder: "Folder name...", title: "Edit Folder name")
+//                .onSubmitName { name in
+//                    chatInt.editChat(name: name, chat: chatContextMenu)
+//                }
+//        }
         
 //        ZStack {
             /*

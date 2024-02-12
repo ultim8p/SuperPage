@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ChatRow: View {
     
+    @EnvironmentObject var navigationManager: NavigationManager
+    
     @EnvironmentObject var chatInt: ChatInteractor
     
     @Binding var chat: Chat
@@ -17,8 +19,6 @@ struct ChatRow: View {
     @Binding var chatContextMenu: Chat
     
     @Binding var selectedChatId: Chat.ID?
-    
-    @Binding var showBranchCreation: Bool
     
     @Binding var showEditChat: Bool
     
@@ -58,8 +58,8 @@ struct ChatRow: View {
         }
         .contextMenu {
             Button("Create Page") {
-                chatContextMenu = chat
-                showBranchCreation = true
+//                chatContextMenu = chat
+                navigationManager.fromChatCreatingBranch = chat
             }
             Button("Rename Folder") {
                 chatContextMenu = chat
@@ -89,7 +89,6 @@ struct ChatRow_Previews: PreviewProvider {
             chat: .constant(Chat(name: "Test Chat")),
             chatContextMenu: .constant(Chat()),
             selectedChatId: .constant(nil),
-            showBranchCreation: .constant(false),
             showEditChat: .constant(false),
             showChatDeleteAlert: .constant(false)
         )

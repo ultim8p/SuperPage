@@ -51,6 +51,30 @@ extension ChatInteractor {
     func branch(id: Branch.ID) -> Branch? {
         chats.branch(id: id)
     }
+    
+    func previousChatId(from chatId: Chat.ID) -> Chat.ID? {
+        let chatCount = chats.count
+        guard 
+            chatCount > 0,
+            let chatIndex = chats.firstIndex(where: { $0.id == chatId })
+        else { return nil }
+        
+        let previousIndex = chatIndex - 1
+        guard previousIndex >= 0 else { return chats[chatCount - 1].id }
+        return chats[previousIndex].id
+    }
+    
+    func nextChatId(from chatId: Chat.ID) -> Chat.ID? {
+        let chatCount = chats.count
+        guard
+            chatCount > 0,
+            let chatIndex = chats.firstIndex(where: { $0.id == chatId })
+        else { return nil }
+        
+        let nextIndex = chatIndex + 1
+        guard nextIndex < chatCount else { return chats[0].id }
+        return chats[nextIndex].id
+    }
 }
 
 // MARK: - Updating Model

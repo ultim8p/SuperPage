@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @StateObject var navigationManager = NavigationManager()
+    
     @EnvironmentObject private var userInt: UserInteractor
     @EnvironmentObject private var authInt: AuthenticationInteractor
     @EnvironmentObject private var chatInt: ChatInteractor
@@ -16,9 +18,11 @@ struct ContentView: View {
     var body: some View {
         if userInt.state.isSignedIn {
             HomeScreen()
+                .environmentObject(navigationManager)
         } else {
             SignInScreen()
         }
+            
     }
 }
 

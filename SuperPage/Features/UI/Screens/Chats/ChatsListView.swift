@@ -40,10 +40,6 @@ struct ChatsListView: View {
     
     // MARK: Selection
     
-    @Binding var selectedBranchId: Branch.ID?
-    
-    @State var selectedChatId: Chat.ID?
-    
     @Binding var selectedChat: Chat?
     
     var body: some View {
@@ -53,14 +49,13 @@ struct ChatsListView: View {
                     ChatRow(
                         chat: .constant(chat),
                         chatContextMenu: $chatContextMenu,
-                        selectedChatId: $selectedChatId,
-                        showBranchCreation: $showBranchCreation,
+                        selectedChatId: $navigationManager.selectedChatId,
                         showEditChat: $showEditChat,
                         showChatDeleteAlert: $showChatDeleteAlert,
                         selectionHandler: {
                             withAnimation {
                                 selectedChat = chat
-                                selectedChatId = chat.id
+                                navigationManager.selectedChatId = chat.id
                                 chatInt.toggleExpand(chat: chat)
                             }
                         }
@@ -70,14 +65,14 @@ struct ChatsListView: View {
                         ForEach(chat.branches ?? []) { branch in
                             BranchRow(
                                 branch: .constant(branch),
-                                selectedBranchId: $selectedBranchId,
+                                selectedBranchId: $navigationManager.selectedBranchId,
                                 branchContextMenu: $branchContextMenu,
                                 showBranchDeleteAlert: $showBranchDeleteAlert,
                                 editPressed: {
                                     navigationManager.editingBranch = branch
                                 },
                                 selectionHandler: {
-                                    selectedBranchId = branch.id
+                                    navigationManager.selectedBranchId = branch.id
                                 }
                             )
                         }
@@ -87,12 +82,6 @@ struct ChatsListView: View {
         }
         .clipped()
         .background(Color.homeBackground)
-        .sheet(isPresented: $showEditChat) {
-            NameEditView(presented: $showEditChat, placeholder: "Folder name...", title: "Edit Folder name")
-                .onSubmitName { name in
-                    chatInt.editChat(name: name, chat: chatContextMenu)
-                }
-        }
     }
 }
 
@@ -210,7 +199,6 @@ struct ChatsList_Previews: PreviewProvider {
             branchName: .constant(""),
             showBranchCreation: .constant(false),
             chatContextMenu: .constant(Chat()),
-            selectedBranchId: .constant(nil),
             selectedChat: .constant(nil)
         )
         .environmentObject(ChatInteractor.mock)

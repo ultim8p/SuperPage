@@ -54,8 +54,10 @@ struct BranchEditView: View {
                 .ignoresSafeArea(.all)
             
             VStack {
-                VStack {
+                VStack(spacing: 0) {
                     Text("Name")
+                        .foregroundStyle(Color.spDefaultText)
+                        .padding(.bottom, -9)
                     HStack {
                         EmojiSelectView(emoji: emoji)
                             .onTapGesture {
@@ -66,18 +68,17 @@ struct BranchEditView: View {
                                 content: {
                                     EmojiPickerView(selectedEmoji: $emoji)
                                 })
-                        
-                        SuperTextField(text: $name)
-                        
+                        SuperTextField(placeholder: "Page Name", text: $name)
                     }
                 }
                 .padding(.leading)
                 .padding(.trailing)
-                .padding(.top)
                 .padding(.bottom)
                 
-                VStack {
-                    Text("Personality")
+                VStack(spacing: 0) {
+                    Text("Assistant")
+                        .foregroundStyle(Color.spDefaultText)
+                        .padding(.bottom, 8)
                     SuperTextEditor(text: $role, placeholder: $placeholder) { shortcut in
                         switch shortcut {
                         case .commandEnter:
@@ -94,30 +95,34 @@ struct BranchEditView: View {
                     BarButton(backgroundColor: .alert, titleColor: .spDefaultText, title: "Cancel") {
                         presentationMode.wrappedValue.dismiss()
                     }
-                    BarButton(backgroundColor: .spAction, titleColor: .spDefaultText, title: isCreating ? "Create" : "Save") {
+                    BarButton(backgroundColor: .spAction, titleColor: .spDefaultText, title: "Save") {
                         didSave()
                     }
                 }
                 .padding()
             }
-            .frame(minWidth: 350, minHeight: 350)
+#if os(macOS)
+            .frame(minWidth: 400, minHeight: 400)
+#else
+            .frame(minWidth: 350)
+#endif
             .padding()
         }
     }
     
     func didSave() {
+        guard !name.isEmpty else { return }
         let savedName = name.isEmpty ? nil : name
         let savedRole = role.isEmpty ? nil : role
         editedHandler?(savedName, savedRole, emoji)
         presentationMode.wrappedValue.dismiss()
-        presentationMode.wrappedValue.dismiss()
     }
 }
 
-//struct ElementSheetView_Previews: PreviewProvider {
+struct ElementSheetView_Previews: PreviewProvider {
                             
-//    static var previews: some View {
-//        BranchEditView(name: "My branch", role: "Description", emoji: "@")
-//            .environmentObject(ChatInteractor.mock)
-//    }
-//}
+    static var previews: some View {
+        BranchEditView(isCreating: false, name: "My branch", role: "Description", emoji: nil)
+            .environmentObject(ChatInteractor.mock)
+    }
+}

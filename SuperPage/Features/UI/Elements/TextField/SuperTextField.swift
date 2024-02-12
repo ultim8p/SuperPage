@@ -9,21 +9,23 @@ import SwiftUI
 
 struct SuperTextField: View {
     
+    let placeholder: String
     @Binding var text: String
+    let placeholderColor: Color = .spDefaultText
     
     var body: some View {
-        ZStack {
-            TextField("", text: $text)
+        ZStack(alignment: .leading) {
+            TextField("", text: $text) // Actual text field
                 .textFieldStyle(.plain)
                 .padding(10)
                 .font(.headline)
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Color.white) // Text input color
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.branchBackground)
+                        .fill(Color("branchBackground")) // Replace with your actual color
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.lineSeparator, lineWidth: 1)
+                                .stroke(Color("lineSeparator"), lineWidth: 1) // Replace with your actual color
                         )
                 )
                 .padding()

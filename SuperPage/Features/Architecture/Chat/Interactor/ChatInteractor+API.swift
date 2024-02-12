@@ -92,11 +92,11 @@ extension ChatInteractor {
     
     // MARK: POST
     
-    func createBranch(name: String?, chat: Chat) {
+    func createBranch(name: String?, promptRole: Role?, chat: Chat) {
         setState(chat: chat, state: .loading)
         Task {
             do {
-                let branchRequest = Branch(chat: chat, name: name)
+                let branchRequest = Branch(chat: chat, promptRole: promptRole, name: name)
                 let response = try await repo.postChatsBranchesCreate(env: env, branch: branchRequest)
                 setState(chat: chat, state: .ok)
                 addBranch(response)
