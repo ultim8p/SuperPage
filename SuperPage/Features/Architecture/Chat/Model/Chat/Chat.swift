@@ -136,7 +136,13 @@ extension Array where Element == Chat {
     
     mutating func addBranch(_ branch: Branch) {
         guard let chatQ = self.chat(for: branch.chat?._id) else { return }
-        self[chatQ.index].branches?.append(branch)
+        var branches = self[chatQ.index].branches ?? []
+        if branches.isEmpty {
+            branches = [branch]
+        } else {
+            branches.append(branch)
+        }
+        self[chatQ.index].branches = branches
         self[chatQ.index].state = nil
     }
     

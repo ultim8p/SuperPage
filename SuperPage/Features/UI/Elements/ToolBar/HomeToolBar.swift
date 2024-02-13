@@ -22,13 +22,15 @@ struct ButtonIconStyle: ButtonStyle {
 
 struct HomeToolBar: View {
     
+    @EnvironmentObject var navigationManager: NavigationManager
+    
     @Binding var showChatCreation: Bool
     
     var body: some View {
         HStack {
             Spacer()
             Button {
-                showChatCreation = !showChatCreation
+                navigationManager.creatingChat = Chat()
             } label: {
                 Image(systemName: SystemImage.folderBadgePlus.rawValue)
                     .foregroundColor(.cyan)

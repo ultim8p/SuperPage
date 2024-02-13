@@ -38,10 +38,15 @@ struct HomeScreen: View {
             .keyboardShortcut("e", modifiers: .command)
             
             Button(action: {
-                guard
-                    let chatId = navigationManager.selectedChatId,
-                    let chat = chatInt.chat(for: chatId)?.chat
-                else { return }
+                var chat: Chat? = nil
+                if let chatId = navigationManager.selectedChatId,
+                   let selectedChat = chatInt.chat(for: chatId)?.chat {
+                    chat = selectedChat
+                } else if let firstChat = chatInt.chats.first {
+                    chat = firstChat
+                }
+                guard let chat else { return }
+                
                 navigationManager.fromChatCreatingBranch = chat
             }, label: {})
             .buttonStyle(.borderless)
@@ -69,7 +74,7 @@ struct HomeScreen: View {
                         },
                         saveContextHandler: { systemRole in
                             print("should have settings")
-                            saveSettings(systemRole: systemRole, branch: branch)
+//                            saveSettings(systemRole: systemRole, branch: branch)
                         }
                     )
                 } else {
@@ -104,6 +109,7 @@ struct HomeScreen: View {
                 )
             }
         )
+        
         .sheet(
             item: $navigationManager.fromChatCreatingBranch,
             onDismiss: {},
@@ -119,36 +125,18 @@ struct HomeScreen: View {
                     }
             }
         )
-//        .sheet(isPresented: $showTest) {
-//            NameEditView(presented: $showTest, placeholder: "Folder name...", title: "Edit Folder name")
-//                .onSubmitName { name in
-//                    chatInt.editChat(name: name, chat: chatContextMenu)
-//                }
-//        }
         
-//        ZStack {
-            /*
-            VStack {
-                ChatsListView(
-                    branchName: $branchName,
-                    showBranchCreation: $showBranchCreation,
-                    chatContextMenu: $chatContextMenu)
-                Spacer()
-                HomeToolBar(showChatCreation: $showChatCreation)
+        .sheet(item: $navigationManager.creatingChat) { chat in
+            ChatCreateView { name in
+                chatInt.createChat(name: name)
             }
-            if showChatCreation {
-                ChatCreationView(presented: $showChatCreation, name: $chatName)
+        }
+        
+        .sheet(item: $navigationManager.editingChat, onDismiss: {}) { chat in
+            ChatEditView(name: chat.name ?? "") { name in
+                chatInt.editChat(name: name, chat: chat)
             }
-            if showBranchCreation {
-                BranchCreationView(
-                    presented: $showBranchCreation,
-                    name: $branchName,
-                    chat: $chatContextMenu)
-            }
-             */
-//        }
-//        .padding(.bottom)
-//        .ignoresSafeArea(edges: [.bottom])
+        }
     }
 }
 
@@ -162,13 +150,6 @@ extension HomeScreen {
             branch: branch,
             messageIds: messageIds
         )
-    }
-    
-    func saveSettings(systemRole: String, branch: Branch) {
-        self.systemRole = systemRole
-        let settings: [String: Any] = [
-            "sysRole": systemRole]
-        chatInt.saveBranchSettings(id: branch.id, settings: settings)
     }
 }
 

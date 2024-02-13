@@ -52,9 +52,23 @@ struct BranchCreateView: View {
             
             VStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    Text("Name")
+                    HStack {
+                        Text("Create Page")
+                            .font(.system(.largeTitle, weight: .black))
+                            .foregroundStyle(Color.spDefaultText)
+                            .padding(.leading, 0)
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Text("Name")
                         .foregroundStyle(Color.spDefaultText)
                         .padding(.bottom, -9)
+                        .padding(.top, 10)
+                        .padding(.leading, 64)
+                        Spacer()
+                }
+                        
                     HStack {
                         EmojiSelectView(emoji: emoji)
                             .onTapGesture {
@@ -74,9 +88,12 @@ struct BranchCreateView: View {
                 .padding(.bottom)
                 
                 VStack(spacing: 0) {
-                    Text("Assistant")
-                        .foregroundStyle(Color.spDefaultText)
-                        .padding(.bottom, 8)
+                    HStack {
+                        Text("Assistant")
+                            .foregroundStyle(Color.spDefaultText)
+                            .padding(.bottom, 8)
+                        Spacer()
+                    }
                     SuperTextEditor(text: $role, placeholder: $placeholder) { shortcut in
                         switch shortcut {
                         case .commandEnter:

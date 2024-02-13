@@ -61,9 +61,8 @@ struct ChatRow: View {
 //                chatContextMenu = chat
                 navigationManager.fromChatCreatingBranch = chat
             }
-            Button("Rename Folder") {
-                chatContextMenu = chat
-                showEditChat = true
+            Button("Edit Folder") {
+                navigationManager.editingChat = chat
             }
             Button("Delete Folder") {
                 chatContextMenu = chat

@@ -97,12 +97,11 @@ struct BranchRow: View {
             selectionHandler?()
         }
         .contextMenu {
-            Button("Edit") {
+            Button("Edit Page") {
                 branchContextMenu = branch
-//                showEditBranch = true
                 editPressed?()
             }
-            Button("Delete") {
+            Button("Delete Page") {
                 branchContextMenu = branch
                 showBranchDeleteAlert = true
             }

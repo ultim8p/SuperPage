@@ -34,8 +34,6 @@ class SendMessageToolBar: NOView {
     
     let messagesSelectedButton: PlatformButton = PlatformButton.noButton(image: .square)
     
-    let attatchmentButton: PlatformButton = PlatformButton.noButton(image: .paperclip)
-    
     let modelButton: PlatformButton = PlatformButton()
     
     let messagesCountLabel = NOTextView(frame: .zero, textContainer: nil)
@@ -81,17 +79,9 @@ class SendMessageToolBar: NOView {
         
         spinner = NOSpinner.noSpinner(inView: contentView, centerTo: sendButton)
         
-        contentView.addSubview(attatchmentButton)
-        attatchmentButton
-            .safeLead(to: contentView, const: 0.0)
-            .top(to: contentView)
-            .bottom(to: contentView)
-            .width(Constant.contentHeight)
-        attatchmentButton.noTarget(self, action: #selector(systemRoleAction))
-        
         contentView.addSubview(messagesSelectedButton)
         messagesSelectedButton
-            .onRight(to: attatchmentButton, const: 0.0)
+        safeLead(to: contentView, const: 0.0)
             .top(to: contentView).bottom(to: contentView).width(Constant.contentHeight)
         messagesSelectedButton.noTarget(self, action: #selector(messagesSelectedButtonAction))
         
@@ -154,10 +144,6 @@ class SendMessageToolBar: NOView {
         messagesSelectedHandler?()
     }
     
-    @objc private func systemRoleAction() {
-        systemRoleHandler?()
-    }
-    
     @objc private func modelButtonAction() {
         modelHandler?()
     }
@@ -166,21 +152,9 @@ class SendMessageToolBar: NOView {
         
     }
     
-    func set(systemRole: Bool) {
-        attatchmentButton.noSetImage(systemRole ? .paperclipBadgeEllipsis : .paperclip)
-    }
-    
     func set(aiModel: AIModel) {
         model = aiModel
         reloadProgressState()
         modelButton.no(setTitle: "🤖 \(aiModel.displayName ?? "")")
-    }
-    
-    func systemRoleFrame() -> PlatformRect {
-        return PlatformRect(
-            x: contentView.frame.origin.x + attatchmentButton.frame.origin.x,
-            y: 0.0,
-            width: attatchmentButton.bounds.size.width,
-            height: attatchmentButton.bounds.size.height)
     }
 }

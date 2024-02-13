@@ -17,4 +17,8 @@ class NavigationManager: ObservableObject {
     
     @Published var fromChatCreatingBranch: Chat?
     
+    @Published var creatingChat: Chat?
+    
+    @Published var editingChat: Chat?
+    
 }
