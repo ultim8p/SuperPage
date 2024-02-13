@@ -170,7 +170,7 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
         ownerBubble.top(to: cardView, const: 1.0).lead(to: cardView, const: 0.0)
         placeholderTextView.formatters = [TextFormat.placeholder(nil)]
         placeholderTextView.onFull(to: textView)
-        placeholderTextView.noSetText(text: "Type...\n\nShortcuts:\n · [⌘ + M] To change AI model.\n · [⌘ + E] To edit the Page’s properties.\n · [⌘ + P] To create a new Page.\n · [⌘ + K] To quickly navigate through Pages.")
+        placeholderTextView.noSetText(text: "Type...\n\nShortcuts:\n · [⌘ + ENTER] To to submit.\n · [⌘ + M] To change AI model.\n · [⌘ + E] To edit the Page’s properties.\n · [⌘ + P] To create a new Page.\n · [⌘ + K] To quickly navigate through Pages.")
         placeholderTextView.isEditable = false
         placeholderTextView.isSelectable = false
     }

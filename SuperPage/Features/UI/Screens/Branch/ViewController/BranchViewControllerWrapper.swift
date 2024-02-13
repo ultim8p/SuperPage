@@ -52,20 +52,15 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
     func makeViewController() -> BranchViewController {
         let viewController = BranchViewController(
-            systemRole: systemRole, localSystemRole: systemRole,
             selectedBranchId: selectedBranchId,
             chatInteractor: chatInteractor
         )
         viewController.sendMessageHandler = sendMessageHandler
-        viewController.saveContextHandler = saveContextHandler
         return viewController
     }
     
     func updateViewController(_ viewController: BranchViewController, context: Context) {
         viewController.selectedBranchId = selectedBranchId
         viewController.sendMessageHandler = sendMessageHandler
-        viewController.saveContextHandler = saveContextHandler
-        viewController.systemRole = systemRole
-        viewController.localSystemRole = _systemRole.wrappedValue
     }
 }

@@ -34,8 +34,6 @@ class BranchViewController: NOViewController {
     
     var stateWidthConstraint: NSLayoutConstraint!
     
-    var systemRoleView: AttatchmentView!
-    
     var models = AIModel.allModels
     var localModel = AIModel.allModels.first!
     
@@ -67,17 +65,7 @@ class BranchViewController: NOViewController {
     
     var messages: [Message] = []
     
-    var systemRole: String
-    
-    var localSystemRole: String {
-        didSet {
-            toolBar?.set(systemRole: !localSystemRole.isEmpty)
-        }
-    }
-    
     var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
-    
-    var saveContextHandler: ((_ systemRole: String) -> Void)?
     
     var newMessage: String = ""
     
@@ -94,12 +82,9 @@ class BranchViewController: NOViewController {
     }
     
     init(
-         systemRole: String, localSystemRole: String,
          selectedBranchId: Branch.ID?,
          chatInteractor: ChatInteractor
     ) {
-        self.systemRole = systemRole
-        self.localSystemRole = localSystemRole
         self.chatInteractor = chatInteractor
         super.init(nibName: nil, bundle: nil)
         self.selectedBranchId = selectedBranchId
@@ -288,10 +273,6 @@ class BranchViewController: NOViewController {
         toolBar = SendMessageToolBar.setup(in: view)
         toolBar.onSend(handler: sendNewMessage)
         
-        toolBar.onSystemRole {
-            self.showSystemRole()
-        }
-        
         toolBar.messagesSelected {
             if self.hasMessageSelection {
                 self.deselectMessages()
@@ -328,28 +309,8 @@ class BranchViewController: NOViewController {
         staticTextView.isHidden = true
     }
     
-    private func showSystemRole() {
-        guard systemRoleView == nil else {
-            systemRoleView.popover?.noDismiss(animated: true)
-            return
-        }
-        
-        systemRoleView = AttatchmentView()
-        let fromRect = toolBar.systemRoleFrame()
-        let size = NODevice.popoverSize(for: view.frame.size)
-        systemRoleView.show(in: self, fromRect: fromRect, relativeTo: toolBar.frame, size: size)
-        systemRoleView.onTextChange { text in
-            self.localSystemRole = text
-        }
-        systemRoleView.set(text: localSystemRole)
-        systemRoleView.popover?.onDismiss(handler: {
-            self.saveContext()
-            self.systemRoleView = nil
-        })
-    }
-    
     func saveContext() {
-        saveContextHandler?(localSystemRole)
+        
     }
     
     private func setupCollectionView() {
@@ -479,10 +440,6 @@ class BranchViewController: NOViewController {
         let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
         let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
         messageCellHeights.append(textHeight)
-    }
-    
-    func set(systemRole: String) {
-        localSystemRole = systemRole
     }
     
     func reloadStateConstraints() {

@@ -20,8 +20,6 @@ class SendMessageToolBar: NOView {
     
     var messagesSelectedHandler: (() -> Void)?
     
-    var systemRoleHandler: (() -> Void)?
-    
     var modelHandler: (() -> Void)?
     
     let contentView: NOView = NOView()
@@ -81,7 +79,7 @@ class SendMessageToolBar: NOView {
         
         contentView.addSubview(messagesSelectedButton)
         messagesSelectedButton
-        safeLead(to: contentView, const: 0.0)
+            .safeLead(to: contentView, const: 0.0)
             .top(to: contentView).bottom(to: contentView).width(Constant.contentHeight)
         messagesSelectedButton.noTarget(self, action: #selector(messagesSelectedButtonAction))
         
@@ -126,10 +124,6 @@ class SendMessageToolBar: NOView {
     
     func messagesSelected(handler: (() -> Void)?) {
         self.messagesSelectedHandler = handler
-    }
-    
-    func onSystemRole(handler: (() -> Void)?) {
-        self.systemRoleHandler = handler
     }
         
     func onModel(handler: (() -> Void)?) {
