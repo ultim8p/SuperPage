@@ -24,6 +24,10 @@ class SettingsInteractor: ObservableObject {
     func inject(env: EnvironmentInteractor) {
         self.env = env
     }
+    
+    func loadInitialState() {
+        reloadSetttings()
+    }
 }
 
 extension SettingsInteractor {

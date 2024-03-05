@@ -24,36 +24,49 @@ struct HomeToolBar: View {
     
     @EnvironmentObject var navigationManager: NavigationManager
     
+    @EnvironmentObject var chatInt: ChatInteractor
+    
     @Binding var showChatCreation: Bool
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             Spacer()
-            Button {
+            CompButton {
                 navigationManager.creatingChat = Chat()
             } label: {
-                Image(systemName: SystemImage.folderBadgePlus.rawValue)
-                    .foregroundColor(.cyan)
+                CompIcon(size: .medium, iconSize: .custom(38), icon: .folderBadgePlus, color: .highlight, weight: .regular)
             }
-            .buttonStyle(ButtonIconStyle())
             Spacer()
-            Button {
-//                showChatCreation = !showChatCreation
+            CompButton {
+                var chat: Chat? = nil
+                if let chatId = navigationManager.selectedChatId,
+                   let selectedChat = chatInt.chat(for: chatId)?.chat {
+                    chat = selectedChat
+                } else if let firstChat = chatInt.chats.first {
+                    chat = firstChat
+                }
+                guard let chat else { return }
+                
+                navigationManager.fromChatCreatingBranch = chat
             } label: {
-                Image(systemName: SystemImage.textMagnifyingGlass.rawValue)
-                    .foregroundColor(.cyan)
-                    
+                CompIcon(size: .small, iconSize: .custom(32), icon: .docBadgePlus, color: .highlight, weight: .regular)
             }
-            .buttonStyle(ButtonIconStyle())
             Spacer()
-            NavLink(destination: SettingsScreen()) {
-                Image(systemName: SystemImage.gearShape.rawValue)
-                    .foregroundColor(.cyan)
-                    .font(.title)
+            CompButton {
+                
+            } label: {
+                CompIcon(size: .small, iconSize: .custom(30), icon: .textMagnifyingGlass, color: .highlight, weight: .light)
             }
-            .buttonStyle(ButtonIconStyle())
             Spacer()
-        }.padding([.bottom, .top])
+            CompButton {
+                navigationManager.openSettings()
+            } label: {
+                CompIcon(size: .small, iconSize: .custom(30), icon: .gearShape, color: .highlight, weight: .regular)
+            }
+            Spacer()
+        }
+        .frame(height: 50.0)
+        .compBackground(color: .mainSecondary, shape: .rectangle)
     }
 }
 
@@ -61,5 +74,7 @@ struct HomeToolBar_Previews: PreviewProvider {
     
     static var previews: some View {
         HomeToolBar(showChatCreation: .constant(false))
+            .environmentObject(NavigationManager.mock)
+            .environmentObject(ChatInteractor.mock)
     }
 }

@@ -48,7 +48,7 @@ struct ChatCreateView: View {
                     }
                     
                     HStack {
-                        SuperTextField(placeholder: "Folder Name", text: $name)
+                        SuperTextField(placeholder: "Folder Name", text: $name, editing: true)
                     }
                     
                     HStack {

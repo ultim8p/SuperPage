@@ -8,6 +8,44 @@
 import Foundation
 import SwiftUI
 
+enum AppColor: String {
+    
+    // Main
+    
+    case main = "branchBackground"
+    
+    case mainSecondary = "homeBackground"
+    
+    // Primary
+    
+    case primary = "action"
+    
+    // Secondary
+    
+    case secondary = "actionSecondary"
+    
+    // Alert
+    
+    case alert = "alert"
+    
+    // Contrast
+    
+    case contrast = "codeDefaultText"
+    
+    case contrastSecondary = "lineSeparator"
+    
+    // Highlight
+    
+    case highlight = "icon"
+    
+    case clear
+    
+    var color: Color {
+        if self == .clear { return Color.clear }
+        return Color(rawValue)
+    }
+}
+
 extension Color {
     
     static var branchBackground: Color {
@@ -36,6 +74,10 @@ extension Color {
     
     static var spPlaceholder: Color {
         return Color("textPlaceholder")
+    }
+    
+    static var spMarkdownCode: Color {
+        return Color("markdownCode")
     }
     
     // Highlights
@@ -100,6 +142,10 @@ class SuperColor {
     
     static var codeBlock: NOColor {
         return NOColor(named: "codeBlock")!
+    }
+    
+    static var markdownCode: NOColor {
+        return NOColor(named: "markdownCode")!
     }
     
     // INDICATORS

@@ -15,7 +15,7 @@ struct SignInScreen: View {
     
     var body: some View {
         VStack {
-            Text(userInteractor.state.user?.username ?? "")
+            
             AppleSignInButton(handler: { credential in
                 authInteractor.postLogin(credential: credential)
             })

@@ -11,11 +11,11 @@ import NoAPI
 extension APIRequestable {
     
     func responseValue<T: Codable>() async throws -> T {
-        return try await response().baseValue()
+        return try await setTimeout(interval: 60 * 10).response().baseValue()
     }
     
     func responseOptionalValue<T: Codable>() async throws -> T? {
-        return try await response().baseOptionalValue()
+        return try await setTimeout(interval: 60 * 10).response().baseOptionalValue()
     }
 }
 

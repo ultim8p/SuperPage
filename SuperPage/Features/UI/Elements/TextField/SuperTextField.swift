@@ -13,9 +13,14 @@ struct SuperTextField: View {
     @Binding var text: String
     let placeholderColor: Color = .spDefaultText
     
+    var editing: Bool = false
+    
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
         ZStack(alignment: .leading) {
-            TextField("", text: $text) // Actual text field
+            TextField("", text: $text)
+                .focused($isFocused)
                 .textFieldStyle(.plain)
                 .padding(10)
                 .font(.headline)
@@ -29,6 +34,13 @@ struct SuperTextField: View {
                         )
                 )
                 .padding()
+                .onAppear {
+                    if editing {
+                        DispatchQueue.main.async {
+                            self.isFocused = editing
+                        }
+                    }
+                }
         }
     }
 }

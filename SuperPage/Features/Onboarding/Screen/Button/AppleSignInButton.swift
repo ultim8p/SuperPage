@@ -9,18 +9,12 @@ import SwiftUI
 import AuthenticationServices
 
 struct AppleSignInButton: View {
-    @Environment(\.colorScheme) var colorScheme
     
     typealias Handler = (_ credential: ASAuthorizationAppleIDCredential) -> Void
     var handler: Handler?
 
     var body: some View {
-      if colorScheme.self == .dark {
-          SignInButton(SignInWithAppleButton.Style.whiteOutline)
-      }
-      else {
-          SignInButton(SignInWithAppleButton.Style.black)
-      }
+        SignInButton(SignInWithAppleButton.Style.black)
     }
 
     func SignInButton(_ type: SignInWithAppleButton.Style) -> some View{
@@ -36,7 +30,7 @@ struct AppleSignInButton: View {
                 print("Authorisation failed: \(error.localizedDescription)")
             }
         }
-        .frame(width: 280, height: 60, alignment: .center)
+        .frame(width: 300, height: 50)
         .signInWithAppleButtonStyle(type)
     }
 }

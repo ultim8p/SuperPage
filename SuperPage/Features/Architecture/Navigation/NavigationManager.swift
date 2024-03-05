@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-class NavigationManager: ObservableObject {
+enum NavDestination: Hashable {
+    case branch(_ id: Branch.ID)
+}
+
+final class NavigationManager: ObservableObject {
     
     @Published var selectedChatId: Chat.ID?
     
@@ -21,4 +25,24 @@ class NavigationManager: ObservableObject {
     
     @Published var editingChat: Chat?
     
+    @Published var sheetSettings: Bool = false
+    
+    @Published var sheetUpgrade: Bool = false
+    
+    @Published var sheetTokenStore: Bool = false
+    
+    func openBranch(id: Branch.ID) {
+        selectedBranchId = id
+    }
+    
+    func openSettings() {
+        sheetSettings = true
+    }
+}
+
+extension NavigationManager {
+    
+    static var mock: NavigationManager {
+        NavigationManager()
+    }
 }

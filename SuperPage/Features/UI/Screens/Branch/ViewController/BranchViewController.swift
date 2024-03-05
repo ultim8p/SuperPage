@@ -26,7 +26,7 @@ class BranchViewController: NOViewController {
     
     var staticTextView = NOTextView(frame: .zero, textContainer: nil)
     
-    var toolBar: SendMessageToolBar!
+//    var toolBar: SendMessageToolBar!
     
     var wasScrolledToBottom = false
     
@@ -39,12 +39,13 @@ class BranchViewController: NOViewController {
     
     var errorView = ErrorView()
     
-    var selectedMessagesIndexPaths: [IndexPath: Bool] = [:]
-    var selectedMessagesIds: [String: Bool] = [:]
-    
     // MARK: - StateVariables
     
     var chatInteractor: ChatInteractor
+    
+    var branchEditState: BranchEditState
+    
+    var selectedMessages: Set<String> = []
     
     private var _selectedBranchId: Branch.ID?
     var selectedBranchId: Branch.ID? {
@@ -83,9 +84,11 @@ class BranchViewController: NOViewController {
     
     init(
          selectedBranchId: Branch.ID?,
-         chatInteractor: ChatInteractor
+         chatInteractor: ChatInteractor,
+         branchEditState: BranchEditState
     ) {
         self.chatInteractor = chatInteractor
+        self.branchEditState = branchEditState
         super.init(nibName: nil, bundle: nil)
         self.selectedBranchId = selectedBranchId
     }
@@ -139,7 +142,7 @@ class BranchViewController: NOViewController {
     // MARK: Setup
     
     func setupView() {
-        setupToolBar()
+//        setupToolBar()
         setupTextView()
         setupCollectionView()
         setupPopUps()
@@ -165,6 +168,26 @@ class BranchViewController: NOViewController {
         chatInteractor.$drafts.sink { [weak self] drafts in
             self?.didUpdate(drafts: drafts)
         }.store(in: &cancellables)
+        
+        branchEditState.$newMessage.sink { [weak self] newMessage in
+//            guard let self else { return }
+//            if newMessage.isEmpty && !self.newMessage.isEmpty {
+//                print("BTST: did reset msg")
+//                self.newMessage = ""
+//                collectionView.collectionLayout.invalidateLayout()
+//                reloadCells()
+//                updateCollectionLayoutForMessage(isNew: true)
+//            }
+        }.store(in: &cancellables)
+        
+        branchEditState.$selectedMessages.sink { [weak self] selectedMessages in
+            self?.didUpdateSelectedMessages(selectedMessages)
+        }.store(in: &cancellables)
+    }
+    
+    func didUpdateSelectedMessages(_ messages: Set<String>) {
+        selectedMessages = messages
+        reloadCells()
     }
     
     func didUpdateChats(_ chats: [Chat]) {
@@ -180,11 +203,11 @@ class BranchViewController: NOViewController {
         messages = branch.messages ?? []
         
         if hasDraft && hasError {
-            newMessage = draft?.messages?.first?.fullTextValue() ?? ""
+//            newMessage = draft?.messages?.first?.fullTextValue() ?? ""
         }
         
         reloadCells()
-        reloadToolBarState()
+//        reloadToolBarState()
         reloadErrorState()
 //        selectDefaultMessages()
         
@@ -216,7 +239,7 @@ class BranchViewController: NOViewController {
         
         self.draft = draft
         if branch?.state != .creatingMessage {
-            newMessage = draft.messages?.first?.fullTextValue() ?? ""
+//            newMessage = draft.messages?.first?.fullTextValue() ?? ""
         }
         reloadCells()
     }
@@ -269,34 +292,18 @@ class BranchViewController: NOViewController {
 #endif
     }
     
-    private func setupToolBar() {
-        toolBar = SendMessageToolBar.setup(in: view)
-        toolBar.onSend(handler: sendNewMessage)
-        
-        toolBar.messagesSelected {
-            if self.hasMessageSelection {
-                self.deselectMessages()
-                self.saveContext()
-            } else {
-                self.selectDefaultMessages()
-            }
-        }
-        
-        toolBar.onModel { [weak self] in
-            guard let self else { return }
-            guard !models.isEmpty else { return }
-
-            if let currentIndex = models.firstIndex(where: { $0.name == self.localModel.name }) {
-                if currentIndex == models.count - 1 {
-                    self.localModel = models[0]
-                } else {
-                    self.localModel = models[currentIndex + 1]
-                }
-            }
-            
-            self.reloadToolBarState()
-        }
-    }
+//    private func setupToolBar() {
+//        toolBar = SendMessageToolBar.setup(in: view)
+//        toolBar.onSend(handler: sendNewMessage)
+//        
+//        toolBar.messagesSelected {
+//            if self.hasMessageSelection {
+//                self.deselectMessages()
+//                self.saveContext()
+//            } else {
+//                self.selectDefaultMessages()
+//            }
+//        }
     
     var textWidth: CGFloat {
         NODevice.readableWidth(for: view.bounds.size.width)
@@ -307,10 +314,6 @@ class BranchViewController: NOViewController {
         staticTextView.backgroundColor = NOColor.gray
         staticTextView.lead(to: view).top(to: view)
         staticTextView.isHidden = true
-    }
-    
-    func saveContext() {
-        
     }
     
     private func setupCollectionView() {
@@ -329,10 +332,10 @@ class BranchViewController: NOViewController {
         scrollView.documentView = collectionView
         scrollView.drawsBackground = false
         view.addSubview(scrollView)
-        scrollView.onFullTop(to: view).onTop(to: toolBar)
+        scrollView.onFull(to: view)
 #elseif os(iOS)
         view.addSubview(collectionView)
-        collectionView.onFullTop(to: view).onTop(to: toolBar)
+        collectionView.onFull(to: view)
 #endif
     }
     
@@ -359,60 +362,23 @@ class BranchViewController: NOViewController {
 //        error != nil
 //    }
     
-    func isSelected(at indexPath: IndexPath) -> Bool {
-        guard let hasMessage = selectedMessagesIndexPaths[indexPath] else { return false }
-        return hasMessage
-    }
-    
     func isSelected(message: Message?) -> Bool {
-        guard let id = message?._id, let hasMessage = selectedMessagesIds[id] else { return false }
-        return hasMessage
+        guard let id = message?._id else { return false }
+        return selectedMessages.contains(id)
     }
     
     func toggleSelection(at indexPath: IndexPath) {
         guard let message = item(at: indexPath), let id = message._id else { return }
         
-        if selectedMessagesIndexPaths[indexPath] == true {
-            selectedMessagesIndexPaths.removeValue(forKey: indexPath)
-            selectedMessagesIds.removeValue(forKey: id)
-        } else {
-            selectedMessagesIndexPaths[indexPath] = true
-            selectedMessagesIds[id] = true
-        }
-        
-        reloadToolBarState()
+        branchEditState.toggleMessageSelection(id: id)
     }
-    
     
     var hasMessageSelection: Bool {
-        selectedMessagesIds.count > 0
-    }
-    
-    func deselectMessages() {
-        selectedMessagesIndexPaths = [:]
-        selectedMessagesIds = [:]
-        reloadToolBarState()
-        reloadCells()
-    }
-    
-    func selectDefaultMessages() {
-        guard
-            messages.count >= 2
-        else { return }
-        let message1 = messages[messagesCount() - 1]
-        let message2 = messages[messagesCount() - 2]
-         
-        selectedMessagesIds[message1.id] = true
-        selectedMessagesIds[message2.id] = true
-        selectedMessagesIndexPaths[IndexPath(item: messagesCount() - 1, section: Sections.messages.rawValue)] = true
-        selectedMessagesIndexPaths[IndexPath(item: messagesCount() - 2, section: Sections.messages.rawValue)] = true
-        
-        reloadCells()
-        reloadToolBarState()
+        !selectedMessages.isEmpty
     }
     
     func reloadItem(at indexPath: IndexPath) {
-        let visibleItems = collectionView.visibleItems()
+        let visibleItems = collectionView.noVisibleCells
         for visibleItem in visibleItems {
             guard
                 let visibleIndexPath = collectionView.indexPath(for: visibleItem),
@@ -443,7 +409,7 @@ class BranchViewController: NOViewController {
     }
     
     func reloadStateConstraints() {
-        toolBar.reloadConstraints()
+
     }
     
     func loadBranch(_ branchId: Branch.ID?) {
@@ -454,24 +420,19 @@ class BranchViewController: NOViewController {
         
         guard branchId != branch?._id, let branch = chatInteractor.branch(id: branchId) else { return }
         
+        print("BRST: did load branch ViewControlle")
+        
         self.branch = branch
         messages = branch.messages ?? []
         draft = chatInteractor.draft(for: branch)
         newMessage = draft?.messages?.first?.fullTextValue() ?? ""
         
-        selectedMessagesIndexPaths = [:]
-        selectedMessagesIds = [:]
-        
-        reloadToolBarState()
         reloadCells()
         scrollToBottom()
         reloadErrorState()
         
         chatInteractor.getDraft(branch: branch)
         chatInteractor.getMessages(branch: branch)
-        
-//        let role = Role(tags: [Tag(type: .emoji, value: "👨‍💻")], text: "Reply every message with a funny hummor")
-//        chatInteractor.editBranch(branch: branch, name: branch.name, promptRole: role)
     }
     
     func scrollToBottom() {
@@ -482,7 +443,6 @@ class BranchViewController: NOViewController {
         branch = nil
         draft = nil
         messages = []
-        reloadToolBarState()
         reloadCells()
     }
     
@@ -492,12 +452,6 @@ class BranchViewController: NOViewController {
         reloadStateConstraints()
         collectionView?.reloadData()
         view.reloadLayoutIfNeeded()
-    }
-    
-    func reloadToolBarState() {
-        toolBar.set(loading: isLoading || isCreating)
-        toolBar.set(aiModel: localModel)
-        toolBar.updateMessageSelection(count: messagesCount(), selectedCount: selectedMessagesIds.count)
     }
     
     // MARK: - Datasource

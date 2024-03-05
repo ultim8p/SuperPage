@@ -16,6 +16,7 @@ import Cocoa
 
 extension BranchViewController {
     
+    /*
     func sendNewMessage() {
         guard !newMessage.isEmpty, let branch else { return }
         
@@ -29,9 +30,7 @@ extension BranchViewController {
             messageIds: Array(selectedMessagesIds.keys)
         )
         
-//        let placeholderMessage = Message(role: .user, text: newMessage)
-//        messages.append(placeholderMessage)
-//        appendCellHeightFor(message: placeholderMessage)
+
         
         
         newMessage = ""
@@ -39,4 +38,9 @@ extension BranchViewController {
         reloadCells()
         updateCollectionLayoutForMessage(isNew: true)
     }
+    */
+    
+    //        let placeholderMessage = Message(role: .user, text: newMessage)
+    //        messages.append(placeholderMessage)
+    //        appendCellHeightFor(message: placeholderMessage)
 }

@@ -19,7 +19,11 @@ extension BranchViewController: MessageCellDelegate {
     func messageCell(_ item: MessageCell, didPerform shortcut: KeyboardShortcut) {
         switch shortcut {
         case .commandEnter:
-            sendNewMessage()
+            branchEditState.sendMessage()
+            newMessage = ""
+            collectionView.collectionLayout.invalidateLayout()
+            reloadCells()
+            updateCollectionLayoutForMessage(isNew: true)
         default:
             break
         }
@@ -37,6 +41,7 @@ extension BranchViewController: MessageCellDelegate {
             updateCollectionLayoutForMessage(isNew: false)
         case .newMessage:
             newMessage = message
+            branchEditState.newMessage = message
             updateCollectionLayoutForMessage(isNew: false)
         default:
             break

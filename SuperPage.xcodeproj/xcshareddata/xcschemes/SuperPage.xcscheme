@@ -50,6 +50,9 @@
             ReferencedContainer = "container:SuperPage.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../../SuperPage/Features/Purchases/SuperPageProducts.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

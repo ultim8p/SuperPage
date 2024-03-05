@@ -82,7 +82,7 @@ struct BranchEditView: View {
                                 content: {
                                     EmojiPickerView(selectedEmoji: $emoji)
                                 })
-                        SuperTextField(placeholder: "Page Name", text: $name)
+                        SuperTextField(placeholder: "Page Name", text: $name, editing: true)
                     }
                 }
                 .padding(.leading)
@@ -92,11 +92,14 @@ struct BranchEditView: View {
                 VStack(spacing: 0) {
                     HStack {
                         Text("Assistant")
-                            .foregroundStyle(Color.spDefaultText)
-                            .padding(.bottom, 8)
+                            .font(.system(.body))
+                            .foregroundColor(AppColor.contrast.color) +
+                         Text(" (Optional)")
+                            .font(.system(.caption))
+                            .foregroundColor(AppColor.contrastSecondary.color)
                             Spacer()
                     }
-                    
+                    .padding(.bottom, 8)
                     SuperTextEditor(text: $role, placeholder: $placeholder) { shortcut in
                         switch shortcut {
                         case .commandEnter:

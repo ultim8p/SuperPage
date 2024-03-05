@@ -32,50 +32,52 @@ struct BranchRow: View {
     
     var body: some View {
         let isSelected = selectedBranchId == branch.id
-        ZStack {
-            HStack(spacing: 0) {
-                let hasError = branch.createMessageError != nil
-                let loading = branch.loadingState == .loading || branch.state == .creatingMessage
-                let name = branch.name ?? "No name"
+        
+            ZStack {
+                HStack(spacing: 0) {
+                    let hasError = branch.createMessageError != nil
+                    let loading = branch.loadingState == .loading || branch.state == .creatingMessage
+                    let name = branch.name ?? "No name"
+                    
+                    let imageName: String = hasError ?
+                    SystemImage.exclamationMarkOctagon.rawValue :
+                    branch.hasPromptText ?
+                    SystemImage.docBadgeEllipsis.rawValue :
+                    SystemImage.doc.rawValue
+                    
+                    let font: Font = .system(size: 14, weight: .regular)
+                    let color: Color = .spDefaultText
                 
-                let imageName: String = hasError ?
-                SystemImage.exclamationMarkOctagon.rawValue :
-                branch.hasPromptText ?
-                SystemImage.docBadgeEllipsis.rawValue :
-                SystemImage.doc.rawValue
-                
-                let font: Font = .system(size: 14, weight: .regular)
-                let color: Color = .spDefaultText
-            
-                ZStack {
-                    if let emoji = branch.promptEmoj {
-                        Text(emoji)
-                            .font(font)
-                    } else {
-                        let iconColor: Color = hasError ? .red : .cyan
-                        Image(systemName: imageName)
-                            .foregroundColor(iconColor)
-                            .font(font)
+                    ZStack {
+                        if let emoji = branch.promptEmoj {
+                            Text(emoji)
+                                .font(font)
+                        } else {
+                            let iconColor: Color = hasError ? .red : .cyan
+                            Image(systemName: imageName)
+                                .foregroundColor(iconColor)
+                                .font(font)
+                        }
+                    }
+                    .frame(width: 22.0, height: 22.0)
+                    
+                    
+                    Text(name)
+                        .font(font)
+                        .foregroundStyle(color)
+                    Spacer()
+                    if loading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .frame(width: 20.0, height: 20.0)
+                        #if os(macOS)
+                            .scaleEffect(0.4)
+                        #endif
                     }
                 }
-                .frame(width: 22.0, height: 22.0)
-                
-                
-                Text(name)
-                    .font(font)
-                    .foregroundStyle(color)
-                Spacer()
-                if loading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .frame(width: 20.0, height: 20.0)
-                    #if os(macOS)
-                        .scaleEffect(0.4)
-                    #endif
-                }
-            }
-            .padding(.leading, 30)
-            .padding(.trailing, 12)
+                .padding(.leading, 30)
+                .padding(.trailing, 12)
+        
         }
         .frame(maxWidth: .infinity)
         .frame(height: 22.0)

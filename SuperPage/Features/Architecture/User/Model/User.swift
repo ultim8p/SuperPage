@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Codable, Identifiable {
+struct User: Codable, Identifiable, Hashable {
     
     var id: String { _id ?? UUID().uuidString }
     
@@ -18,4 +18,5 @@ struct User: Codable, Identifiable {
     var dateUpdated: Date?
     
     var username: String?
+    
 }

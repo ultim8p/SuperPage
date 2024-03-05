@@ -18,19 +18,22 @@ extension ChatInteractor {
             do {
                 let response = try await repo.getChatsAllMe(env: env)
                 self.chats = response.items ?? []
+                self.loadingChatsState = .ok
             } catch {
                 print("CHAT ERR: \(error)")
+                self.loadingChatsState = .error(error)
             }
         }
     }
     
     // MARK: POST
     
-    func createChat(name: String?) {
+    func createChat(name: String?, handler: ((_ chatId: String) -> Void)? = nil) {
         Task {
             do {
                 let chat = try await repo.postChatsCreate(env: env, chat: Chat(name: name))
                 chats.append(chat)
+                handler?(chat.id)
             } catch {
                 print("CREATE CHAT ERR: \(error)")
             }
@@ -92,7 +95,7 @@ extension ChatInteractor {
     
     // MARK: POST
     
-    func createBranch(name: String?, promptRole: Role?, chat: Chat) {
+    func createBranch(name: String?, promptRole: Role?, chat: Chat, handler: ((_ id: String) -> Void)? = nil) {
         setState(chat: chat, state: .loading)
         Task {
             do {
@@ -100,6 +103,7 @@ extension ChatInteractor {
                 let response = try await repo.postChatsBranchesCreate(env: env, branch: branchRequest)
                 setState(chat: chat, state: .ok)
                 addBranch(response)
+                handler?(response.id)
             }
             catch {
                 setState(chat: chat, state: .error(error))
@@ -217,6 +221,8 @@ extension ChatInteractor {
                 setState(branch: branch, state: .ok, loadingState: .ok)
                 setError(branch: branch, createMessageError: nil)
                 addMessage(messages: messages, branch: branch)
+                
+                settingsInt.reloadSetttings()
             }  catch let error as NoError {
                 setState(branch: branch, state: .ok, loadingState: .ok)
                 setError(branch: branch, createMessageError: error)
@@ -230,6 +236,7 @@ extension ChatInteractor {
 // MARK: - Draft
 
 extension ChatInteractor {
+    
     func getDraft(branch: Branch) {
         let request = Branch(_id: branch._id)
         Task {

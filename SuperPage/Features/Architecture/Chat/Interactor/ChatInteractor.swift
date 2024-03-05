@@ -18,12 +18,18 @@ class ChatInteractor: ObservableObject {
     
     @ObservedObject var env: EnvironmentInteractor
     
+    @ObservedObject var settingsInt: SettingsInteractor
+    
+    @Published var loadingChatsState: ModelState = .loading
+    
     init(repo: ChatRepo) {
         self.repo = repo
         env = EnvironmentInteractor.mock
+        settingsInt = SettingsInteractor.mock
     }
     
-    func inject(env: EnvironmentInteractor) {
+    func inject(env: EnvironmentInteractor, settingsInt: SettingsInteractor) {
+        self.settingsInt = settingsInt
         self.env = env
     }
     
@@ -33,6 +39,10 @@ class ChatInteractor: ObservableObject {
     
     func branchSettings(id: String) -> [String: Any] {
         return UserDefaults.standard.dictionary(forKey: "chatSettings\(id)") ?? [:]
+    }
+    
+    var hasChats: Bool {
+        !chats.isEmpty
     }
 }
 
@@ -182,6 +192,14 @@ extension ChatInteractor {
         if updatingChat.expanded ?? false {
             getBranches(chat: chat)
         }
+    }
+    
+    func expandChat(with id: String) {
+        guard let chatIndex = chats.firstIndex(where: { $0._id == id }) else { return }
+        var updatingChat = chats[chatIndex]
+        updatingChat.expanded = true
+        chats[chatIndex] = updatingChat
+        self.chats = chats
     }
     
     func remove(chat: Chat) {

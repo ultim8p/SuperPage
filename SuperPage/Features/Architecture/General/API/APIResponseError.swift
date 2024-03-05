@@ -16,7 +16,7 @@ extension String {
     static var domainSuperPage = "SuperPage"
 }
 
-struct NoError: Error, DecodableError, Encodable, Equatable {
+struct NoError: Error, DecodableError, Encodable, Equatable, Hashable {
     
     var domain: String?
     

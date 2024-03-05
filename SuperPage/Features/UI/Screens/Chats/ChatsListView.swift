@@ -38,12 +38,18 @@ struct ChatsListView: View {
     
     @State var showEditBranch: Bool = false
     
+    @State var swiftuisucksBranches = [Branch()]
+    
     // MARK: Selection
     
     @Binding var selectedChat: Chat?
     
     var body: some View {
         ZStack {
+            List(swiftuisucksBranches, selection: $navigationManager.selectedBranchId) { _ in }
+            
+            AppColor.mainSecondary.color
+                .ignoresSafeArea(.all)
             ScrollView {
                 ForEach(chatInt.chats) { chat in
                     ChatRow(
@@ -63,18 +69,21 @@ struct ChatsListView: View {
                     
                     if chat.expanded ?? false {
                         ForEach(chat.branches ?? []) { branch in
-                            BranchRow(
-                                branch: .constant(branch),
-                                selectedBranchId: $navigationManager.selectedBranchId,
-                                branchContextMenu: $branchContextMenu,
-                                showBranchDeleteAlert: $showBranchDeleteAlert,
-                                editPressed: {
-                                    navigationManager.editingBranch = branch
-                                },
-                                selectionHandler: {
-                                    navigationManager.selectedBranchId = branch.id
-                                }
-                            )
+                                BranchRow(
+                                    branch: .constant(branch),
+                                    selectedBranchId: $navigationManager.selectedBranchId,
+                                    branchContextMenu: $branchContextMenu,
+                                    showBranchDeleteAlert: $showBranchDeleteAlert,
+                                    editPressed: {
+                                        navigationManager.editingBranch = branch
+                                    },
+                                    selectionHandler: {
+                                        print("DID SELECT BRANCH: \(branch.id)")
+    //                                    navigationManager.selectedBranchId = branch.id
+                                        navigationManager.openBranch(id: branch.id)
+                                    }
+                                )
+                            
                         }
                     }
                 }
@@ -83,6 +92,7 @@ struct ChatsListView: View {
         .clipped()
         .background(Color.homeBackground)
     }
+                
 }
 
 

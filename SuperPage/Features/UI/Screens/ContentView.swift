@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @StateObject var branchEditState = BranchEditState()
     @StateObject var navigationManager = NavigationManager()
     
     @EnvironmentObject private var userInt: UserInteractor
@@ -16,13 +17,28 @@ struct ContentView: View {
     @EnvironmentObject private var chatInt: ChatInteractor
     
     var body: some View {
-        if userInt.state.isSignedIn {
-            HomeScreen()
-                .environmentObject(navigationManager)
-        } else {
-            SignInScreen()
+        ZStack {
+            AppColor.mainSecondary.color
+                .ignoresSafeArea(.all)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    if userInt.state.isSignedIn {
+                        HomeScreen()
+                            .environmentObject(navigationManager)
+                            .environmentObject(branchEditState)
+                            .onAppear {
+                                self.setupState()
+                            }
+                    } else {
+                        SignInScreen()
+                    }
         }
-            
+    }
+}
+
+extension ContentView {
+    
+    func setupState() {
+        branchEditState.inject(chatInt: chatInt, navManager: navigationManager)
     }
 }
 

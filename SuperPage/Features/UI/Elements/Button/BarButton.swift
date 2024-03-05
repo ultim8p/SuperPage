@@ -52,7 +52,7 @@ struct BarButton: View {
 struct BarButton_Previews: PreviewProvider {
     
     static var previews: some View {
-        BarButton(backgroundColor: .red, titleColor: .white, title: "Continue to Print", action: {})
+        BarButton(backgroundColor: .red, titleColor: .white, title: "Purchase", action: {})
     }
 }
 

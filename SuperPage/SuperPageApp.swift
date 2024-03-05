@@ -26,6 +26,8 @@ struct SuperPageApp: App {
     @StateObject var env = EnvironmentInteractor(
         state: EnvironmentState())
     
+    @StateObject var store = StoreKitManager(identifiers: StoreProduct.rawValues)
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -33,6 +35,7 @@ struct SuperPageApp: App {
                 .environmentObject(signInInteractor)
                 .environmentObject(chatInteractor)
                 .environmentObject(settingsInt)
+                .environmentObject(store)
                 .onAppear {
                     setupInjection()
                 }
@@ -51,11 +54,19 @@ extension SuperPageApp {
             userInteractor: userInteractor,
             chatInt: chatInteractor)
         userInteractor.inject(env: env)
-        chatInteractor.inject(env: env)
+        chatInteractor.inject(
+            env: env,
+            settingsInt: settingsInt
+        )
         settingsInt.inject(env: env)
         
         userInteractor.loadInitialState()
         env.loadInitialState()
         chatInteractor.reloadChats()
+        settingsInt.loadInitialState()
+        
+        Task {
+            await self.store.fetchProducts()
+        }
     }
 }

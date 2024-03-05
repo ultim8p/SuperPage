@@ -9,9 +9,9 @@ import Foundation
 
 struct UsageTokens: Codable {
     
-    var promptTokens: Int?
+    var promptTokens: Double?
     
-    var completionTokens: Int?
+    var completionTokens: Double?
     
-    var totalTokens: Int?
+    var totalTokens: Double?
 }

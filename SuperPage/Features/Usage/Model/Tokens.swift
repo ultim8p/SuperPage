@@ -9,5 +9,5 @@ import Foundation
 
 struct Tokens: Codable {
     
-    var purchased: Int?
+    var purchased: Double?
 }

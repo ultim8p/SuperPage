@@ -17,15 +17,13 @@ import Cocoa
 
 struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
-    @Binding var systemRole: String
-    
     @Binding var selectedBranchId: Branch.ID?
+    
+    @ObservedObject var branchEditState: BranchEditState
     
     @ObservedObject var chatInteractor: ChatInteractor
     
     var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
-    
-    var saveContextHandler: ((_ systemRole: String) -> Void)?
     
 #if os(macOS)
     typealias NSViewControllerType = BranchViewController
@@ -53,7 +51,8 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     func makeViewController() -> BranchViewController {
         let viewController = BranchViewController(
             selectedBranchId: selectedBranchId,
-            chatInteractor: chatInteractor
+            chatInteractor: chatInteractor,
+            branchEditState: branchEditState
         )
         viewController.sendMessageHandler = sendMessageHandler
         return viewController
