@@ -165,6 +165,7 @@
 		A08230642B760BB500350016 /* EmojiPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230632B760BB500350016 /* EmojiPickerView.swift */; };
 		A08230662B760BE700350016 /* EmojiSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230652B760BE700350016 /* EmojiSelectView.swift */; };
 		A08230692B760DAB00350016 /* BarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08230682B760DAB00350016 /* BarButton.swift */; };
+		A093F0092BB637CA0017AFDE /* CompSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A093F0082BB637CA0017AFDE /* CompSeparator.swift */; };
 		A0A22CA129DA2B76003F9ED1 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */; };
 		A0A22CA429DA500E003F9ED1 /* FileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A22CA329DA500E003F9ED1 /* FileRow.swift */; };
 		A0BAD8522AB781800051DE73 /* BranchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BAD8512AB781800051DE73 /* BranchState.swift */; };
@@ -338,6 +339,7 @@
 		A08230632B760BB500350016 /* EmojiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerView.swift; sourceTree = "<group>"; };
 		A08230652B760BE700350016 /* EmojiSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiSelectView.swift; sourceTree = "<group>"; };
 		A08230682B760DAB00350016 /* BarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarButton.swift; sourceTree = "<group>"; };
+		A093F0082BB637CA0017AFDE /* CompSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompSeparator.swift; sourceTree = "<group>"; };
 		A0A22CA029DA2B76003F9ED1 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		A0A22CA329DA500E003F9ED1 /* FileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRow.swift; sourceTree = "<group>"; };
 		A0BAD8512AB781800051DE73 /* BranchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchState.swift; sourceTree = "<group>"; };
@@ -501,7 +503,6 @@
 				A01CA27E29D0B39A00AEB258 /* Architecture */,
 				A01CA26C29D02E1300AEB258 /* UI */,
 				A01CA26129D02D0700AEB258 /* Frameworks */,
-				A01CA25E29D0289700AEB258 /* App */,
 				A01CA25229D01DFC00AEB258 /* Onboarding */,
 			);
 			path = Features;
@@ -532,13 +533,6 @@
 			path = Button;
 			sourceTree = "<group>";
 		};
-		A01CA25E29D0289700AEB258 /* App */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
 		A01CA26129D02D0700AEB258 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -563,6 +557,7 @@
 			children = (
 				A01CA26429D02D2200AEB258 /* SystemImage.swift */,
 				A07598C92B86C103009C7C3F /* CompIcon.swift */,
+				A093F0082BB637CA0017AFDE /* CompSeparator.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -1135,12 +1130,12 @@
 			path = EmptyStates;
 			sourceTree = "<group>";
 		};
-		A04C7CB72B8B053200800714 /* Component */ = {
+		A04C7CB72B8B053200800714 /* ButtonComponent */ = {
 			isa = PBXGroup;
 			children = (
 				A04C7CB82B8B054100800714 /* ComponentMainButton.swift */,
 			);
-			path = Component;
+			path = ButtonComponent;
 			sourceTree = "<group>";
 		};
 		A04C7CE12B8C398700800714 /* Branch */ = {
@@ -1231,12 +1226,11 @@
 		A07598CB2B86C2AD009C7C3F /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				A04C7CB72B8B053200800714 /* Component */,
+				A04C7CB72B8B053200800714 /* ButtonComponent */,
 				A07598E92B872F42009C7C3F /* Text */,
 				A07598DD2B86F284009C7C3F /* Shape */,
 				A07598D82B86EE1D009C7C3F /* Enums */,
 				A07598D52B86EDEB009C7C3F /* Modifiers */,
-				A07598D02B86CEA2009C7C3F /* Background */,
 				A07598CD2B86CE8D009C7C3F /* Button */,
 				A01CA26529D02D2D00AEB258 /* Navigation */,
 				A01CA26329D02D1A00AEB258 /* Image */,
@@ -1265,13 +1259,6 @@
 				A07598CE2B86CE9E009C7C3F /* CompButton.swift */,
 			);
 			path = Button;
-			sourceTree = "<group>";
-		};
-		A07598D02B86CEA2009C7C3F /* Background */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Background;
 			sourceTree = "<group>";
 		};
 		A07598D52B86EDEB009C7C3F /* Modifiers */ = {
@@ -1608,6 +1595,7 @@
 				A07598C32B85ECB9009C7C3F /* StoreKitManager.swift in Sources */,
 				A01CA28229D0B3B700AEB258 /* UserInteractor.swift in Sources */,
 				A03A1C6929D5269700158E95 /* SettingsUsage.swift in Sources */,
+				A093F0092BB637CA0017AFDE /* CompSeparator.swift in Sources */,
 				A01CA29E29D0E6E600AEB258 /* AuthenticationInteractor+Mock.swift in Sources */,
 				A07598E42B872690009C7C3F /* CompButtonModifier.swift in Sources */,
 				A03645F329E89F2700D524BB /* BranchViewControllerWrapper.swift in Sources */,
@@ -1809,7 +1797,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SuperPage/SuperPage.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SuperPage/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J5NGE9JCN;
@@ -1849,7 +1837,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SuperPage/SuperPage.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SuperPage/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J5NGE9JCN;

@@ -39,23 +39,34 @@ struct HomeScreen: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             HomeShortcutsView()
             NavigationSplitView {
-                VStack(spacing: 0) {
-                    if settingsInt.settingsUsage.shouldShowTokensLeft {
-                        HomeTokenStatsView()
+                ZStack {
+                    AppColor.mainSecondary.color
+                        .ignoresSafeArea(.all)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    VStack(spacing: 0) {
+                        ChatsListView(
+                            branchName: $branchName,
+                            showBranchCreation: $showBranchCreation,
+                            chatContextMenu: $chatContextMenu,
+                            selectedChat: .constant(nil)
+                        )
+
+//                        if settingsInt.settingsUsage.shouldShowTokensLeft {
+//                            CompSeparator()
+//                            HomeTokenStatsView()
+//                        }
+                        
+                        HomeUpgradeView()
+                        CompSeparator()
+                            .zIndex(1)
+                        HomeToolBar(showChatCreation: $showChatCreation)
                     }
-                    ChatsListView(
-                        branchName: $branchName,
-                        showBranchCreation: $showBranchCreation,
-                        chatContextMenu: $chatContextMenu,
-                        selectedChat: .constant(nil)
-                    )
-                    HomeUpgradeView()
-                    HomeToolBar(showChatCreation: $showChatCreation)
                 }
             } detail: {
                 BranchScreenDetail()
             }
             .tint(AppColor.highlight.color)
+            .background(Color.clear)
 #if os(macOS)
             .toolbarBackground(Color.branchBackground, for: .windowToolbar)
 #endif

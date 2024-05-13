@@ -23,7 +23,11 @@ struct ComponentMainButton: ViewModifier {
 extension View {
     
     func componentMainButton(color: AppColor = .primary) -> some View {
-        modifier(ComponentMainButton(color: color, dimension: .regular))
+        var dimension: CompSizeDimension = .regular
+        #if os(macOS)
+        dimension = .medium
+        #endif
+        return modifier(ComponentMainButton(color: color, dimension: dimension))
     }
     
     func componentMainButtonSmall(color: AppColor = .primary) -> some View {

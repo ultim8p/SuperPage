@@ -66,7 +66,6 @@ struct HomeToolBar: View {
             Spacer()
         }
         .frame(height: 50.0)
-        .compBackground(color: .mainSecondary, shape: .rectangle)
     }
 }
 

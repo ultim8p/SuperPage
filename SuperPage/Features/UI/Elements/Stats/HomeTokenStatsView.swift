@@ -47,8 +47,6 @@ struct HomeTokenStatsView: View {
         let percentage = max(0.0, min(1.0, tokensLeft / 1_000_000))
         
         ZStack {
-            AppColor.mainSecondary.color
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             VStack(spacing: 0.0) {
                 Spacer()
@@ -81,7 +79,7 @@ struct HomeTokenStatsView: View {
             }
             .padding(.bottom, 5).padding(.top, 5)
         }
-        .frame(height: 50.0)
+        .frame(height: 55.0)
     }
 }
 

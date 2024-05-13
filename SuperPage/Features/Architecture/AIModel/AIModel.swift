@@ -14,7 +14,7 @@ struct AIModel: Codable {
         // MARK: - OpenAI
         case gpt35Turbo = "gpt-3.5-turbo"
         
-        case gpt4TurboPreview = "gpt-4-turbo-preview"
+        case gpt4o = "gpt-4o"
         
         // MARK: - Claude
         case claude3Opus = "claude-3-opus"
@@ -37,6 +37,9 @@ struct AIModel: Codable {
         
         case gpt432k = "gpt-4-32k"
         
+        case gpt4TurboPreview = "gpt-4-turbo-preview"
+        
+        
         case unknown
         
         static public var unknownCase: AIModel.Name = .unknown
@@ -50,8 +53,9 @@ struct AIModel: Codable {
         switch name {
         case .gpt35Turbo:
             return "GPT 3"
-        case .gpt4TurboPreview:
-            return "GPT 4 Turbo"
+        case .gpt4o:
+            return "GPT 4o"
+            
         case .mistralLarge:
             return "MistralLarge"
         case .claude3Opus:
@@ -60,7 +64,7 @@ struct AIModel: Codable {
             return "Claude Sonnet"
             
             
-        // MARK: - Legacy
+            // MARK: - Legacy
         case .claudeInstant:
             return "Claude Instant"
         case .claude:
@@ -71,6 +75,8 @@ struct AIModel: Codable {
             return "GPT 4"
         case .gpt432k:
             return "GPT 4 32k"
+        case .gpt4TurboPreview:
+            return "GPT 4 Turbo"
         default:
             return nil
         }
@@ -78,11 +84,8 @@ struct AIModel: Codable {
     
     static var allModels: [AIModel] {
         return [
-            AIModel(name: .claude3Sonnet),
-            AIModel(name: .claude3Opus),
-            AIModel(name: .mistralLarge),
             AIModel(name: .gpt35Turbo),
-            AIModel(name: .gpt4TurboPreview)
+            AIModel(name: .gpt4o)
         ]
     }
 }

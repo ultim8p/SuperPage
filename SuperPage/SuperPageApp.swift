@@ -19,7 +19,8 @@ struct SuperPageApp: App {
         repo: AuthenticationRepo(),
         state: AuthenticationState())
     
-    @StateObject var chatInteractor = ChatInteractor(repo: ChatRepo())
+    //@StateObject var chatInteractor = ChatInteractor(repo: ChatRepo())
+    @StateObject var chatInteractor = ChatInteractor.mock
     
     @StateObject var settingsInt = SettingsInteractor(repo: SettingsRepo())
     

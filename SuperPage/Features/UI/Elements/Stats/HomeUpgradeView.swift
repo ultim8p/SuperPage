@@ -13,20 +13,24 @@ struct HomeUpgradeView: View {
     
     var body: some View {
         ZStack {
-            AppColor.mainSecondary.color
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()
-            CompButton {
-                navManager.sheetUpgrade = true
-            } label: {
-                VStack(spacing: 0) {
-                    Text("Get SuperPage Plus")
-                        .compText(fontStyle: .title3, fontWeight: .bold)
-                        .componentMainButton()
+            VStack {
+                Spacer()
+                CompButton {
+                    navManager.sheetUpgrade = true
+                } label: {
+                    VStack(spacing: 0) {
+                        Text("Get SuperPage Plus")
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .compText(fontStyle: .title3, fontWeight: .bold)
+                            .componentMainButton()
+                    }
                 }
+                .padding(.leading).padding(.trailing).padding(.bottom, 5)
+                Spacer()
             }
         }
-        .padding()
+        
         .frame(height: 65.0)
     }
 }
