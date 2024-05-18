@@ -42,7 +42,7 @@ struct BranchToolBar: View {
                     modelButtonAction()
                 } label: {
                     HStack(spacing: 0) {
-                        Text("🤖")
+                        Text("🐼")
                             .font(.system(size: 18))
                         Text(branchEditState.model.displayName ?? "")
                             .font(.system(size: 18, weight: .bold))

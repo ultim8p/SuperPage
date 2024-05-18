@@ -18,11 +18,23 @@ enum CompSizeDimension {
     var value: CGFloat {
         switch self {
         case .small:
-            return 40.0
+#if os(macOS)
+        return 30.0
+#else
+        return 35
+#endif
         case .medium:
-            return 48.0
+#if os(macOS)
+        return 42.0
+#else
+        return 48.0
+#endif
         case .regular:
-            return 55.0
+#if os(macOS)
+            return 48.0
+#else
+        return 55.0
+#endif
         }
     }
 }

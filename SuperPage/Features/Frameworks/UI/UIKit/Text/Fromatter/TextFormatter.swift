@@ -25,7 +25,7 @@ protocol TextFormatter {
 enum TextFormat: TextFormatter {
         
     enum Constant {
-        static let defaultFontSize: CGFloat = 12.0
+        static let defaultFontSize: CGFloat = 15.0
     }
     
     // General

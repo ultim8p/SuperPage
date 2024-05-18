@@ -90,6 +90,7 @@ class BranchViewController: NOViewController {
         self.chatInteractor = chatInteractor
         self.branchEditState = branchEditState
         super.init(nibName: nil, bundle: nil)
+        
         self.selectedBranchId = selectedBranchId
     }
     
@@ -118,6 +119,11 @@ class BranchViewController: NOViewController {
     }
     
 #if os(macOS)
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        
+        self.reloadCells()
+    }
 #elseif os(iOS)
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animate(alongsideTransition: { context in
@@ -170,6 +176,15 @@ class BranchViewController: NOViewController {
         }.store(in: &cancellables)
         
         branchEditState.$newMessage.sink { [weak self] newMessage in
+            guard
+                let self,
+                self.newMessage != newMessage
+            else { return }
+            
+            print("MSG: GOT NEW MESSAGE")
+            
+            self.newMessage = ""
+            reloadCells()
 //            guard let self else { return }
 //            if newMessage.isEmpty && !self.newMessage.isEmpty {
 //                print("BTST: did reset msg")
@@ -178,6 +193,7 @@ class BranchViewController: NOViewController {
 //                reloadCells()
 //                updateCollectionLayoutForMessage(isNew: true)
 //            }
+            
         }.store(in: &cancellables)
         
         branchEditState.$selectedMessages.sink { [weak self] selectedMessages in

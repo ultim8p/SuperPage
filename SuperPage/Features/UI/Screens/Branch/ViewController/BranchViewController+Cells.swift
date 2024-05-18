@@ -20,10 +20,10 @@ extension BranchViewController: MessageCellDelegate {
         switch shortcut {
         case .commandEnter:
             branchEditState.sendMessage()
-            newMessage = ""
-            collectionView.collectionLayout.invalidateLayout()
-            reloadCells()
-            updateCollectionLayoutForMessage(isNew: true)
+//            newMessage = ""
+//            collectionView.collectionLayout.invalidateLayout()
+//            reloadCells()
+//            updateCollectionLayoutForMessage(isNew: true)
         default:
             break
         }

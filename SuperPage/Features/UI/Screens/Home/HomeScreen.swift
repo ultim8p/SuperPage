@@ -51,12 +51,12 @@ struct HomeScreen: View {
                             selectedChat: .constant(nil)
                         )
 
-//                        if settingsInt.settingsUsage.shouldShowTokensLeft {
-//                            CompSeparator()
-//                            HomeTokenStatsView()
-//                        }
-                        
-                        HomeUpgradeView()
+                        if settingsInt.settingsUsage.shouldShowTokensLeft {
+                            CompSeparator()
+                            HomeTokenStatsView()
+                        }
+//                        
+//                        HomeUpgradeView()
                         CompSeparator()
                             .zIndex(1)
                         HomeToolBar(showChatCreation: $showChatCreation)
