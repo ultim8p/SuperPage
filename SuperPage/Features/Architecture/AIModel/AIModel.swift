@@ -62,11 +62,9 @@ struct AIModel: Codable {
             
         case .mistralLarge:
             return "MistralLarge"
-        case .claude3Opus:
-            return "Claude Opus"
-        case .claude3Sonnet:
-            return "Claude Sonnet"
-            
+        
+        case .claude35Sonnet:
+            return "Claude 3.5 Sonnet"
             
             // MARK: - Legacy
         case .claudeInstant:
@@ -81,6 +79,10 @@ struct AIModel: Codable {
             return "GPT 4 32k"
         case .gpt4TurboPreview:
             return "GPT 4 Turbo"
+        case .claude3Opus:
+            return "Claude Opus"
+        case .claude3Sonnet:
+            return "Claude Sonnet"
         default:
             return nil
         }
