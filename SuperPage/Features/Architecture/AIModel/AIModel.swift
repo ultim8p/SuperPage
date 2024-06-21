@@ -12,24 +12,28 @@ struct AIModel: Codable {
     enum Name: String, Codable, CaseIterable, UnknownCaseRepresentable {
         
         // MARK: - OpenAI
+        
         case gpt35Turbo = "gpt-3.5-turbo"
         
         case gpt4o = "gpt-4o"
         
         // MARK: - Claude
-        case claude3Opus = "claude-3-opus"
         
-        case claude3Sonnet = "claude-3-sonnet"
+        case claude35Sonnet = "claude-3-5-sonnet"
         
         // MARK: - Mistral
-        case mistralLarge = "mistral-large"
         
+        case mistralLarge = "mistral-large"
         
         // MARK: - Legacy
         
         case claude = "claude"
         
         case claudeInstant = "claude-instant"
+        
+        case claude3Opus = "claude-3-opus"
+        
+        case claude3Sonnet = "claude-3-sonnet"
         
         case gpt35Turbo16k = "gpt-3.5-turbo-16k"
         
@@ -84,7 +88,7 @@ struct AIModel: Codable {
     
     static var allModels: [AIModel] {
         return [
-            AIModel(name: .gpt35Turbo),
+            AIModel(name: .claude35Sonnet),
             AIModel(name: .gpt4o)
         ]
     }
