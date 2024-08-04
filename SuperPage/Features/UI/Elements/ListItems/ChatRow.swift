@@ -39,7 +39,7 @@ struct ChatRow: View {
         FileRow(
             name: chat.name ?? "No name",
             isExpanded: expanded,
-            loading: chat.state == .loading,
+            loading: chatsState.chatsStates[chat.id] == .loading,
             hasError: false
         )
         .frame(maxWidth: .infinity)

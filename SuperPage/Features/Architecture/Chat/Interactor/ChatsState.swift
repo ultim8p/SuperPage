@@ -19,6 +19,8 @@ class ChatsState: ObservableObject {
     
     @Published var chats: [Chat] = []
     
+    @Published var chatsStates: [String: ModelState] = [:]
+    
     @Published var drafts: [String: MessageDraft] = [:]
     
     @Published var loadingChatsState: ModelState = .loading
@@ -121,15 +123,12 @@ extension ChatsState {
     }
     
     func setState(chat: Chat?, state: ModelState) {
-        var chats = self.chats
-        chats.setState(chat: chat, state: state)
-        self.chats = chats
+        setState(chatId: chat?._id, state: state)
     }
     
     func setState(chatId: String?, state: ModelState) {
-        var chats = self.chats
-        chats.setState(chatId: chatId, state: state)
-        self.chats = chats
+        guard let chatId else { return }
+        chatsStates[chatId] = state
     }
     
     // MARK: Branch

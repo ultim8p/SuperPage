@@ -29,8 +29,7 @@ struct BranchScreenDetail: View {
                 } else {
                     let selectedChatId = navigationManager.selectedChatId
                     if let selectedChat = chatsState.chat(for: selectedChatId)?.chat {
-                        let state = selectedChat.state ?? .ok
-                        if state == .loading {
+                        if chatsState.chatsStates[selectedChat.id] == .loading {
                             EmptyHomeView()
                         } else {
                             let hasBranches = !(selectedChat.branches?.isEmpty ?? true)

@@ -25,8 +25,6 @@ struct Chat: Codable, Identifiable, Equatable {
     
     // MARK: Local
     
-    var state: ModelState?
-    
     var branches: [Branch]?
 }
 
@@ -68,16 +66,6 @@ extension Array where Element == Chat {
     mutating func setChat(name: String, chat: Chat) {
         guard let chatQ = self.chat(for: chat._id) else { return }
         self[chatQ.index].name = name
-    }
-    
-    mutating func setState(chat: Chat?, state: ModelState) {
-        guard let chat = chat else { return }
-        setState(chatId: chat._id, state: state)
-    }
-    
-    mutating func setState(chatId: String?, state: ModelState) {
-        guard let chatId = chatId, let chatQ = self.chat(for: chatId) else { return }
-        self[chatQ.index].state = state
     }
     
     // MARK: Branch
@@ -124,7 +112,6 @@ extension Array where Element == Chat {
     mutating func setBranches(response: [Branch]) {
         guard let chatId = response.first?.chat?._id, let chatQ = self.chat(for: chatId) else { return }
         self[chatQ.index].branches = response
-        self[chatQ.index].state = nil
     }
     
     mutating func setBranch(name: String, branch: Branch) {
@@ -141,13 +128,11 @@ extension Array where Element == Chat {
             branches.append(branch)
         }
         self[chatQ.index].branches = branches
-        self[chatQ.index].state = nil
     }
     
     mutating func remove(branch: Branch) {
         guard let branchQ = self.branch(for: branch) else { return }
         self[branchQ.chatIndex].branches?.remove(at: branchQ.branchIndex)
-        self[branchQ.chatIndex].state = nil
     }
     
     // MARK: Messages
