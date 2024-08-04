@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Message: Codable, Identifiable {
+struct Message: Codable, Identifiable, Equatable {
     
     var id: String {
         return _id ?? UUID().uuidString
@@ -30,6 +30,9 @@ struct Message: Codable, Identifiable {
     var content: [MessageContent]?
     
     var model: AIModel?
+    
+    // Local
+    
     
     init(_id: String? = nil,
          dateCreated: Date? = nil,

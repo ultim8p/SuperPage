@@ -21,7 +21,7 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
     @ObservedObject var branchEditState: BranchEditState
     
-    @ObservedObject var chatInteractor: ChatInteractor
+    @ObservedObject var chatsState: ChatsState
     
     var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
     
@@ -51,7 +51,7 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     func makeViewController() -> BranchViewController {
         let viewController = BranchViewController(
             selectedBranchId: selectedBranchId,
-            chatInteractor: chatInteractor,
+            chatsState: chatsState,
             branchEditState: branchEditState
         )
         viewController.sendMessageHandler = sendMessageHandler

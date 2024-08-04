@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BranchCreateView: View {
     
-    @EnvironmentObject var chatInteractor: ChatInteractor
+    @EnvironmentObject var chatsState: ChatsState
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -117,7 +117,7 @@ struct BranchCreateView: View {
                         .padding(.bottom, 8)
                     ScrollViewReader { value in
                         ScrollView {
-                            ForEach(chatInteractor.chats) { chat in
+                            ForEach(chatsState.chats) { chat in
                                 ChatRowShort(
                                     name: chat.name ?? "",
                                     selectedChatId: $selectedChatId,
@@ -161,7 +161,7 @@ struct BranchCreateView: View {
             }
             .onAppear {
                 guard selectedChatId == nil else { return }
-                selectedChatId = chatInteractor.chats.first?.id
+                selectedChatId = chatsState.chats.first?.id
             }
 #if os(macOS)
             .frame(minWidth: 400, minHeight: 600)
@@ -178,7 +178,7 @@ extension BranchCreateView {
     func moveChatDown() {
         guard
             let selectedChatId,
-            let nextId = chatInteractor.nextChatId(from: selectedChatId)
+            let nextId = chatsState.nextChatId(from: selectedChatId)
         else { return }
         self.selectedChatId = nextId
     }
@@ -186,7 +186,7 @@ extension BranchCreateView {
     func moveChatUp() {
         guard 
             let selectedChatId,
-            let previousId = chatInteractor.previousChatId(from: selectedChatId)
+            let previousId = chatsState.previousChatId(from: selectedChatId)
         else { return }
         self.selectedChatId = previousId
     }
@@ -204,6 +204,6 @@ struct BranchCreateView_Previews: PreviewProvider {
                             
     static var previews: some View {
         BranchCreateView()
-        .environmentObject(ChatInteractor.mock)
+        .environmentObject(ChatsState.mock)
     }
 }

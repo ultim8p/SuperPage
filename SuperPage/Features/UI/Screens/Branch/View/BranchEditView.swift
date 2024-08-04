@@ -24,7 +24,7 @@ import SwiftUI
 
 struct BranchEditView: View {
     
-    @EnvironmentObject var chatInteractor: ChatInteractor
+    
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -144,6 +144,5 @@ struct ElementSheetView_Previews: PreviewProvider {
                             
     static var previews: some View {
         BranchEditView(isCreating: false, name: "My branch", role: "Description", emoji: nil)
-            .environmentObject(ChatInteractor.mock)
     }
 }

@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct MessageContent: Codable {
+struct MessageContent: Codable, Equatable {
     
-    enum ContentType: String, Codable {
+    enum ContentType: String, Codable, Equatable {
         
         case text
         

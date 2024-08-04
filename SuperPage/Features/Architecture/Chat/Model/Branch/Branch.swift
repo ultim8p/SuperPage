@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Branch: Codable, Identifiable {
+struct Branch: Codable, Identifiable, Equatable {
     
     var id: String {
         return _id ?? UUID().uuidString

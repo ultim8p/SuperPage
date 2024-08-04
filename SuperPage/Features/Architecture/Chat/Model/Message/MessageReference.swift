@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MessageReference: Codable {
+struct MessageReference: Codable, Equatable {
     
     var _id: String?
 }

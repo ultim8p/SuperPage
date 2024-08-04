@@ -10,12 +10,12 @@ import SwiftUI
 
 struct RadialProgressBar: View {
     
-    @EnvironmentObject var settingsInt: SettingsInteractor
+    @EnvironmentObject var settingsState: SettingsState
     
     var body: some View {
         
-        let purchasedTokens = CGFloat(settingsInt.settingsUsage.tokens?.purchased ?? 0)
-        let tokensUsed = CGFloat(settingsInt.settingsUsage.usage?.tokens?.totalTokens ?? 0)
+        let purchasedTokens = CGFloat(settingsState.settingsUsage.tokens?.purchased ?? 0)
+        let tokensUsed = CGFloat(settingsState.settingsUsage.usage?.tokens?.totalTokens ?? 0)
         let percentage = tokensUsed / purchasedTokens
         
         ZStack {
@@ -37,14 +37,14 @@ struct RadialProgressBar: View {
         }
         .frame(width: 150.0, height: 150.0)
         .onAppear{
-            settingsInt.reloadSetttings()
+            settingsState.reloadSetttings()
         }
     }
 }
 
 struct SettingsScreen: View {
     
-    @EnvironmentObject var settingsInt: SettingsInteractor
+    @EnvironmentObject var settingsInt: SettingsState
     
     var body: some View {
         
@@ -72,9 +72,6 @@ struct SettingsScreen_Previews: PreviewProvider {
                             
     static var previews: some View {
         SettingsScreen()
-            .environmentObject(ChatInteractor.mock)
-            .environmentObject(AuthenticationInteractor.mock)
-            .environmentObject(UserInteractor.mock)
-            .environmentObject(SettingsInteractor.mock)
+            .environmentObject(SettingsState.mock)
     }
 }

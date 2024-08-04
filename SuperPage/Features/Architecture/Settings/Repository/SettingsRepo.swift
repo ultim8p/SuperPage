@@ -24,10 +24,16 @@ class SettingsRepo {
     
     // MARK: - GET
     
-    func getSettingsMe(env: EnvironmentInteractor)
+    func getSettingsMe(env: EnvironmentState)
     async throws -> SettingsUsage {
-        return try await .get(env, path: SettingsPath.getSettingsMe)
-            .authenticate(env: env)
-            .responseValue()
+        return try await .get(
+            env,
+            path: SettingsPath.getSettingsMe,
+            scheme: env.scheme,
+            host: env.host,
+            port: env.port
+        )
+        .authenticate(env: env)
+        .responseValue()
     }
 }

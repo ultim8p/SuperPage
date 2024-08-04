@@ -10,9 +10,15 @@ import SwiftUI
 
 struct ChatRow: View {
     
+    // MARK: Navigation State
+    
     @EnvironmentObject var navigationManager: NavigationManager
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    // MARK: App State
+    
+    @EnvironmentObject var chatsState: ChatsState
+    
+    // MARK: View State
     
     @Binding var chat: Chat
     
@@ -75,7 +81,7 @@ struct ChatRow: View {
         {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                chatInt.deleteChat(chat: chatContextMenu)
+                chatsState.deleteChat(chat: chatContextMenu)
             }
         }
     }
@@ -91,6 +97,7 @@ struct ChatRow_Previews: PreviewProvider {
             showEditChat: .constant(false),
             showChatDeleteAlert: .constant(false)
         )
-            .environmentObject(ChatInteractor.mock)
+            .environmentObject(ChatsState.mock)
+            .environmentObject(NavigationManager.mock)
     }
 }

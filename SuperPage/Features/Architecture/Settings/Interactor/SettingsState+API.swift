@@ -1,5 +1,5 @@
 //
-//  SettingsInteractor+API.swift
+//  SettingsState+API.swift
 //  SuperPage
 //
 //  Created by Guerson Perez on 3/30/23.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-extension SettingsInteractor {
+extension SettingsState {
     
     // MARK: - GET
     
     func reloadSetttings() {
         Task {
             do {
-                let settings = try await repo.getSettingsMe(env: env)
+                let settings = try await repo.getSettingsMe(env: envState)
                 self.settingsUsage = settings
             }
             catch {

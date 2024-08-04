@@ -248,29 +248,12 @@ class NOTextView: PTextView, TextFormatting {
 
         // Calculate the rectangle that fits these glyphs
         var usedRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
-
-     
-
+        
         // Reset to original container size if needed
         textContainer.containerSize = originalSize
 
         return CGSize(width: ceil(usedRect.size.width), height: ceil(usedRect.size.height))
 
-        
-        /*
-                
-                let containerWidth = (targetWidth > 0.0) ? targetWidth : textContainer.containerSize.width
-                
-                layoutManager.ensureLayout(for: textContainer)
-                
-                // Calculate the range of the text that is currently laid out.
-                let range = layoutManager.glyphRange(forBoundingRect: CGRect(x: 0, y: 0, width: containerWidth, height: CGFloat.greatestFiniteMagnitude), in: textContainer)
-                
-                // Compute the rectangle needed to display that text.
-                let rect = layoutManager.boundingRect(forGlyphRange: range, in: textContainer)
-                
-                return CGSize(width: ceil(rect.width), height: ceil(rect.height))
-         */
     #elseif os(iOS)
         let contentSize = sizeThatFits(CGSize(width: targetWidth, height: .greatestFiniteMagnitude))
         return CGSize(width: contentSize.width, height: contentSize.height)

@@ -9,11 +9,15 @@ import SwiftUI
 
 struct BranchScreen: View {
         
+    // MARK: Navigation State
+    
     @EnvironmentObject var branchEditState: BranchEditState
     
-    @EnvironmentObject var chatInt: ChatInteractor
-    
     @EnvironmentObject var navigationManager: NavigationManager
+    
+    // MARK: App State
+    
+    @EnvironmentObject var chatsState: ChatsState
     
     var body: some View {
         ZStack {
@@ -24,7 +28,7 @@ struct BranchScreen: View {
                 BranchViewControllerWrapper(
                     selectedBranchId: $navigationManager.selectedBranchId,
                     branchEditState: branchEditState,
-                    chatInteractor: chatInt,
+                    chatsState: chatsState,
                     sendMessageHandler: { message, model, messageIds in
 //                        sendMessage(message: message, model: model, branch: branch, messageIds: messageIds)
                     }

@@ -35,14 +35,18 @@ extension Double {
 
 struct HomeTokenStatsView: View {
     
+    // MARK: Navigation State
+    
     @EnvironmentObject var navManager: NavigationManager
     
-    @EnvironmentObject var settingsInt: SettingsInteractor
+    // MARK: App State
+    
+    @EnvironmentObject var settingsState: SettingsState
     
     var body: some View {
         
-        let purchasedTokens = Double(settingsInt.settingsUsage.tokens?.purchased ?? 0)
-        let tokensUsed = Double(settingsInt.settingsUsage.usage?.tokens?.totalTokens ?? 0)
+        let purchasedTokens = Double(settingsState.settingsUsage.tokens?.purchased ?? 0)
+        let tokensUsed = Double(settingsState.settingsUsage.usage?.tokens?.totalTokens ?? 0)
         let tokensLeft = max(0.0, Double(purchasedTokens - tokensUsed))
         let percentage = max(0.0, min(1.0, tokensLeft / 1_000_000))
         
@@ -85,5 +89,5 @@ struct HomeTokenStatsView: View {
 
 #Preview {
     HomeTokenStatsView()
-        .environmentObject(SettingsInteractor.mock)
+        .environmentObject(AppState.mock)
 }

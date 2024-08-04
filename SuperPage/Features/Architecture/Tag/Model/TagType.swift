@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TagType: String, Codable {
+enum TagType: String, Codable, Equatable {
     
     case emoji
 }

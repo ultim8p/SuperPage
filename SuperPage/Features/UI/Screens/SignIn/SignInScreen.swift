@@ -10,14 +10,13 @@ import AuthenticationServices
 
 struct SignInScreen: View {
     
-    @EnvironmentObject private var userInteractor: UserInteractor
-    @EnvironmentObject private var authInteractor: AuthenticationInteractor
+    @EnvironmentObject private var authState: AuthenticationState
     
     var body: some View {
         VStack {
             
             AppleSignInButton(handler: { credential in
-                authInteractor.postLogin(credential: credential)
+                authState.postLogin(credential: credential)
             })
         }
         .padding()
@@ -28,7 +27,6 @@ struct SignInScreen_Previews: PreviewProvider {
      
     static var previews: some View {
         SignInScreen()
-            .environmentObject(UserInteractor.mock)
-            .environmentObject(AuthenticationInteractor.mock)
+            .environmentObject(AuthenticationState.mock)
     }
 }

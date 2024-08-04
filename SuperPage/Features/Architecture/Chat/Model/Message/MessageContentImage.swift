@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MessageContentImage: Codable {
+struct MessageContentImage: Codable, Equatable {
     
     var bucket: String?
     

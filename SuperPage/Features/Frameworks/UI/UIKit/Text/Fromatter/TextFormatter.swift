@@ -223,12 +223,13 @@ extension TextFormat {
         // swift
         return [
             "if", "else", "switch", "case", "default", "break", "continue", "for", "while", "return", "throw", "catch", "try", "var", "const", "bool", "int", "float", "double", "char", "string",
-            "public", "private", "protected", "static", "final", "abstract", "func", "extension", "let", "init", "class", "struct", "import", "some", "enum"
+            "public", "private", "protected", "static", "final", "abstract", "func", "extension", "let", "init", "class", "struct", "import", "some", "enum", "protocol", "actor"
         ]
-
-        
     }
 }
+
+
+
 
 //
 

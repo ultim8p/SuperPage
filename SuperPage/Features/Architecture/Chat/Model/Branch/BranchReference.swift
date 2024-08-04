@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BranchReference: Codable {
+struct BranchReference: Codable, Equatable {
     
     var _id: String?
 }

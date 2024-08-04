@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootSheetsModifier: ViewModifier {
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    @EnvironmentObject var chatsState: ChatsState
     
     @EnvironmentObject var navigationManager: NavigationManager
     
@@ -31,7 +31,7 @@ struct RootSheetsModifier: ViewModifier {
                                 tags = [Tag(type: .emoji, value: emoji)]
                             }
                             let role = Role(tags: tags, text: role)
-                            chatInt.editBranch(branch: branch, name: name, promptRole: role)
+                            chatsState.editBranch(branch: branch, name: name, promptRole: role)
                         }
                     )
                 }
@@ -48,7 +48,7 @@ struct RootSheetsModifier: ViewModifier {
                                 tags = [Tag(type: .emoji, value: emoji)]
                             }
                             let role = Role(tags: tags, text: role)
-                            chatInt.createBranch(name: name, promptRole: role, chat: chat) { id in
+                            chatsState.createBranch(name: name, promptRole: role, chat: chat) { id in
                                 navigationManager.openBranch(id: id)
                             }
                         }
@@ -57,16 +57,16 @@ struct RootSheetsModifier: ViewModifier {
         
             .sheet(item: $navigationManager.creatingChat) { chat in
                 ChatCreateView { name in
-                    chatInt.createChat(name: name) { chatId in
+                    chatsState.createChat(name: name) { chatId in
                         navigationManager.selectedChatId = chatId
-                        chatInt.expandChat(with: chatId)
+                        chatsState.expandChat(with: chatId)
                     }
                 }
             }
             
             .sheet(item: $navigationManager.editingChat, onDismiss: {}) { chat in
                 ChatEditView(name: chat.name ?? "") { name in
-                    chatInt.editChat(name: name, chat: chat)
+                    chatsState.editChat(name: name, chat: chat)
                 }
             }
             .sheet(isPresented: $navigationManager.sheetSettings, content: {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ChatRole: String, Codable {
+public enum ChatRole: String, Codable, Equatable {
     
     case user
     

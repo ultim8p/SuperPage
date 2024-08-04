@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 struct ButtonIconStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
@@ -19,12 +18,17 @@ struct ButtonIconStyle: ButtonStyle {
 
 }
 
-
 struct HomeToolBar: View {
+    
+    // MARK: Nav State
     
     @EnvironmentObject var navigationManager: NavigationManager
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    // MARK: App State
+    
+    @EnvironmentObject var chatsState: ChatsState
+    
+    // MARK: View State
     
     @Binding var showChatCreation: Bool
     
@@ -40,9 +44,9 @@ struct HomeToolBar: View {
             CompButton {
                 var chat: Chat? = nil
                 if let chatId = navigationManager.selectedChatId,
-                   let selectedChat = chatInt.chat(for: chatId)?.chat {
+                   let selectedChat = chatsState.chat(for: chatId)?.chat {
                     chat = selectedChat
-                } else if let firstChat = chatInt.chats.first {
+                } else if let firstChat = chatsState.chats.first {
                     chat = firstChat
                 }
                 guard let chat else { return }
@@ -74,6 +78,6 @@ struct HomeToolBar_Previews: PreviewProvider {
     static var previews: some View {
         HomeToolBar(showChatCreation: .constant(false))
             .environmentObject(NavigationManager.mock)
-            .environmentObject(ChatInteractor.mock)
+            .environmentObject(AppState.mock)
     }
 }

@@ -33,7 +33,8 @@ enum StoreProduct: String, CaseIterable {
     }
 }
 
-@MainActor final class StoreKitManager: ObservableObject {
+@MainActor 
+final class StoreKitManager: ObservableObject {
     
     let identifiers: [String]
     
@@ -43,13 +44,13 @@ enum StoreProduct: String, CaseIterable {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(identifiers: [String]) {
-        self.identifiers = identifiers
+    init() {
+        self.identifiers = StoreProduct.rawValues
         $products
-                    .sink { _ in
-                        self.objectWillChange.send()
-                    }
-                    .store(in: &cancellables)
+            .sink { _ in
+                self.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
     
     func fetchProducts() async {
@@ -92,6 +93,6 @@ extension StoreKitManager {
 extension StoreKitManager {
     
     static var mock: StoreKitManager {
-        StoreKitManager(identifiers: StoreProduct.rawValues)
+        StoreKitManager()
     }
 }

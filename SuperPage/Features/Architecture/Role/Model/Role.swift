@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Role: Codable {
+struct Role: Codable, Equatable {
     
     var tags: [Tag]?
     

@@ -10,33 +10,31 @@ import SwiftUI
 @main
 struct SuperPageApp: App {
     
-    // MARK: - Interactor
-    @StateObject var userInteractor = UserInteractor(
-        repo: UserRepo(),
-        state: UserState())
+    // MARK: - App State
     
-    @StateObject var signInInteractor = AuthenticationInteractor(
-        repo: AuthenticationRepo(),
-        state: AuthenticationState())
+    @StateObject var state = AppState()
     
-    //@StateObject var chatInteractor = ChatInteractor(repo: ChatRepo())
-    @StateObject var chatInteractor = ChatInteractor.mock
+    @StateObject var env = EnvironmentState()
     
-    @StateObject var settingsInt = SettingsInteractor(repo: SettingsRepo())
+    @StateObject var user = UserState()
     
-    @StateObject var env = EnvironmentInteractor(
-        state: EnvironmentState())
+    @StateObject var chats = ChatsState()
     
-    @StateObject var store = StoreKitManager(identifiers: StoreProduct.rawValues)
+    @StateObject var store = StoreKitManager()
+    
+    @StateObject var auth = AuthenticationState()
+    
+    @StateObject var settings = SettingsState()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(userInteractor)
-                .environmentObject(signInInteractor)
-                .environmentObject(chatInteractor)
-                .environmentObject(settingsInt)
+                .environmentObject(state)
+                .environmentObject(chats)
+                .environmentObject(user)
                 .environmentObject(store)
+                .environmentObject(auth)
+                .environmentObject(settings)
                 .onAppear {
                     setupInjection()
                 }
@@ -47,27 +45,19 @@ struct SuperPageApp: App {
     }
 }
 
-extension SuperPageApp {
+private extension SuperPageApp {
     
     func setupInjection() {
-        signInInteractor.inject(
-            env: env,
-            userInteractor: userInteractor,
-            chatInt: chatInteractor)
-        userInteractor.inject(env: env)
-        chatInteractor.inject(
-            env: env,
-            settingsInt: settingsInt
-        )
-        settingsInt.inject(env: env)
+        chats.inject(settings: settings, env: env)
+        settings.inject(envState: env)
         
-        userInteractor.loadInitialState()
         env.loadInitialState()
-        chatInteractor.reloadChats()
-        settingsInt.loadInitialState()
+        user.loadInitialState()
+        settings.loadInitialState()
+        chats.reloadChats()
         
         Task {
-            await self.store.fetchProducts()
+            await store.fetchProducts()
         }
     }
 }

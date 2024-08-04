@@ -11,15 +11,16 @@ import NoAuth
 
 extension APIRequestable {
     
-    func authenticate(env: EnvironmentInteractor) throws -> Self {
+    @MainActor
+    func authenticate(env: EnvironmentState) throws -> Self {
         var credentials: [ClientCredentials] = []
-        if let appCredentials = env.state.appCredentials {
+        if let appCredentials = env.appCredentials {
             credentials.append(appCredentials)
         }
-        if let userCredentials = env.state.userCredentials {
+        if let userCredentials = env.userCredentials {
             credentials.append(userCredentials)
         }
-        return try authenticate(publicKey: env.state.superPageKey, credentials: credentials)
+        return try authenticate(publicKey: env.superPageKey, credentials: credentials)
     }
     
     func authenticate(publicKey: String? = nil, credentials: [ClientCredentials]? = nil) throws -> Self {

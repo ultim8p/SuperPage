@@ -6,16 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
 import NoAuth
 
-enum EnvironmentType {
-    case dev
-    case prod
-}
 
-struct EnvironmentState {
+class EnvironmentState: ObservableObject {
     
-    // Env Variables
+    enum EnvironmentType {
+        case dev
+        case prod
+    }
     
     let env = EnvironmentType.prod
     
@@ -27,8 +27,6 @@ struct EnvironmentState {
         _id: "6421a8b1b24bd4bb31f49781",
         publicKey: "YO913lKhiTbDU3Tm84dlCmGIPaJCJ6I/z1pLE44y/9E=",
         otpKey: "ejlwMmJDbmRuTlVuc0F0aWNHS2RxeTUxeTlVUHlRamhZdW4xQTRkbw==")
-    
-    
     
     var scheme: String {
         switch env {
@@ -42,7 +40,7 @@ struct EnvironmentState {
     var host: String {
         switch env {
         case .dev:
-            return "127.0.0.1"
+            return "192.168.0.152"
         case .prod:
             return "superpage.cloud"
         }
@@ -55,5 +53,22 @@ struct EnvironmentState {
         case .prod:
             return nil
         }
+    }
+    
+    init() {
+        
+    }
+    
+    func loadInitialState() {
+        userCredentials = getUserCredentials()
+    }
+    
+    func setUserCredentials(_ credentials: ClientCredentials?) {
+        userCredentials = credentials
+        UserDefaults.standard.setObject(credentials, forKey: "AuthenticatedUserCredentials")
+    }
+    
+    func getUserCredentials() -> ClientCredentials? {
+        UserDefaults.standard.getObject(forKey: "AuthenticatedUserCredentials")
     }
 }

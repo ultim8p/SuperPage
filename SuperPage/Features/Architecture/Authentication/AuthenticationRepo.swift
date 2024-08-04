@@ -24,11 +24,17 @@ enum AuthPath: APIPath {
 class AuthenticationRepo {
     
     func postUserAuthenticate(
-        env: EnvironmentInteractor,
+        env: EnvironmentState,
         request: SignInRequest
     ) async throws -> SignInResponse {
         return try await request.request(
-            env, method: .post, path: AuthPath.postSignIn
-        ).authenticate(env: env).responseValue()
+            env,
+            method: .post,
+            path: AuthPath.postSignIn,
+            scheme: env.scheme,
+            host: env.host,
+            port: env.port
+        )
+        .authenticate(env: env).responseValue()
     }
 }

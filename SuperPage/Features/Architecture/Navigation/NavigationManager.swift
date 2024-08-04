@@ -11,6 +11,7 @@ enum NavDestination: Hashable {
     case branch(_ id: Branch.ID)
 }
 
+@MainActor
 final class NavigationManager: ObservableObject {
     
     @Published var selectedChatId: Chat.ID?

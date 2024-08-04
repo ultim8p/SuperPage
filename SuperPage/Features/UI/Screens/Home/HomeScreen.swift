@@ -10,13 +10,18 @@ import SwiftUI
 
 struct HomeScreen: View {
     
+    // MARK: Navigation State
+    
     @EnvironmentObject var navigationManager: NavigationManager
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    // MARK: App State
     
-    @EnvironmentObject var settingsInt: SettingsInteractor
+    @EnvironmentObject var settingsState: SettingsState
     
-    @State var chatName: String = ""
+    @EnvironmentObject var chatsState: ChatsState
+    
+    // MARK: View State
+    
     @State var branchName: String = ""
     
     @State private var showChatCreation = false
@@ -51,7 +56,7 @@ struct HomeScreen: View {
                             selectedChat: .constant(nil)
                         )
 
-                        if settingsInt.settingsUsage.shouldShowTokensLeft {
+                        if settingsState.settingsUsage.shouldShowTokensLeft {
                             CompSeparator()
                             HomeTokenStatsView()
                         }
@@ -79,7 +84,7 @@ extension HomeScreen {
     
     func sendMessage(message: String, model: AIModel, branch: Branch, messageIds: [String]) {
         guard !message.isEmpty else { return }
-        chatInt.postCreateMessage(
+        chatsState.postCreateMessage(
             text: message,
             model: model,
             branch: branch,
@@ -92,8 +97,7 @@ struct HomeScreen_Previews: PreviewProvider {
                             
     static var previews: some View {
         HomeScreen()
-            .environmentObject(ChatInteractor.mock)
-            .environmentObject(NavigationManager.mock)
-            .environmentObject(SettingsInteractor.mock)
+            .environmentObject(SettingsState.mock)
+            .environmentObject(ChatsState.mock)
     }
 }

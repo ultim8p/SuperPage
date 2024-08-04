@@ -1,5 +1,5 @@
 //
-//  ChatInteractor.swift
+//  ChatsState.swift
 //  SuperPage
 //
 //  Created by Guerson Perez on 3/29/23.
@@ -8,28 +8,49 @@
 import Foundation
 import SwiftUI
 
-class ChatInteractor: ObservableObject {
+@MainActor
+class ChatsState: ObservableObject {
     
-    let repo: ChatRepo
+    // MARK: - Network
+    
+    let repo = ChatRepo()
+    
+    // MARK: - Model State
     
     @Published var chats: [Chat] = []
     
     @Published var drafts: [String: MessageDraft] = [:]
     
-    @ObservedObject var env: EnvironmentInteractor
-    
-    @ObservedObject var settingsInt: SettingsInteractor
-    
     @Published var loadingChatsState: ModelState = .loading
     
-    init(repo: ChatRepo) {
-        self.repo = repo
-        env = EnvironmentInteractor.mock
-        settingsInt = SettingsInteractor.mock
+    // MARK: - App State
+    
+    @ObservedObject var settings: SettingsState
+    
+    @ObservedObject var env: EnvironmentState
+    
+    init() {
+        settings = SettingsState.mock
+        env = EnvironmentState.mock
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+//            self.chats = [
+//                Chat(name: "Chat1"),
+//                Chat(name: "Chat3",
+//                     branches: [
+//                        Branch(name: "Branch 1"),
+//                        Branch(name: "Branch 2"),
+//                        Branch(name: "Branch 3")
+//                     ]),
+//                Chat(name: "Chat4"),
+//                Chat(name: "Chat5", branches: [Branch(name: "Branch1")])
+//            ]
+//            print("DID SET CHATS")
+//        })
     }
     
-    func inject(env: EnvironmentInteractor, settingsInt: SettingsInteractor) {
-        self.settingsInt = settingsInt
+    func inject(settings: SettingsState, env: EnvironmentState) {
+        self.settings = settings
         self.env = env
     }
     
@@ -48,7 +69,7 @@ class ChatInteractor: ObservableObject {
 
 // MARK: - Model Read & Write
 
-extension ChatInteractor {
+extension ChatsState {
     
     func chat(for id: String?) -> (chat: Chat, index: Int)? {
         chats.chat(for: id)
@@ -89,7 +110,7 @@ extension ChatInteractor {
 
 // MARK: - Updating Model
 
-extension ChatInteractor {
+extension ChatsState {
     
     // MARK: Chat
     
@@ -179,7 +200,7 @@ extension ChatInteractor {
 
 // MARK: - Actions
 
-extension ChatInteractor {
+extension ChatsState {
     
     func toggleExpand(chat: Chat) {
         var chats = self.chats
@@ -210,7 +231,7 @@ extension ChatInteractor {
 
 // MARK: - Draft
 
-extension ChatInteractor {
+extension ChatsState {
     
     func draft(for branch: Branch?) -> MessageDraft? {
         guard let branchId = branch?._id else { return nil }

@@ -14,7 +14,7 @@ struct ChatsListView: View {
     
     @EnvironmentObject var navigationManager: NavigationManager
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    @EnvironmentObject var chatsState: ChatsState
     
     // MARK: Branch
     
@@ -51,7 +51,7 @@ struct ChatsListView: View {
             AppColor.mainSecondary.color
                 .ignoresSafeArea(.all)
             ScrollView {
-                ForEach(chatInt.chats) { chat in
+                ForEach(chatsState.chats) { chat in
                     ChatRow(
                         chat: .constant(chat),
                         chatContextMenu: $chatContextMenu,
@@ -62,27 +62,27 @@ struct ChatsListView: View {
                             withAnimation {
                                 selectedChat = chat
                                 navigationManager.selectedChatId = chat.id
-                                chatInt.toggleExpand(chat: chat)
+                                chatsState.toggleExpand(chat: chat)
                             }
                         }
                     )
                     
                     if chat.expanded ?? false {
                         ForEach(chat.branches ?? []) { branch in
-                                BranchRow(
-                                    branch: .constant(branch),
-                                    selectedBranchId: $navigationManager.selectedBranchId,
-                                    branchContextMenu: $branchContextMenu,
-                                    showBranchDeleteAlert: $showBranchDeleteAlert,
-                                    editPressed: {
-                                        navigationManager.editingBranch = branch
-                                    },
-                                    selectionHandler: {
-                                        print("DID SELECT BRANCH: \(branch.id)")
-    //                                    navigationManager.selectedBranchId = branch.id
-                                        navigationManager.openBranch(id: branch.id)
-                                    }
-                                )
+                            BranchRow(
+                                branch: .constant(branch),
+                                selectedBranchId: $navigationManager.selectedBranchId,
+                                branchContextMenu: $branchContextMenu,
+                                showBranchDeleteAlert: $showBranchDeleteAlert,
+                                editPressed: {
+                                    navigationManager.editingBranch = branch
+                                },
+                                selectionHandler: {
+                                    print("DID SELECT BRANCH: \(branch.id)")
+                                    //                                    navigationManager.selectedBranchId = branch.id
+                                    navigationManager.openBranch(id: branch.id)
+                                }
+                            )
                             
                         }
                     }
@@ -91,8 +91,10 @@ struct ChatsListView: View {
         }
         .clipped()
         .background(Color.homeBackground)
+        .onChange(of: chatsState.chats) { oldValue, newValue in
+            print("Up´dated chats: \(oldValue.count) New val: \(newValue.count)")
+        }
     }
-                
 }
 
 
@@ -211,6 +213,6 @@ struct ChatsList_Previews: PreviewProvider {
             chatContextMenu: .constant(Chat()),
             selectedChat: .constant(nil)
         )
-        .environmentObject(ChatInteractor.mock)
+        .environmentObject(ChatsState.mock)
     }
 }

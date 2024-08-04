@@ -1,5 +1,5 @@
 //
-//  ChatInteractor+Mock.swift
+//  ChatsState+Mock.swift
 //  SuperPage
 //
 //  Created by Guerson Perez on 3/29/23.
@@ -7,10 +7,10 @@
 
 import Foundation
 
-extension ChatInteractor {
+extension ChatsState {
     
-    static var mock: ChatInteractor {
-        let interactor = ChatInteractor(repo: ChatRepo())
+    static var mock: ChatsState {
+        let interactor = ChatsState()
         interactor.chats = [
             Chat(name: "Chat1"),
             Chat(name: "Chat3",

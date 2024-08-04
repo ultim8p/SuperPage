@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Chat: Codable, Identifiable {
+struct Chat: Codable, Identifiable, Equatable {
     
     var id: String {
         return _id ?? UUID().uuidString

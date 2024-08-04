@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AIModel: Codable {
+struct AIModel: Codable, Equatable {
     
     enum Name: String, Codable, CaseIterable, UnknownCaseRepresentable {
         
@@ -16,6 +16,8 @@ struct AIModel: Codable {
         case gpt35Turbo = "gpt-3.5-turbo"
         
         case gpt4o = "gpt-4o"
+        
+        case gpt4oMini = "gpt-4o-mini"
         
         // MARK: - Claude
         
@@ -59,6 +61,9 @@ struct AIModel: Codable {
             return "GPT 3"
         case .gpt4o:
             return "GPT 4o"
+        case .gpt4oMini:
+            return "GPT-4o-mini"
+            
             
         case .mistralLarge:
             return "MistralLarge"
@@ -90,6 +95,7 @@ struct AIModel: Codable {
     
     static var allModels: [AIModel] {
         return [
+            AIModel(name: .gpt4oMini),
             AIModel(name: .claude35Sonnet),
             AIModel(name: .gpt4o)
         ]

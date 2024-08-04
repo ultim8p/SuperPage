@@ -10,7 +10,11 @@ import SwiftUI
 
 struct BranchRow: View {
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    // MARK: App State
+    
+    @EnvironmentObject var chatsState: ChatsState
+    
+    // MARK: View State
     
     @Binding var branch: Branch
     
@@ -114,7 +118,7 @@ struct BranchRow: View {
         {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                chatInt.deleteBranch(branch: branchContextMenu)
+                chatsState.deleteBranch(branch: branchContextMenu)
             }
         }
     }
@@ -131,6 +135,6 @@ struct BranchRow_Previews: PreviewProvider {
             branchContextMenu: .constant(Branch()),
             showBranchDeleteAlert: .constant(false)
         )
-        .environmentObject(ChatInteractor.mock)
+        .environmentObject(ChatsState.mock)
     }
 }

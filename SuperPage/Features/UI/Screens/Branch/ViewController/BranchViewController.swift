@@ -39,9 +39,9 @@ class BranchViewController: NOViewController {
     
     var errorView = ErrorView()
     
-    // MARK: - StateVariables
+    // MARK: - App State
     
-    var chatInteractor: ChatInteractor
+    var chatsState: ChatsState
     
     var branchEditState: BranchEditState
     
@@ -84,10 +84,10 @@ class BranchViewController: NOViewController {
     
     init(
          selectedBranchId: Branch.ID?,
-         chatInteractor: ChatInteractor,
+         chatsState: ChatsState,
          branchEditState: BranchEditState
     ) {
-        self.chatInteractor = chatInteractor
+        self.chatsState = chatsState
         self.branchEditState = branchEditState
         super.init(nibName: nil, bundle: nil)
         
@@ -167,11 +167,11 @@ class BranchViewController: NOViewController {
     }
     
     func bindViewModel() {
-        chatInteractor.$chats.sink { [weak self] chats in
+        chatsState.$chats.sink { [weak self] chats in
             self?.didUpdateChats(chats)
         }.store(in: &cancellables)
         
-        chatInteractor.$drafts.sink { [weak self] drafts in
+        chatsState.$drafts.sink { [weak self] drafts in
             self?.didUpdate(drafts: drafts)
         }.store(in: &cancellables)
         
@@ -434,21 +434,21 @@ class BranchViewController: NOViewController {
             return
         }
         
-        guard branchId != branch?._id, let branch = chatInteractor.branch(id: branchId) else { return }
+        guard branchId != branch?._id, let branch = chatsState.branch(id: branchId) else { return }
         
         print("BRST: did load branch ViewControlle")
         
         self.branch = branch
         messages = branch.messages ?? []
-        draft = chatInteractor.draft(for: branch)
+        draft = chatsState.draft(for: branch)
         newMessage = draft?.messages?.first?.fullTextValue() ?? ""
         
         reloadCells()
         scrollToBottom()
         reloadErrorState()
         
-        chatInteractor.getDraft(branch: branch)
-        chatInteractor.getMessages(branch: branch)
+        chatsState.getDraft(branch: branch)
+        chatsState.getMessages(branch: branch)
     }
     
     func scrollToBottom() {

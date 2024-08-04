@@ -9,9 +9,14 @@ import SwiftUI
 
 struct EmptyCreateBranchView: View {
     
+    
+    // MARK: Navigation State
+    
     @EnvironmentObject var navigationManager: NavigationManager
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    // MARK: App State
+    
+    @EnvironmentObject var chatsState: ChatsState
     
     var body: some View {
         ZStack {
@@ -53,9 +58,9 @@ struct EmptyCreateBranchView: View {
     func openCreate() {
         var chat: Chat? = nil
         if let chatId = navigationManager.selectedChatId,
-           let selectedChat = chatInt.chat(for: chatId)?.chat {
+           let selectedChat = chatsState.chat(for: chatId)?.chat {
             chat = selectedChat
-        } else if let firstChat = chatInt.chats.first {
+        } else if let firstChat = chatsState.chats.first {
             chat = firstChat
         }
         guard let chat else { return }

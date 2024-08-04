@@ -11,12 +11,12 @@ struct HomeShortcutsView: View {
     
     @EnvironmentObject var navigationManager: NavigationManager
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    @EnvironmentObject var chatsState: ChatsState
     
     var body: some View {
         Button(action: {
             guard let selectedBranchId = navigationManager.selectedBranchId else { return }
-            navigationManager.editingBranch = chatInt.branch(id: selectedBranchId)
+            navigationManager.editingBranch = chatsState.branch(id: selectedBranchId)
         }, label: {})
         .buttonStyle(.borderless)
         .keyboardShortcut("e", modifiers: .command)
@@ -24,9 +24,9 @@ struct HomeShortcutsView: View {
         Button(action: {
             var chat: Chat? = nil
             if let chatId = navigationManager.selectedChatId,
-               let selectedChat = chatInt.chat(for: chatId)?.chat {
+               let selectedChat = chatsState.chat(for: chatId)?.chat {
                 chat = selectedChat
-            } else if let firstChat = chatInt.chats.first {
+            } else if let firstChat = chatsState.chats.first {
                 chat = firstChat
             }
             guard let chat else { return }

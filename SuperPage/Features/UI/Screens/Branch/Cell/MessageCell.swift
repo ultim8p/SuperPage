@@ -139,9 +139,9 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
             let barWidth = mouseOn ? Constant.barHoverWidth : Constant.barWidth
             selectedBar.noSet(radius: barWidth * 0.5)
             selectedBar.width(barWidth)
-            self.textView.backgroundColor = mouseOn ?
-                .black.withAlphaComponent(0.1) :
-                .clear
+//            self.textView.backgroundColor = mouseOn ?
+//                .black.withAlphaComponent(0.1) :
+//                .clear
             reloadSelectedBarState()
         }
     }

@@ -1,5 +1,5 @@
 //
-//  ChatInteractor+API.swift
+//  ChatsState+API.swift
 //  SuperPage
 //
 //  Created by Guerson Perez on 3/29/23.
@@ -9,16 +9,20 @@ import Foundation
 
 // MARK: - Chat
 
-extension ChatInteractor {
+
+extension ChatsState {
     
     // MARK: GET
     
     func reloadChats() {
-        Task {
+        Task(priority: .userInitiated) { @MainActor in
             do {
                 let response = try await repo.getChatsAllMe(env: env)
-                self.chats = response.items ?? []
-                self.loadingChatsState = .ok
+                await MainActor.run {
+                    self.chats = response.items ?? []
+                    self.loadingChatsState = .ok
+                    
+                }
             } catch {
                 print("CHAT ERR: \(error)")
                 self.loadingChatsState = .error(error)
@@ -73,7 +77,7 @@ extension ChatInteractor {
 
 // MARK: - Branch
 
-extension ChatInteractor {
+extension ChatsState {
     
     // MARK: GET
     
@@ -145,7 +149,7 @@ extension ChatInteractor {
 
 // MARK: - Message
 
-extension ChatInteractor {
+extension ChatsState {
     
     // MARK: GET
     
@@ -222,7 +226,7 @@ extension ChatInteractor {
                 setError(branch: branch, createMessageError: nil)
                 addMessage(messages: messages, branch: branch)
                 
-                settingsInt.reloadSetttings()
+                settings.reloadSetttings()
             }  catch let error as NoError {
                 setState(branch: branch, state: .ok, loadingState: .ok)
                 setError(branch: branch, createMessageError: error)
@@ -235,7 +239,7 @@ extension ChatInteractor {
 
 // MARK: - Draft
 
-extension ChatInteractor {
+extension ChatsState {
     
     func getDraft(branch: Branch) {
         let request = Branch(_id: branch._id)

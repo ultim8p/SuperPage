@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Codable, Identifiable, Hashable {
+struct User: Codable, Identifiable, Hashable, Equatable {
     
     var id: String { _id ?? UUID().uuidString }
     

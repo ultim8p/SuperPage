@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Tag: Codable {
+struct Tag: Codable, Equatable {
     
     var type: TagType?
     

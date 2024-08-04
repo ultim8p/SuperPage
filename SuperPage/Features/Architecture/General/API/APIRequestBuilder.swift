@@ -18,13 +18,18 @@ import AppKit
 
 extension APIRequestable {
     
-    static func request(_ env: EnvironmentInteractor,
-                        method: APIMethod? = nil,
-                        path: APIPath? = nil) throws -> APIBaseRequest {
+    static func request(
+        _ env: EnvironmentState,
+        method: APIMethod? = nil,
+        path: APIPath? = nil,
+        scheme: String,
+        host: String,
+        port: Int?
+    ) throws -> APIBaseRequest {
         var request = APIBaseRequest()
-        request = try request.setScheme(env.state.scheme)
-            .setHost(env.state.host)
-            .setPort(env.state.port)
+        request = try request.setScheme(scheme)
+            .setHost(host)
+            .setPort(port)
             .setMethod(method)
             .addBaseHeaders()
             .setTimeout(interval: TimeInterval(60.0 * 10.0))

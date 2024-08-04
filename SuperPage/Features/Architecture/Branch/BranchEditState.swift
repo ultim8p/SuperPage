@@ -8,9 +8,10 @@
 import Combine
 import SwiftUI
 
+@MainActor
 final class BranchEditState: ObservableObject {
     
-    @ObservedObject var chatInt: ChatInteractor
+    @ObservedObject var chatsState: ChatsState
     
     @ObservedObject var navManager: NavigationManager
     
@@ -36,12 +37,15 @@ final class BranchEditState: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        chatInt = ChatInteractor.mock
+        chatsState = ChatsState.mock
         navManager = NavigationManager.mock
     }
     
-    func inject(chatInt: ChatInteractor, navManager: NavigationManager) {
-        self.chatInt = chatInt
+    func inject(
+        chatsState: ChatsState,
+        navManager: NavigationManager
+    ) {
+        self.chatsState = chatsState
         self.navManager = navManager
         
         setupBindings()
@@ -102,7 +106,7 @@ extension BranchEditState {
     func selectDefaultMessages() {
         guard
             let branchId = selectedBranchId,
-            let messages = chatInt.branch(id: branchId)?.messages
+            let messages = chatsState.branch(id: branchId)?.messages
         else { return }
         
         let maxMessages = 3
@@ -134,13 +138,13 @@ extension BranchEditState {
         guard
             !newMessage.isEmpty,
             let branchId = selectedBranchId,
-            let branch = chatInt.branch(id: branchId)
+            let branch = chatsState.branch(id: branchId)
         else { return }
         
         let draftMessage = Message.create(role: .user, text: newMessage)
         messageDraft = MessageDraft(branch: branch, messages: [draftMessage])
         
-        chatInt.postCreateMessage(
+        chatsState.postCreateMessage(
             text: newMessage,
             model: model,
             branch: branch,

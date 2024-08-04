@@ -11,14 +11,14 @@ struct BranchScreenDetail: View {
     
 //    @StateObject var branchEditState = BranchEditState()
     
-    @EnvironmentObject var chatInt: ChatInteractor
+    @EnvironmentObject var chatsState: ChatsState
     
     @EnvironmentObject var navigationManager: NavigationManager
     
     var body: some View {
         Group {
-            if !chatInt.hasChats {
-                if chatInt.loadingChatsState == .loading {
+            if !chatsState.hasChats {
+                if chatsState.loadingChatsState == .loading {
                     EmptyLoadingView()
                 } else {
                     EmptyCreateChatView()
@@ -28,7 +28,7 @@ struct BranchScreenDetail: View {
                     BranchScreen()
                 } else {
                     let selectedChatId = navigationManager.selectedChatId
-                    if let selectedChat = chatInt.chat(for: selectedChatId)?.chat {
+                    if let selectedChat = chatsState.chat(for: selectedChatId)?.chat {
                         let state = selectedChat.state ?? .ok
                         if state == .loading {
                             EmptyHomeView()
