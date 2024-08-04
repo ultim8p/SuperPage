@@ -28,8 +28,6 @@ struct Chat: Codable, Identifiable, Equatable {
     var state: ModelState?
     
     var branches: [Branch]?
-    
-    var expanded: Bool?
 }
 
 // MARK: - Model Read & Write

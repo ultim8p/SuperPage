@@ -32,6 +32,20 @@ final class NavigationManager: ObservableObject {
     
     @Published var sheetTokenStore: Bool = false
     
+    @Published var expandedChatIds: Set<String> = []
+    
+    func toggleExpand(chatId: String) {
+        if expandedChatIds.contains(chatId) {
+            expandedChatIds.remove(chatId)
+        } else {
+            expandedChatIds.insert(chatId)
+        }
+    }
+    
+    func expand(chatId: String) {
+        expandedChatIds.insert(chatId)
+    }
+    
     func openBranch(id: Branch.ID) {
         selectedBranchId = id
     }

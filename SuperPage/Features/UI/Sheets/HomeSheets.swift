@@ -59,7 +59,7 @@ struct RootSheetsModifier: ViewModifier {
                 ChatCreateView { name in
                     chatsState.createChat(name: name) { chatId in
                         navigationManager.selectedChatId = chatId
-                        chatsState.expandChat(with: chatId)
+                        navigationManager.expand(chatId: chatId)
                     }
                 }
             }

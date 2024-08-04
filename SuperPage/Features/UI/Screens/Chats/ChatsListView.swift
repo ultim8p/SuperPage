@@ -60,14 +60,19 @@ struct ChatsListView: View {
                         showChatDeleteAlert: $showChatDeleteAlert,
                         selectionHandler: {
                             withAnimation {
-                                selectedChat = chat
-                                navigationManager.selectedChatId = chat.id
-                                chatsState.toggleExpand(chat: chat)
+                                navigationManager.toggleExpand(chatId: chat.id)
+                            }
+                            
+                            selectedChat = chat
+                            navigationManager.selectedChatId = chat.id
+                            
+                            if navigationManager.expandedChatIds.contains(chat.id) {
+                                chatsState.getBranches(chat: chat)
                             }
                         }
                     )
                     
-                    if chat.expanded ?? false {
+                    if navigationManager.expandedChatIds.contains(chat.id) {
                         ForEach(chat.branches ?? []) { branch in
                             BranchRow(
                                 branch: .constant(branch),

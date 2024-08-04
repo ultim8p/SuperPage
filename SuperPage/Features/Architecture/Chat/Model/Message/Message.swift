@@ -31,9 +31,6 @@ struct Message: Codable, Identifiable, Equatable {
     
     var model: AIModel?
     
-    // Local
-    
-    
     init(_id: String? = nil,
          dateCreated: Date? = nil,
          dateUpdated: Date? = nil,

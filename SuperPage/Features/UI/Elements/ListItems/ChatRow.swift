@@ -33,7 +33,7 @@ struct ChatRow: View {
     var selectionHandler: (() -> Void)?
     
     var body: some View {
-        let expanded = chat.expanded ?? false
+        let expanded = navigationManager.expandedChatIds.contains(chat.id)
         let isSelected = selectedChatId == chat.id
         
         FileRow(

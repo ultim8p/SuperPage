@@ -202,27 +202,6 @@ extension ChatsState {
 
 extension ChatsState {
     
-    func toggleExpand(chat: Chat) {
-        var chats = self.chats
-        guard let chatIndex = chats.firstIndex(where: { $0._id == chat._id }) else { return }
-        var updatingChat = chats[chatIndex]
-        updatingChat.expanded = !(updatingChat.expanded ?? false)
-        chats[chatIndex] = updatingChat
-        self.chats = chats
-        
-        if updatingChat.expanded ?? false {
-            getBranches(chat: chat)
-        }
-    }
-    
-    func expandChat(with id: String) {
-        guard let chatIndex = chats.firstIndex(where: { $0._id == id }) else { return }
-        var updatingChat = chats[chatIndex]
-        updatingChat.expanded = true
-        chats[chatIndex] = updatingChat
-        self.chats = chats
-    }
-    
     func remove(chat: Chat) {
         guard let chatIndex = chats.firstIndex(where: {$0.id == chat.id}) else { return }
         chats.remove(at: chatIndex)
