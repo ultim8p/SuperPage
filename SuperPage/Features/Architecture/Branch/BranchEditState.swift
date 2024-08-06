@@ -20,17 +20,25 @@ final class BranchEditState: ObservableObject {
     
     // Editing Entity
     
-    var selectedBranchId: Branch.ID? = nil
+    @Published var selectedBranchRef: BranchReference? = nil
     
     // Edition State
     
     @Published var model: AIModel = AIModel.allModels.first!
     
-    @Published var messageDraft: MessageDraft?
-    
     @Published var newMessage: String = ""
     
     @Published var selectedMessages: Set<String> = []
+    
+    // App Properties
+    
+    @Published var branch: Branch?
+    
+    @Published var draft: MessageDraft?
+    
+    @Published var messages: [Message] = []
+    
+    @Published var branchLocalState: ModelState?
     
     // Combine
     
@@ -57,28 +65,91 @@ final class BranchEditState: ObservableObject {
 extension BranchEditState {
     
     private func setupBindings() {
-        navManager.$selectedBranchId
-            .sink { [weak self] selectedBranchId in
-                self?.didChange(selectedBranch: selectedBranchId)
-            }
-            .store(in: &cancellables)
-    }
+        navManager.$selectedBranchRef.sink { [weak self] branchRef in
+            self?.didChange(selectedBranch: branchRef)
+        }.store(in: &cancellables)
         
-    private func didChange(selectedBranch branchId: Branch.ID?) {
-        guard selectedBranchId != branchId else {
-            // Save message draf & useful state of previous branch,
-            return
-        }
-        selectedBranchId = branchId
-        // Update your branch edit state accordingly
-        resetBranch()
+        chatsState.$messages.sink { [weak self] messages in
+            guard let branchId = self?.selectedBranchRef?._id else { return }
+            
+            let branchMessages = messages[branchId]
+            self?.didChange(messages: branchMessages)
+        }.store(in: &cancellables)
+        
+        
+        chatsState.$branches.sink { [weak self] branches in
+            guard 
+                let chatId = self?.selectedBranchRef?.chat?._id,
+                let branchId = self?.selectedBranchRef?._id,
+                let branch = branches[chatId]?.first(where: { $0._id == branchId })
+            else { return }
+            
+            self?.didChange(branch: branch)
+        }.store(in: &cancellables)
+        
+        chatsState.$branchesStates.sink { [weak self] states in
+            guard
+                let branchId = self?.selectedBranchRef?._id,
+                let state = states[branchId]
+            else { return }
+            
+            self?.didChange(branchLocalState: state)
+        }.store(in: &cancellables)
+    }
+}
+
+// MARK: - Update Selection State
+
+private extension BranchEditState {
+    
+    private func didChange(selectedBranch ref: BranchReference?) {
+        guard selectedBranchRef != ref else { return }
+        
+        // Save message draf & useful state of previous branch,
+        
+        selectedBranchRef = ref
+        setupBranch()
+    }
+}
+
+// MARK: - Update State
+
+private extension BranchEditState {
+    
+    func didChange(messages: [Message]?) {
+        self.messages = messages ?? []
     }
     
-    func resetBranch() {
-        messageDraft = nil
+    func didChange(branchLocalState: ModelState?) {
+        self.branchLocalState = branchLocalState
+    }
+    
+    func didChange(branch: Branch?) {
+        self.branch = branch
+    }
+    
+    func setupBranch() {
         newMessage = ""
         selectedMessages = []
+        draft = nil
+//        draft = chatsState.draftFor(branchId: selectedBranchRef?._id)
+        branchLocalState = nil
+        branch = chatsState.branchFor(branchRef: selectedBranchRef)
+//        branchLocalState = chatsState.branchLocalStateFor(branchId: selectedBranchRef?._id)
+        messages = []
+//        messages = chatsState.messagesFor(branchId: selectedBranchRef?._id)
+        
+        guard let branch else { return }
+        
+        chatsState.getMessages(branch: branch)
+        chatsState.getDraft(branch: branch)
     }
+}
+
+// MARK: - State Properties
+
+private extension BranchEditState {
+    
 }
 
 // MARK: - Actions
@@ -105,9 +176,11 @@ extension BranchEditState {
     
     func selectDefaultMessages() {
         guard
-            let branchId = selectedBranchId,
-            let messages = chatsState.branch(id: branchId)?.messages
+            let branchRef = selectedBranchRef,
+            let branchId = branchRef._id
         else { return }
+        
+        let messages = chatsState.messagesFor(branchId: branchId)
         
         let maxMessages = 3
         var messageIds: Set<String> = []
@@ -137,12 +210,11 @@ extension BranchEditState {
     func sendMessage() {
         guard
             !newMessage.isEmpty,
-            let branchId = selectedBranchId,
-            let branch = chatsState.branch(id: branchId)
+            let branch = chatsState.branchFor(branchRef: selectedBranchRef)
         else { return }
         
         let draftMessage = Message.create(role: .user, text: newMessage)
-        messageDraft = MessageDraft(branch: branch, messages: [draftMessage])
+        draft = MessageDraft(branch: branch, messages: [draftMessage])
         
         chatsState.postCreateMessage(
             text: newMessage,

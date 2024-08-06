@@ -15,8 +15,8 @@ struct HomeShortcutsView: View {
     
     var body: some View {
         Button(action: {
-            guard let selectedBranchId = navigationManager.selectedBranchId else { return }
-            navigationManager.editingBranch = chatsState.branch(id: selectedBranchId)
+            guard let selectedBranchRef = navigationManager.selectedBranchRef else { return }
+            navigationManager.editingBranch = chatsState.branchFor(branchRef: selectedBranchRef)
         }, label: {})
         .buttonStyle(.borderless)
         .keyboardShortcut("e", modifiers: .command)

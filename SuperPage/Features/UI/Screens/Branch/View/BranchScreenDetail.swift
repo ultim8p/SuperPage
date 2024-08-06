@@ -24,24 +24,26 @@ struct BranchScreenDetail: View {
                     EmptyCreateChatView()
                 }
             } else {
-                if navigationManager.selectedBranchId != nil {
+                if navigationManager.selectedBranchRef != nil {
                     BranchScreen()
                 } else {
-                    let selectedChatId = navigationManager.selectedChatId
-                    if let selectedChat = chatsState.chat(for: selectedChatId)?.chat {
-                        if chatsState.chatsStates[selectedChat.id] == .loading {
-                            EmptyHomeView()
-                        } else {
-                            let hasBranches = !(selectedChat.branches?.isEmpty ?? true)
-                            if hasBranches {
-                                EmptyHomeView()
-                            } else {
-                                EmptyCreateBranchView()
-                            }
-                        }
-                    } else {
-                        EmptyHomeView()
-                    }
+                    EmptyHomeView()
+//                    let selectedChatId = navigationManager.selectedChatId
+//                    if let selectedChat = chatsState.chatFor(id: selectedChatId) {
+//                        if chatsState.chatsStates[selectedChat.id] == .loading {
+//                            EmptyHomeView()
+//                        } else {
+//                            let chatBranches = chatsState.branches[selectedChat.id]
+//                            let hasBranches = !(chatBranches?.isEmpty ?? true)
+//                            if hasBranches {
+//                                EmptyHomeView()
+//                            } else {
+//                                EmptyCreateBranchView()
+//                            }
+//                        }
+//                    } else {
+//                        EmptyHomeView()
+//                    }
                 }
             }
         }

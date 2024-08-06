@@ -46,7 +46,7 @@ struct ChatsListView: View {
     
     var body: some View {
         ZStack {
-            List(swiftuisucksBranches, selection: $navigationManager.selectedBranchId) { _ in }
+            List(swiftuisucksBranches, selection: $navigationManager.selectedBranchRef) { _ in }
             
             AppColor.mainSecondary.color
                 .ignoresSafeArea(.all)
@@ -59,36 +59,25 @@ struct ChatsListView: View {
                         showEditChat: $showEditChat,
                         showChatDeleteAlert: $showChatDeleteAlert,
                         selectionHandler: {
-                            withAnimation {
-                                navigationManager.toggleExpand(chatId: chat.id)
-                            }
-                            
-                            selectedChat = chat
-                            navigationManager.selectedChatId = chat.id
-                            
-                            if navigationManager.expandedChatIds.contains(chat.id) {
-                                chatsState.getBranches(chat: chat)
-                            }
+                            self.handleChatRowSelection(chat: chat)
                         }
                     )
                     
                     if navigationManager.expandedChatIds.contains(chat.id) {
-                        ForEach(chat.branches ?? []) { branch in
+                        let branches = chatsState.branches[chat.id] ?? []
+                        ForEach(branches) { branch in
                             BranchRow(
                                 branch: .constant(branch),
-                                selectedBranchId: $navigationManager.selectedBranchId,
+                                selectedBranchRef: $navigationManager.selectedBranchRef,
                                 branchContextMenu: $branchContextMenu,
                                 showBranchDeleteAlert: $showBranchDeleteAlert,
                                 editPressed: {
                                     navigationManager.editingBranch = branch
                                 },
                                 selectionHandler: {
-                                    print("DID SELECT BRANCH: \(branch.id)")
-                                    //                                    navigationManager.selectedBranchId = branch.id
-                                    navigationManager.openBranch(id: branch.id)
+                                    self.handleBranchRowSelection(chat: chat, branch: branch)
                                 }
                             )
-                            
                         }
                     }
                 }
@@ -96,12 +85,28 @@ struct ChatsListView: View {
         }
         .clipped()
         .background(Color.homeBackground)
-        .onChange(of: chatsState.chats) { oldValue, newValue in
-            print("Up´dated chats: \(oldValue.count) New val: \(newValue.count)")
-        }
     }
 }
 
+extension ChatsListView {
+    
+    func handleChatRowSelection(chat: Chat) {
+        withAnimation {
+            navigationManager.toggleExpand(chatId: chat.id)
+        }
+        
+        selectedChat = chat
+        navigationManager.selectedChatId = chat.id
+        
+        if navigationManager.expandedChatIds.contains(chat.id) {
+            chatsState.getBranches(chat: chat)
+        }
+    }
+    
+    func handleBranchRowSelection(chat: Chat, branch: Branch) {
+        navigationManager.openBranch(branchId: branch.id, chatId: chat.id)
+    }
+}
 
 
 /*

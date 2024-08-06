@@ -49,7 +49,7 @@ struct RootSheetsModifier: ViewModifier {
                             }
                             let role = Role(tags: tags, text: role)
                             chatsState.createBranch(name: name, promptRole: role, chat: chat) { id in
-                                navigationManager.openBranch(id: id)
+                                navigationManager.openBranch(branchId: id, chatId: chat.id)
                             }
                         }
                 }

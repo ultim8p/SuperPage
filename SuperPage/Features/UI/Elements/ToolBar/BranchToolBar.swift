@@ -19,20 +19,20 @@ struct BranchToolBar: View {
                 let sendDisabled = branchEditState.newMessage.isEmpty
                 VStack {
                     Spacer()
-//                    if branchEditState.messagesCount > 0 {
-                        CompButton {
-                            messagesButtonAction()
-                        } label: {
-                            HStack(spacing: 0) {
-                                CompIcon(size: .large, iconSize: .small, icon: branchEditState.selectedMessages.count > 0 ? .checkmarkSquare : .square, color: .highlight, weight: .regular)
-                                Text("\(branchEditState.selectedMessages.count) messages")
-                                    .foregroundStyle(AppColor.highlight.color)
-                                    .font(.system(size: 18))
-                                    .padding(.leading, -6)
-                            }
+                    
+                    CompButton {
+                        messagesButtonAction()
+                    } label: {
+                        HStack(spacing: 0) {
+                            CompIcon(size: .large, iconSize: .small, icon: branchEditState.selectedMessages.count > 0 ? .checkmarkSquare : .square, color: .highlight, weight: .regular)
+                            Text("\(branchEditState.selectedMessages.count) messages")
+                                .foregroundStyle(AppColor.highlight.color)
+                                .font(.system(size: 18))
+                                .padding(.leading, -6)
                         }
-                        .frame(height: 50.0)
-//                    }
+                    }
+                    .frame(height: 50.0)
+                    
                     Spacer()
                 }
                 .padding(.leading)

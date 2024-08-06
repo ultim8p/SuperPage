@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,6 +24,8 @@
 		A009F16029D416C40045F311 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A009F15F29D416C40045F311 /* HomeScreen.swift */; };
 		A00BFA242C5F573F00A0B16E /* MessageBitBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00BFA232C5F573F00A0B16E /* MessageBitBuilder.swift */; };
 		A00BFA282C5F638D00A0B16E /* MessageBit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00BFA272C5F638D00A0B16E /* MessageBit.swift */; };
+		A00BFA2A2C604DEE00A0B16E /* ChatReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00BFA292C604DEE00A0B16E /* ChatReference.swift */; };
+		A00BFA2D2C6178D000A0B16E /* NoUI in Frameworks */ = {isa = PBXBuildFile; productRef = A00BFA2C2C6178D000A0B16E /* NoUI */; };
 		A01236AB29E2C43000DF14C4 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01236AA29E2C43000DF14C4 /* TextView.swift */; };
 		A01CA24329D019C500AEB258 /* SuperPageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA24229D019C500AEB258 /* SuperPageApp.swift */; };
 		A01CA24529D019C500AEB258 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA24429D019C500AEB258 /* ContentView.swift */; };
@@ -90,7 +92,6 @@
 		A03645D929E7736100D524BB /* loadingDots.json in Resources */ = {isa = PBXBuildFile; fileRef = A03645D829E7736100D524BB /* loadingDots.json */; };
 		A03645DC29E77C8900D524BB /* Device+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645DB29E77C8900D524BB /* Device+Additions.swift */; };
 		A03645E529E88EA100D524BB /* AttatchmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645E429E88EA100D524BB /* AttatchmentView.swift */; };
-		A03645E829E8952D00D524BB /* NOLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645E729E8952D00D524BB /* NOLayout.swift */; };
 		A03645EB29E8974D00D524BB /* SuperColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645EA29E8974D00D524BB /* SuperColor.swift */; };
 		A03645ED29E89D7300D524BB /* BranchViewController+Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645EC29E89D7300D524BB /* BranchViewController+Message.swift */; };
 		A03645EF29E89DAD00D524BB /* BranchViewController+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03645EE29E89DAD00D524BB /* BranchViewController+Layout.swift */; };
@@ -196,6 +197,7 @@
 		A009F15F29D416C40045F311 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		A00BFA232C5F573F00A0B16E /* MessageBitBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBitBuilder.swift; sourceTree = "<group>"; };
 		A00BFA272C5F638D00A0B16E /* MessageBit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBit.swift; sourceTree = "<group>"; };
+		A00BFA292C604DEE00A0B16E /* ChatReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatReference.swift; sourceTree = "<group>"; };
 		A01236AA29E2C43000DF14C4 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		A01BFAFE2B8A13B6007FF216 /* SuperPageOfflineStore.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuperPageOfflineStore.storekit; sourceTree = "<group>"; };
 		A01CA23F29D019C500AEB258 /* SuperPage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperPage.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,7 +264,6 @@
 		A03645D829E7736100D524BB /* loadingDots.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loadingDots.json; sourceTree = "<group>"; };
 		A03645DB29E77C8900D524BB /* Device+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Device+Additions.swift"; sourceTree = "<group>"; };
 		A03645E429E88EA100D524BB /* AttatchmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttatchmentView.swift; sourceTree = "<group>"; };
-		A03645E729E8952D00D524BB /* NOLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NOLayout.swift; sourceTree = "<group>"; };
 		A03645EA29E8974D00D524BB /* SuperColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperColor.swift; sourceTree = "<group>"; };
 		A03645EC29E89D7300D524BB /* BranchViewController+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BranchViewController+Message.swift"; sourceTree = "<group>"; };
 		A03645EE29E89DAD00D524BB /* BranchViewController+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BranchViewController+Layout.swift"; sourceTree = "<group>"; };
@@ -359,6 +360,7 @@
 				A02882B429D7CAAE005F6479 /* NoAPI in Frameworks */,
 				A01CA2CE29D15FF000AEB258 /* NoAuth in Frameworks */,
 				A03645D229E7708500D524BB /* Lottie in Frameworks */,
+				A00BFA2D2C6178D000A0B16E /* NoUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +414,7 @@
 			children = (
 				A009F14229D3BA800045F311 /* Chat.swift */,
 				A009F15529D3EDD70045F311 /* ChatRole.swift */,
+				A00BFA292C604DEE00A0B16E /* ChatReference.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -947,7 +950,6 @@
 		A03645E629E8952600D524BB /* Layout */ = {
 			isa = PBXGroup;
 			children = (
-				A03645E729E8952D00D524BB /* NOLayout.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -1441,6 +1443,7 @@
 				A01CA2CD29D15FF000AEB258 /* NoAuth */,
 				A02882B329D7CAAE005F6479 /* NoAPI */,
 				A03645D129E7708500D524BB /* Lottie */,
+				A00BFA2C2C6178D000A0B16E /* NoUI */,
 			);
 			productName = SuperPage;
 			productReference = A01CA23F29D019C500AEB258 /* SuperPage.app */;
@@ -1474,6 +1477,7 @@
 				A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */,
 				A02882B229D7CAAE005F6479 /* XCRemoteSwiftPackageReference "NoAPI" */,
 				A03645D029E7708500D524BB /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				A00BFA2B2C6178D000A0B16E /* XCLocalSwiftPackageReference "../../../Core/Frameworks/NoUI" */,
 			);
 			productRefGroup = A01CA24029D019C500AEB258 /* Products */;
 			projectDirPath = "";
@@ -1544,7 +1548,6 @@
 				A03645C729E7543A00D524BB /* Button+Create.swift in Sources */,
 				A01CA2AA29D0E79700AEB258 /* Encodable+Request.swift in Sources */,
 				A057F5092A8174640084E4F6 /* UserDefaults+Helpers.swift in Sources */,
-				A03645E829E8952D00D524BB /* NOLayout.swift in Sources */,
 				A03645B729E6EBB300D524BB /* CollectionViewFlowLayout.swift in Sources */,
 				A03645B129E6EA2300D524BB /* KeyboardShortcut.swift in Sources */,
 				A009F15C29D4088F0045F311 /* ChatsListView.swift in Sources */,
@@ -1663,6 +1666,7 @@
 				A009F15429D3ED570045F311 /* AIModel.swift in Sources */,
 				A03645C429E74AF800D524BB /* Image+Create.swift in Sources */,
 				A009F14729D3BE6A0045F311 /* ChatsState+API.swift in Sources */,
+				A00BFA2A2C604DEE00A0B16E /* ChatReference.swift in Sources */,
 				A03645FF29E957AE00D524BB /* NOPopover.swift in Sources */,
 				A009F14C29D3EB630045F311 /* MessageCreateRequest.swift in Sources */,
 			);
@@ -1889,6 +1893,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		A00BFA2B2C6178D000A0B16E /* XCLocalSwiftPackageReference "../../../Core/Frameworks/NoUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../Core/Frameworks/NoUI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1917,6 +1928,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A00BFA2C2C6178D000A0B16E /* NoUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NoUI;
+		};
 		A01CA2CD29D15FF000AEB258 /* NoAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */;

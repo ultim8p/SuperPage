@@ -37,17 +37,12 @@ struct Branch: Codable, Identifiable, Equatable {
     
     // MARK: - Local
     
-    var loadingState: ModelState?
-    
-    var messages: [Message]?
-    
     init(_id: String? = nil,
          dateCreated: Date? = nil,
          dateUpdated: Date? = nil,
          user: User? = nil,
          chat: Chat? = nil,
          branch: BranchReference? = nil,
-         loadingState: ModelState? = nil,
          message: MessageReference? = nil,
          promptRole: Role? = nil,
          name: String? = nil,
@@ -58,7 +53,6 @@ struct Branch: Codable, Identifiable, Equatable {
         self.user = user
         self.chat = chat
         self.branch = branch
-        self.loadingState = loadingState
         self.message = message
         self.promptRole = promptRole
         self.name = name
@@ -82,9 +76,5 @@ extension Branch {
     
     var hasPromptEmoji: Bool {
         promptEmoj != nil
-    }
-    
-    var hasMessages: Bool {
-        messages?.count ?? 0 > 0
     }
 }

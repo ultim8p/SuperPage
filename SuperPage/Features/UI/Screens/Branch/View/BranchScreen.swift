@@ -26,12 +26,8 @@ struct BranchScreen: View {
             
             VStack(spacing: 0) {
                 BranchViewControllerWrapper(
-                    selectedBranchId: $navigationManager.selectedBranchId,
-                    branchEditState: branchEditState,
-                    chatsState: chatsState,
-                    sendMessageHandler: { message, model, messageIds in
-//                        sendMessage(message: message, model: model, branch: branch, messageIds: messageIds)
-                    }
+                    selectedBranchRef: $navigationManager.selectedBranchRef,
+                    branchEditState: branchEditState
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 

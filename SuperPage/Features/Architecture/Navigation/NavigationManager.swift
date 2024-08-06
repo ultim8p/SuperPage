@@ -16,7 +16,7 @@ final class NavigationManager: ObservableObject {
     
     @Published var selectedChatId: Chat.ID?
     
-    @Published var selectedBranchId: Branch.ID?
+    @Published var selectedBranchRef: BranchReference?
     
     @Published var editingBranch: Branch?
     
@@ -46,8 +46,8 @@ final class NavigationManager: ObservableObject {
         expandedChatIds.insert(chatId)
     }
     
-    func openBranch(id: Branch.ID) {
-        selectedBranchId = id
+    func openBranch(branchId: String, chatId: String) {
+        selectedBranchRef = BranchReference.create(branchId: branchId, chatId: chatId)
     }
     
     func openSettings() {

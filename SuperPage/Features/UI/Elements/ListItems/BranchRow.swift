@@ -18,7 +18,7 @@ struct BranchRow: View {
     
     @Binding var branch: Branch
     
-    @Binding var selectedBranchId: Branch.ID?
+    @Binding var selectedBranchRef: BranchReference?
     
     // MARK: Actions
     
@@ -35,12 +35,13 @@ struct BranchRow: View {
     var selectionHandler: (() -> Void)?
     
     var body: some View {
-        let isSelected = selectedBranchId == branch.id
+        let isSelected = selectedBranchRef?._id == branch.id
         
             ZStack {
                 HStack(spacing: 0) {
                     let hasError = branch.createMessageError != nil
-                    let loading = branch.loadingState == .loading || branch.state == .creatingMessage
+                    let branchState = chatsState.branchesStates[branch.id]
+                    let loading = branchState == .loading || branch.state == .creatingMessage
                     let name = branch.name ?? "No name"
                     
                     let imageName: String = hasError ?
@@ -131,7 +132,7 @@ struct BranchRow_Previews: PreviewProvider {
     static var previews: some View {
         BranchRow(
             branch: .constant(Branch(name: "Test Page")),
-            selectedBranchId: .constant(nil),
+            selectedBranchRef: .constant(nil),
             branchContextMenu: .constant(Branch()),
             showBranchDeleteAlert: .constant(false)
         )

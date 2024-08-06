@@ -19,28 +19,28 @@ extension PlatformCollectionView {
     func scrollToBottom(animated: Bool = false) {
     #if os(macOS)
         guard let scrollView = enclosingScrollView else { return }
-
-            let contentHeight = frame.height
-            let visibleHeight = scrollView.frame.height
-            let bottomInset = scrollView.contentInsets.bottom
-            let topInset = scrollView.contentInsets.top
-            let adjustedContentHeight = contentHeight + topInset + bottomInset
-
-            let targetY = max(adjustedContentHeight - visibleHeight, 0)
-
-            let bottomPoint = NSPoint(x: 0, y: targetY)
-            
-            if animated {
-                NSAnimationContext.runAnimationGroup({ context in
-                    context.duration = 0.5
-                    context.allowsImplicitAnimation = true
-                    scrollView.contentView.animator().setBoundsOrigin(bottomPoint)
-                    scrollView.reflectScrolledClipView(scrollView.contentView)
-                }, completionHandler: nil)
-            } else {
-                scrollView.contentView.scroll(to: bottomPoint)
+        
+        let contentHeight = frame.height
+        let visibleHeight = scrollView.frame.height
+        let bottomInset = scrollView.contentInsets.bottom
+        let topInset = scrollView.contentInsets.top
+        let adjustedContentHeight = contentHeight + topInset + bottomInset
+        
+        let targetY = max(adjustedContentHeight - visibleHeight, 0)
+        
+        let bottomPoint = NSPoint(x: 0, y: targetY)
+    
+        if animated {
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.5
+                context.allowsImplicitAnimation = true
+                scrollView.contentView.animator().setBoundsOrigin(bottomPoint)
                 scrollView.reflectScrolledClipView(scrollView.contentView)
-            }
+            }, completionHandler: nil)
+        } else {
+            scrollView.contentView.scroll(to: bottomPoint)
+            scrollView.reflectScrolledClipView(scrollView.contentView)
+        }
         
 //            let contentHeight = frame.height
 //            let visibleHeight = scrollView.frame.height
