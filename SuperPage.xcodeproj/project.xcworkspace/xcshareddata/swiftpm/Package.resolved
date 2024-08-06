@@ -1,4 +1,5 @@
 {
+  "originHash" : "7509a253bd5d0f83d27b8646367185c308af9f687bbb2b048a8968df8fcfba4c",
   "pins" : [
     {
       "identity" : "codableutils",
@@ -55,6 +56,15 @@
       }
     },
     {
+      "identity" : "noui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ultim8p/NoUI.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ce8adb73f95e85db99f6949132c5f72ab2dcb884"
+      }
+    },
+    {
       "identity" : "swift-crypto",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
@@ -64,5 +74,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

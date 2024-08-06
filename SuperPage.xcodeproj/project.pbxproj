@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,6 +26,7 @@
 		A00BFA282C5F638D00A0B16E /* MessageBit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00BFA272C5F638D00A0B16E /* MessageBit.swift */; };
 		A00BFA2A2C604DEE00A0B16E /* ChatReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00BFA292C604DEE00A0B16E /* ChatReference.swift */; };
 		A00BFA2D2C6178D000A0B16E /* NoUI in Frameworks */ = {isa = PBXBuildFile; productRef = A00BFA2C2C6178D000A0B16E /* NoUI */; };
+		A00BFA302C620FC400A0B16E /* NoUI in Frameworks */ = {isa = PBXBuildFile; productRef = A00BFA2F2C620FC400A0B16E /* NoUI */; };
 		A01236AB29E2C43000DF14C4 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01236AA29E2C43000DF14C4 /* TextView.swift */; };
 		A01CA24329D019C500AEB258 /* SuperPageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA24229D019C500AEB258 /* SuperPageApp.swift */; };
 		A01CA24529D019C500AEB258 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01CA24429D019C500AEB258 /* ContentView.swift */; };
@@ -359,6 +360,7 @@
 			files = (
 				A02882B429D7CAAE005F6479 /* NoAPI in Frameworks */,
 				A01CA2CE29D15FF000AEB258 /* NoAuth in Frameworks */,
+				A00BFA302C620FC400A0B16E /* NoUI in Frameworks */,
 				A03645D229E7708500D524BB /* Lottie in Frameworks */,
 				A00BFA2D2C6178D000A0B16E /* NoUI in Frameworks */,
 			);
@@ -1444,6 +1446,7 @@
 				A02882B329D7CAAE005F6479 /* NoAPI */,
 				A03645D129E7708500D524BB /* Lottie */,
 				A00BFA2C2C6178D000A0B16E /* NoUI */,
+				A00BFA2F2C620FC400A0B16E /* NoUI */,
 			);
 			productName = SuperPage;
 			productReference = A01CA23F29D019C500AEB258 /* SuperPage.app */;
@@ -1477,7 +1480,7 @@
 				A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */,
 				A02882B229D7CAAE005F6479 /* XCRemoteSwiftPackageReference "NoAPI" */,
 				A03645D029E7708500D524BB /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				A00BFA2B2C6178D000A0B16E /* XCLocalSwiftPackageReference "../../../Core/Frameworks/NoUI" */,
+				A00BFA2E2C620FC400A0B16E /* XCRemoteSwiftPackageReference "NoUI" */,
 			);
 			productRefGroup = A01CA24029D019C500AEB258 /* Products */;
 			projectDirPath = "";
@@ -1797,7 +1800,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SuperPage/SuperPage.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SuperPage/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J5NGE9JCN;
@@ -1837,7 +1840,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SuperPage/SuperPage.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SuperPage/Preview Content\"";
 				DEVELOPMENT_TEAM = 7J5NGE9JCN;
@@ -1893,14 +1896,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		A00BFA2B2C6178D000A0B16E /* XCLocalSwiftPackageReference "../../../Core/Frameworks/NoUI" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../Core/Frameworks/NoUI;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		A00BFA2E2C620FC400A0B16E /* XCRemoteSwiftPackageReference "NoUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ultim8p/NoUI.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		A01CA2CC29D15FF000AEB258 /* XCRemoteSwiftPackageReference "NoAuth" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ultim8p/NoAuth.git";
@@ -1930,6 +1934,11 @@
 /* Begin XCSwiftPackageProductDependency section */
 		A00BFA2C2C6178D000A0B16E /* NoUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = NoUI;
+		};
+		A00BFA2F2C620FC400A0B16E /* NoUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00BFA2E2C620FC400A0B16E /* XCRemoteSwiftPackageReference "NoUI" */;
 			productName = NoUI;
 		};
 		A01CA2CD29D15FF000AEB258 /* NoAuth */ = {
