@@ -16,7 +16,7 @@ enum AuthPath: APIPath {
     var description: String {
         switch self {
         case .postSignIn:
-            return "/v1/signin"
+            return "/v1/user/signin"
         }
     }
 }
