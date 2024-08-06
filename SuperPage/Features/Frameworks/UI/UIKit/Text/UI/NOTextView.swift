@@ -152,8 +152,10 @@ class NOTextView: PTextView, TextFormatting {
         let layoutManager = NSLayoutManager()
         textStorage.addLayoutManager(layoutManager)
         let textContainer = NSTextContainer()
-        textContainer.widthTracksTextView = true
-        textContainer.heightTracksTextView = true
+        
+        // WARNING: Setting to true breaks scroll in CollectionView. Jump glitch.
+        textContainer.widthTracksTextView = false
+        textContainer.heightTracksTextView = false
         layoutManager.addTextContainer(textContainer)
         super.init(frame: frame, textContainer: textContainer)
         
@@ -210,13 +212,25 @@ class NOTextView: PTextView, TextFormatting {
 #endif
     }
     
-    func noSetText(text: String) {
+    func noSetText(text: String, size: NOSize) {
     #if os(macOS)
         self.string = text
+        if let textContainer = self.textContainer {
+            textContainer.size = size
+        }
     #elseif os(iOS)
         self.text = text
     #endif
         didChangeTextViewText()
+    }
+    
+    func noSetText(size: NOSize) {
+#if os(macOS)
+    if let textContainer = self.textContainer {
+        textContainer.size = size
+    }
+#elseif os(iOS)
+#endif
     }
     
     func noSetAlignment(_ alignment: NSTextAlignment) {
@@ -235,7 +249,7 @@ class NOTextView: PTextView, TextFormatting {
 
         // Save existing container size
         let originalSize = textContainer.containerSize
-
+        
         // Set the target width
         textContainer.containerSize = CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude)
 
@@ -247,7 +261,7 @@ class NOTextView: PTextView, TextFormatting {
         let glyphRange = layoutManager.glyphRange(for: textContainer)
 
         // Calculate the rectangle that fits these glyphs
-        var usedRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+        let usedRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
         
         // Reset to original container size if needed
         textContainer.containerSize = originalSize

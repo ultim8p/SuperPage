@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NoUI
 
 class ChatOwnerBubble: NOView {
     
@@ -29,20 +30,25 @@ class ChatOwnerBubble: NOView {
         nameLabel.setContentHuggingPriority(.required, for: .vertical)
         nameLabel.setContentHuggingPriority(.required, for: .horizontal)
         nameLabel
-            .lead(to: self, const: Constant.horizontalSpace)
-            .top(to: self, const: Constant.verticalSpace)
-            .trail(to: self, const: Constant.horizontalSpace)
-            .bottom(to: self, const: Constant.verticalSpace)
+            .onCenter(to: self)
     }
     
     func configure(_ message: Message?) {
         let isUser = message?.role == .user
         let modelString: String = isUser ? "User" : message?.model?.displayName ?? ""
         noBackgroundColor = isUser ? SuperColor.indicatorUser : SuperColor.indicatorAIModel
-        nameLabel.noSetText(text: modelString)
+        nameLabel.noSetText(text: modelString, size: NOSize(width: 20000, height: 2000))
         let textSize = nameLabel.targetTextSize(targetWidth: 1000.0)
-        nameLabel.height(textSize.height).width(textSize.width)
+        nameLabel.noSetText(text: modelString, size: textSize)
+        nameLabel
+            .height(textSize.height)
+            .width(textSize.width)
         updateRadius(textHeight: textSize.height)
+        
+        let bubbleWidth = textSize.width + (Constant.horizontalSpace * 2.0)
+        let bubbleHeight = textSize.height + (Constant.verticalSpace * 2.0)
+        width(bubbleWidth, priority: .priority10)
+        height(bubbleHeight, priority: .priority10)
     }
     
     func updateRadius(textHeight: CGFloat) {

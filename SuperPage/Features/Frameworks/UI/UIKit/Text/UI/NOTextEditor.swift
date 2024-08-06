@@ -82,7 +82,7 @@ extension NOTextEditor {
 extension NOTextEditor {
     
     func reloadTextHeight() {
-        measureTextView.noSetText(text: text)
+        measureTextView.noSetText(text: text, size: NOSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude))
         textHeight = measureTextView.targetTextSize(targetWidth: contentWidth).height
     }
 }
@@ -157,8 +157,9 @@ extension NOTextEditor {
     
     func cellItem(at indexPath: IndexPath) -> NOTextViewCell {
         let cell: NOTextViewCell = collectionView.noReusableCell(for: indexPath)
-        cell.configure(text: text)
-        cell.configure(placeHolder: placeholder)
+        let itemSize = sizeForItem(at: indexPath)
+        cell.configure(text: text, size: itemSize)
+        cell.configure(placeHolder: placeholder, size: itemSize)
         cell.delegate = self
         return cell
     }

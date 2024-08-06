@@ -13,6 +13,7 @@ import AppKit
 #elseif canImport(Cocoa)
 import Cocoa
 #endif
+import NoUI
 
 class AttatchmentView: NOViewController, NOPopoverable {
     
@@ -69,7 +70,7 @@ class AttatchmentView: NOViewController, NOPopoverable {
     }
     
     func set(text: String) {
-        textView.noSetText(text: text)
+//        textView.noSetText(text: text)
     }
     
     // MARK: -  Setup
@@ -84,23 +85,23 @@ class AttatchmentView: NOViewController, NOPopoverable {
     func setupTextView() {
         placeholderTextView.formatters = [TextFormat.placeholder(nil)]
         placeholderTextView.isEditable = false
-        placeholderTextView.noSetText(text: """
-        Add context for the AI to know about the conversation.
-        For example:
-            - Paste an essay you need help with.
-            - Paste code you need help with.
-            - Set an instruction like: Act as a laywer.
-        """
-        )
+//        placeholderTextView.noSetText(text: """
+//        Add context for the AI to know about the conversation.
+//        For example:
+//            - Paste an essay you need help with.
+//            - Paste code you need help with.
+//            - Set an instruction like: Act as a laywer.
+//        """
+//        )
         
         contentView.addSubview(placeholderTextView)
         
-        let textViewConstraintsView = textView.noEnableScroll()
-        contentView.addSubview(textViewConstraintsView)
+//        let textViewConstraintsView = textView.noEnableScroll()
+//        contentView.addSubview(textViewConstraintsView)
         
         
         
-        textViewConstraintsView.onFullBottom(to: contentView, const: Constant.screenOffset).onBottom(to: headerView, const: Constant.screenOffset)
+//        textViewConstraintsView.onFullBottom(to: contentView, const: Constant.screenOffset).onBottom(to: headerView, const: Constant.screenOffset)
         textView.isEditable = true
         textView.noBecomeFirstResponder()
         textView.noTextViewDelegate = self

@@ -17,13 +17,9 @@ import Cocoa
 
 struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
     
-    @Binding var selectedBranchId: Branch.ID?
+    @Binding var selectedBranchRef: BranchReference?
     
     @ObservedObject var branchEditState: BranchEditState
-    
-    @ObservedObject var chatsState: ChatsState
-    
-    var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
     
 #if os(macOS)
     typealias NSViewControllerType = BranchViewController
@@ -49,17 +45,10 @@ struct BranchViewControllerWrapper: PlatformViewControlerRepresentable {
 #endif
     
     func makeViewController() -> BranchViewController {
-        let viewController = BranchViewController(
-            selectedBranchId: selectedBranchId,
-            chatsState: chatsState,
-            branchEditState: branchEditState
-        )
-        viewController.sendMessageHandler = sendMessageHandler
+        let viewController = BranchViewController(branchEditState: branchEditState)
+        
         return viewController
     }
     
-    func updateViewController(_ viewController: BranchViewController, context: Context) {
-        viewController.selectedBranchId = selectedBranchId
-        viewController.sendMessageHandler = sendMessageHandler
-    }
+    func updateViewController(_ viewController: BranchViewController, context: Context) { }
 }

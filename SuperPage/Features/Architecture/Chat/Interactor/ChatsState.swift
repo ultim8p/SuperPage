@@ -21,6 +21,15 @@ class ChatsState: ObservableObject {
     
     @Published var chatsStates: [String: ModelState] = [:]
     
+    // ChatID
+    @Published var branches: [String: [Branch]] = [:]
+    
+    // BranchID
+    @Published var branchesStates: [String: ModelState] = [:]
+    
+    // BranchID, Message
+    @Published var messages: [String: [Message]] = [:]
+    
     @Published var drafts: [String: MessageDraft] = [:]
     
     @Published var loadingChatsState: ModelState = .loading
@@ -73,16 +82,40 @@ class ChatsState: ObservableObject {
 
 extension ChatsState {
     
+    func chatFor(id: String) -> Chat? {
+        chats.first(where: { $0._id == id })
+    }
+    
     func chat(for id: String?) -> (chat: Chat, index: Int)? {
         chats.chat(for: id)
     }
     
-    func branch(for branch: Branch?) -> (chat: Chat, chatIndex: Int, branch: Branch, branchIndex: Int)? {
-        chats.branch(for: branch)
+//    func branch(for branch: Branch?) -> (chat: Chat, chatIndex: Int, branch: Branch, branchIndex: Int)? {
+//        chats.branch(for: branch)
+//    }
+//    
+//    func branch(id: Branch.ID) -> Branch? {
+//        chats.branch(id: id)
+//    }
+    
+    func messagesFor(branchId: String?) -> [Message] {
+        guard let branchId else { return [] }
+        
+        return messages[branchId] ?? []
     }
     
-    func branch(id: Branch.ID) -> Branch? {
-        chats.branch(id: id)
+    func branchFor(branchRef: BranchReference?) -> Branch? {
+        guard 
+            let chatId = branchRef?.chat?._id,
+            let branchId = branchRef?._id
+        else { return nil }
+        
+        return branches[chatId]?.first(where: { $0._id == branchId })
+    }
+    
+    func branchLocalStateFor(branchId: String?) -> ModelState? {
+        guard let branchId else { return nil }
+        return branchesStates[branchId]
     }
     
     func previousChatId(from chatId: Chat.ID) -> Chat.ID? {
@@ -110,96 +143,30 @@ extension ChatsState {
     }
 }
 
-// MARK: - Updating Model
+// MARK: - Chat Model Updates
 
 extension ChatsState {
     
-    // MARK: Chat
+    // Properties
     
-    func setChat(name: String, chat: Chat) {
+    func update(chat: Chat, name: String) {
         var chats = self.chats
         chats.setChat(name: name, chat: chat)
         self.chats = chats
     }
     
-    func setState(chat: Chat?, state: ModelState) {
-        setState(chatId: chat?._id, state: state)
+    // State
+    
+    func update(chat: Chat?, localState: ModelState) {
+        update(chatId: chat?._id, localState: localState)
     }
     
-    func setState(chatId: String?, state: ModelState) {
+    func update(chatId: String?, localState: ModelState) {
         guard let chatId else { return }
-        chatsStates[chatId] = state
+        chatsStates[chatId] = localState
     }
     
-    // MARK: Branch
-    
-    func setState(branch: Branch?, state: BranchState? = nil, loadingState: ModelState? = nil) {
-        var chats = self.chats
-        chats.setState(branch: branch, state: state, loadingState: loadingState)
-        self.chats = chats
-    }
-    
-    
-    func setError(branch: Branch?, createMessageError: NoError?) {
-        var chats = self.chats
-        chats.setError(branch: branch, createMessageError: createMessageError)
-        self.chats = chats
-    }
-    
-    func setBranches(response: [Branch]) {
-        var chats = self.chats
-        chats.setBranches(response: response)
-        self.chats = chats
-    }
-    
-    func setBranch(name: String, branch: Branch) {
-        var chats = self.chats
-        chats.setBranch(name: name, branch: branch)
-        self.chats = chats
-    }
-    
-    func addBranch(_ branch: Branch) {
-        var chats = self.chats
-        chats.addBranch(branch)
-        self.chats = chats
-    }
-    
-    func remove(branch: Branch) {
-        var chats = self.chats
-        chats.remove(branch: branch)
-        self.chats = chats
-    }
-    
-    func updateBranch(branch: Branch) {
-        var chats = self.chats
-        chats.update(branch: branch)
-        self.chats = chats
-    }
-    
-    // MARK: Messages
-    
-    func setMessages(messages: [Message], branch: Branch) {
-        var chats = self.chats
-        chats.setMessages(messages: messages, branch: branch)
-        self.chats = chats
-    }
-    
-    func addMessage(messages: [Message], branch: Branch) {
-        var chats = self.chats
-        chats.addMessage(messages: messages, branch: branch)
-        self.chats = chats
-    }
-    
-    func removeMessage(message: Message) {
-        var chats = chats
-        chats.removeMessage(message: message)
-        self.chats = chats
-    }
-}
-
-// MARK: - Actions
-
-extension ChatsState {
+    // Actions
     
     func remove(chat: Chat) {
         guard let chatIndex = chats.firstIndex(where: {$0.id == chat.id}) else { return }
@@ -207,12 +174,172 @@ extension ChatsState {
     }
 }
 
+// MARK: - Branch Modle Updates
+
+extension ChatsState {
+    
+    // State
+    
+    func update(branch: Branch?, createMessageError: NoError?) {
+        guard
+            let chatId = branch?.chat?._id,
+            let branchId = branch?._id,
+            var chatBranches = branches[chatId],
+            let index = chatBranches.firstIndex(where: { $0._id == branchId })
+        else { return }
+        
+        var branch = chatBranches[index]
+        
+        guard branch.createMessageError != createMessageError
+        else { return }
+        
+        branch.createMessageError = createMessageError
+        
+        chatBranches[index] = branch
+        branches[chatId] = chatBranches
+    }
+    
+    func update(branch: Branch?, state: BranchState?) {
+        guard
+            let chatId = branch?.chat?._id,
+            let branchId = branch?._id
+        else { return }
+        
+        var chatBranches = branches[chatId] ?? []
+        guard let index = chatBranches.firstIndex(where: { $0._id == branchId }) else { return }
+        
+        var branch = chatBranches[index]
+        
+        guard branch.state != state
+        else { return }
+        
+        branch.state = state
+        
+        chatBranches[index] = branch
+        branches[chatId] = chatBranches
+    }
+    
+    func update(branch: Branch?, localState: ModelState?) {
+        update(branchId: branch?._id, localState: localState)
+    }
+    
+    func update(branchId: String?, localState: ModelState?) {
+        guard let branchId else { return }
+        branchesStates[branchId] = localState
+    }
+    
+    // Model Updates
+    
+    func setBranches(response: [Branch]) {
+        guard let chatId = response.first?.chat?._id else { return }
+        branches[chatId] = response
+    }
+    
+    func setBranch(name: String, branch: Branch) {
+        guard
+            let chatId = branch.chat?._id,
+            let branchId = branch._id
+        else { return }
+        
+        var chatBranches = branches[chatId] ?? []
+        guard let branchIndex = chatBranches.firstIndex(where: { $0._id == branchId }) else { return }
+        
+        var branch = chatBranches[branchIndex]
+        
+        branch.name = name
+        
+        chatBranches[branchIndex] = branch
+        branches[chatId] = chatBranches
+    }
+    
+    func addBranch(_ branch: Branch) {
+        guard
+            let chatId = branch.chat?._id
+        else { return }
+        
+        var chatBranches = branches[chatId] ?? []
+        
+        if chatBranches.isEmpty { chatBranches = [branch] }
+        else { chatBranches.append(branch) }
+        
+        branches[chatId] = chatBranches
+    }
+    
+    func remove(branch: Branch) {
+        guard
+            let chatId = branch.chat?._id,
+            let branchId = branch._id
+        else { return }
+        
+        var chatBranches = branches[chatId] ?? []
+        guard let branchIndex = chatBranches.firstIndex(where: { $0._id == branchId }) else { return }
+        
+        chatBranches.remove(at: branchIndex)
+        
+        branches[chatId] = chatBranches
+    }
+    
+    func updateBranch(branch: Branch) {
+        guard
+            let chatId = branch.chat?._id,
+            let branchId = branch._id
+        else { return }
+        
+        var chatBranches = branches[chatId] ?? []
+        guard let branchIndex = chatBranches.firstIndex(where: { $0._id == branchId }) else { return }
+        
+        chatBranches[branchIndex] = branch
+        
+        branches[chatId] = chatBranches
+    }
+}
+
+// MARK: - Message Modle Updates
+
+extension ChatsState {
+    
+    func setMessages(messages: [Message], branch: Branch) {
+        guard
+            let branchId = branch._id
+        else { return }
+        
+        self.messages[branchId] = messages
+    }
+    
+    func addMessage(messages: [Message], branch: Branch) {
+        guard
+            let branchId = branch._id
+        else { return }
+        
+        var branchMessages = self.messages[branchId] ?? []
+        
+        if branchMessages.isEmpty { branchMessages = messages }
+        else { branchMessages.append(contentsOf: messages) }
+        
+        self.messages[branchId] = branchMessages
+    }
+    
+    func removeMessage(message: Message) {
+        guard
+            let branchId = message.branch?._id,
+            let messageId = message._id
+        else { return }
+        
+        var branchMessages = self.messages[branchId] ?? []
+        
+        guard let messageIndex = branchMessages.firstIndex(where: { $0._id == messageId }) else { return }
+        branchMessages.remove(at: messageIndex)
+        
+        self.messages[branchId] = branchMessages
+    }
+}
+
 // MARK: - Draft
 
 extension ChatsState {
     
-    func draft(for branch: Branch?) -> MessageDraft? {
-        guard let branchId = branch?._id else { return nil }
+    func draftFor(branchId: String?) -> MessageDraft? {
+        guard let branchId else { return nil }
         return drafts[branchId]
     }
     

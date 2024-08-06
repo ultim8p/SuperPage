@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 import SwiftUI
+import NoUI
+
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -37,36 +39,25 @@ class BranchViewController: NOViewController {
     var models = AIModel.allModels
     var localModel = AIModel.allModels.first!
     
-    var errorView = ErrorView()
+//    var errorView = ErrorView()
     
     // MARK: - App State
     
-    var chatsState: ChatsState
-    
     var branchEditState: BranchEditState
+    
+    // MARK: - State Variables
     
     var selectedMessages: Set<String> = []
     
-    private var _selectedBranchId: Branch.ID?
-    var selectedBranchId: Branch.ID? {
-        get {
-            return _selectedBranchId
-        }
-        set {
-            if let newValue, _selectedBranchId != newValue, _selectedBranchId != nil {
-                loadBranch(newValue)
-            }
-            _selectedBranchId = newValue
-        }
-    }
+    var branchRef: BranchReference?
     
     var branch: Branch?
     
     var draft: MessageDraft?
     
-    var messages: [Message] = []
+    var branchLocalState: ModelState?
     
-    var sendMessageHandler: ((_ message: String, _ model: AIModel, _ messageIds: [String]) -> Void)?
+    var messages: [Message] = []
     
     var newMessage: String = ""
     
@@ -83,15 +74,10 @@ class BranchViewController: NOViewController {
     }
     
     init(
-         selectedBranchId: Branch.ID?,
-         chatsState: ChatsState,
-         branchEditState: BranchEditState
+        branchEditState: BranchEditState
     ) {
-        self.chatsState = chatsState
         self.branchEditState = branchEditState
         super.init(nibName: nil, bundle: nil)
-        
-        self.selectedBranchId = selectedBranchId
     }
     
     required init?(coder: NSCoder) {
@@ -100,11 +86,9 @@ class BranchViewController: NOViewController {
     
     enum Constant {
         
-        static let loadingHeight: CGFloat = 30.0
+        static let loadingHeight: CGFloat = 150.0
         
         static let minimumNewMessageHeight: CGFloat = 150.0
-        
-        static let messageSpace: CGFloat = 10.0
     }
     
     enum Sections: Int, CaseIterable {
@@ -140,9 +124,7 @@ class BranchViewController: NOViewController {
         super.viewDidLoad()
         
         setupView()
-        
         bindViewModel()
-        loadBranch(selectedBranchId)
     }
     
     // MARK: Setup
@@ -159,20 +141,28 @@ class BranchViewController: NOViewController {
     }
     
     func setupPopUps() {
-        view.addSubview(errorView)
-        errorView
-            .safeTop(to: view, const: 10.0)
-            .centerX(to: view)
-            .width(500.0)
+//        view.addSubview(errorView)
+//        errorView
+//            .safeTop(to: view, const: 10.0)
+//            .centerX(to: view)
+//            .width(500.0)
     }
     
     func bindViewModel() {
-        chatsState.$chats.sink { [weak self] chats in
-            self?.didUpdateChats(chats)
+        branchEditState.$selectedBranchRef.sink { [weak self] ref in
+            self?.didUpdateSelectedBranchRef(ref)
         }.store(in: &cancellables)
         
-        chatsState.$drafts.sink { [weak self] drafts in
-            self?.didUpdate(drafts: drafts)
+        branchEditState.$messages.sink { [weak self] messages in
+            self?.didUpdateMessages(messages)
+        }.store(in: &cancellables)
+        
+//        chatsState.$drafts.sink { [weak self] drafts in
+//            self?.didUpdate(drafts: drafts)
+//        }.store(in: &cancellables)
+        
+        branchEditState.$branchLocalState.sink { [weak self] state in
+            self?.didUpdateBranchLocalState(state: state)
         }.store(in: &cancellables)
         
         branchEditState.$newMessage.sink { [weak self] newMessage in
@@ -181,24 +171,47 @@ class BranchViewController: NOViewController {
                 self.newMessage != newMessage
             else { return }
             
-            print("MSG: GOT NEW MESSAGE")
+            print("BRVC: GOT NEW MESSAGE")
             
             self.newMessage = ""
             reloadCells()
-//            guard let self else { return }
-//            if newMessage.isEmpty && !self.newMessage.isEmpty {
-//                print("BTST: did reset msg")
-//                self.newMessage = ""
-//                collectionView.collectionLayout.invalidateLayout()
-//                reloadCells()
-//                updateCollectionLayoutForMessage(isNew: true)
-//            }
+            
+            
+            if newMessage.isEmpty && !self.newMessage.isEmpty {
+                print("BTST: did reset msg")
+                self.newMessage = ""
+                collectionView.collectionLayout.invalidateLayout()
+                reloadCells()
+                updateCollectionLayoutForMessage(isNew: true)
+            }
             
         }.store(in: &cancellables)
         
         branchEditState.$selectedMessages.sink { [weak self] selectedMessages in
             self?.didUpdateSelectedMessages(selectedMessages)
         }.store(in: &cancellables)
+        
+        branchEditState.$branch.sink { [weak self] branch in
+            self?.didUpdateBranch(branch)
+        }.store(in: &cancellables)
+        
+        branchEditState.$draft.sink { [weak self] draft in
+            self?.didUpdate(draft: draft)
+        }.store(in: &cancellables)
+    }
+    
+    func didUpdateSelectedBranchRef(_ ref: BranchReference?) {
+        guard ref != branchRef else { return }
+        
+        print("BRVC: ViewController updated SEL BRANCH REF")
+        clearState()
+        self.branchRef = ref
+        reloadCells()
+    }
+    
+    func didUpdateBranch(_ branch: Branch?) {
+        self.branch = branch
+        reloadCells()
     }
     
     func didUpdateSelectedMessages(_ messages: Set<String>) {
@@ -206,8 +219,41 @@ class BranchViewController: NOViewController {
         reloadCells()
     }
     
+    func didUpdateMessages(_ messages: [Message]?) {
+        guard let messages else {
+            self.messages = []
+            reloadCells()
+            return
+        }
+        
+        let diff = messages.difference(from: self.messages)
+        let changeCount = diff.count
+        let hasChanges = changeCount > 0
+        let hadMessages = !self.messages.isEmpty
+        
+        print("BRVC: did update msgs")
+        
+//        guard hasChanges else { return }
+        
+        self.messages = messages
+        reloadCells()
+        
+        guard !hadMessages else { return }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            self.scrollToBottom()
+//        })
+//        if !hadMessages { scrollToBottom() }
+    }
+    
+    func didUpdateBranchLocalState(state: ModelState?) {
+        branchLocalState = state
+        reloadCells()
+    }
+    
+    /*
     func didUpdateChats(_ chats: [Chat]) {
         print("DID UPDATE CHATS")
+        
         guard
             let branch = chats.branch(for: branch)?.branch
         else { return }
@@ -231,6 +277,7 @@ class BranchViewController: NOViewController {
             self.scrollToBottom()
         }
     }
+    */
     
     func hasChanges(for branch: Branch) -> Bool {
         stateChanged(for: branch) ||
@@ -239,21 +286,15 @@ class BranchViewController: NOViewController {
         createErrorChanged(for: branch)
     }
     
-    func didUpdate(drafts: [String: MessageDraft]) {
-        guard
-            let branchId = branch?._id,
-            let draft = drafts[branchId]
-        else {
-            if self.draft != nil {
-                self.draft = nil
-                reloadCells()
-            }
-            return
-        }
-        
-        guard hasChanges(for: draft) else { return }
-        
+    func didUpdate(draft: MessageDraft?) {
+        let msg = draft?.messages?.first?.fullTextValue() ?? ""
+        print("BR EDIT: GOT DRFT: \(msg)")
         self.draft = draft
+        reloadCells()
+    }
+    
+    func didUpdate(drafts: [String: MessageDraft]) {
+        
         if branch?.state != .creatingMessage {
 //            newMessage = draft.messages?.first?.fullTextValue() ?? ""
         }
@@ -269,8 +310,8 @@ class BranchViewController: NOViewController {
     
     
     func reloadErrorState() {
-        errorView.isHidden = !hasError
-        errorView.configure(error: branch?.createMessageError)
+//        errorView.isHidden = !hasError
+//        errorView.configure(error: branch?.createMessageError)
     }
     
     func stateChanged(for branch: Branch) -> Bool {
@@ -278,12 +319,14 @@ class BranchViewController: NOViewController {
     }
     
     func loadingStateChanged(for branch: Branch) -> Bool {
-        branch.loadingState != self.branch?.loadingState
+//        branch.loadingState != self.branch?.loadingState
+        false
     }
     
     func messagesChanged(for branch: Branch) -> Bool {
-        branch.messages?.count ?? 0 != messages.count ||
-        branch.messages?.last?._id != messages.last?._id
+//        branch.messages?.count ?? 0 != messages.count ||
+//        branch.messages?.last?._id != messages.last?._id
+        false
     }
     
     func createErrorChanged(for branch: Branch) -> Bool {
@@ -347,8 +390,11 @@ class BranchViewController: NOViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.documentView = collectionView
         scrollView.drawsBackground = false
+//        scrollView.automaticallyAdjustsContentInsets = true
+//        scrollView.scrollsDynamically = false
         view.addSubview(scrollView)
         scrollView.onFull(to: view)
+        
 #elseif os(iOS)
         view.addSubview(collectionView)
         collectionView.onFull(to: view)
@@ -357,13 +403,9 @@ class BranchViewController: NOViewController {
     
     // MARK: State
     
-    var isLoading: Bool {
-        branch?.loadingState == .loading
-    }
+    var isLoading: Bool { branchLocalState == .loading }
     
-    var isCreating: Bool {
-        branch?.state == .creatingMessage
-    }
+    var isCreating: Bool { branch?.state == .creatingMessage }
     
 //    var error: Error? {
 //        switch branch?.state ?? .none {
@@ -401,6 +443,7 @@ class BranchViewController: NOViewController {
                 visibleIndexPath == indexPath,
                 let messageCell = visibleItem as? MessageCell
             else { continue }
+            
             configure(cell: messageCell, for: visibleIndexPath)
         }
     }
@@ -409,38 +452,50 @@ class BranchViewController: NOViewController {
         messageCellHeights = []
         let maxWidth = textWidth
         for message in messages {
-            staticTextView.noSetText(text: message.fullTextValue() ?? "")
+            staticTextView.noSetText(
+                text: message.fullTextValue() ?? "",
+                size: NOSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude)
+            )
             let textSize = staticTextView.targetTextSize(targetWidth: maxWidth)
             let textHeight = textSize.height +
             MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
             messageCellHeights.append(textHeight)
         }
+        
+//        print("SCR: totalH \(totalMessagesHeights) added: \(totalMessagesHeights + Constant.minimumNewMessageHeight) CELLW: \(maxWidth)")
     }
     
-    func appendCellHeightFor(message: Message) {
-        staticTextView.noSetText(text: message.fullTextValue() ?? "")
-        let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
-        let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
-        messageCellHeights.append(textHeight)
-    }
+//    func appendCellHeightFor(message: Message) {
+//        staticTextView.noSetText(text: message.fullTextValue() ?? "")
+//        let textSize = staticTextView.targetTextSize(targetWidth: textWidth)
+//        let textHeight = textSize.height + MessageCell.Constant.topSpace + MessageCell.Constant.bottomSpace
+//        messageCellHeights.append(textHeight)
+//    }
     
     func reloadStateConstraints() {
-
+        
     }
     
-    func loadBranch(_ branchId: Branch.ID?) {
-        guard let branchId else {
+    /*
+    func setupBranch(_ branchRef: BranchReference?) {
+        print("BRVC: loading ref: \(branchRef) SELF: \(self.branchRef)")
+        guard let branchRef else {
             clearState()
             return
         }
         
-        guard branchId != branch?._id, let branch = chatsState.branch(id: branchId) else { return }
+        guard 
+            branchRef._id != self.branchRef?._id,
+            let branch = chatsState.branchFor(branchRef: branchRef)
+        else { return }
+        clearState()
         
-        print("BRST: did load branch ViewControlle")
-        
+        print("BRVC: did load branch ViewControlle")
+        self.branchRef = branchRef
         self.branch = branch
-        messages = branch.messages ?? []
-        draft = chatsState.draft(for: branch)
+//        self.messages = chatsState.messagesFor(branchId: branchRef._id)
+        
+//        draft = chatsState.draft(for: branch)
         newMessage = draft?.messages?.first?.fullTextValue() ?? ""
         
         reloadCells()
@@ -450,23 +505,30 @@ class BranchViewController: NOViewController {
         chatsState.getDraft(branch: branch)
         chatsState.getMessages(branch: branch)
     }
+    */
     
     func scrollToBottom() {
         collectionView?.scrollToBottom()
+        print("SCR: cvh: \(collectionView.frame.size.height)")
     }
     
     func clearState() {
         branch = nil
         draft = nil
+        branchLocalState = nil
+        newMessage = ""
+        messageCellHeights = []
+        selectedMessages = []
         messages = []
-        reloadCells()
     }
     
     func reloadCells() {
         reloadMessageHeights()
         view.reloadLayoutIfNeeded()
         reloadStateConstraints()
+//        collectionView?.collectionViewLayout?.invalidateLayout()
         collectionView?.reloadData()
+//        collectionView?.layoutSubtreeIfNeeded()
         view.reloadLayoutIfNeeded()
     }
     

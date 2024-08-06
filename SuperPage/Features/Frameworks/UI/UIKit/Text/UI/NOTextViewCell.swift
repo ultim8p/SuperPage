@@ -30,6 +30,8 @@ class NOTextViewCell: PCollectionViewCell, ClassNameProtocol {
     let textView = NOTextView(frame: .zero, textContainer: nil)
     let placeholderTextView = NOTextView(frame: .zero, textContainer: nil)
     
+    var itemSize: NOSize = .zero
+    
 #if os(macOS)
     override func loadView() {
         self.view = NSView()
@@ -90,17 +92,21 @@ extension NOTextViewCell: NOTextViewDelegate {
     
     func noTextViewDidChangeSize(_ textView: NOTextView) {
         delegate?.noTextViewCell(self, didUpdateMessage: textView.noText)
+        let textSize = textView.targetTextSize(targetWidth: itemSize.width)
+        textView.noSetText(size: NOSize(width: itemSize.width, height: max(itemSize.height, textSize.height)))
     }
 }
 
 extension NOTextViewCell {
     
-    func configure(placeHolder: String?) {
-        placeholderTextView.noSetText(text: placeHolder ?? "")
+    func configure(placeHolder: String?, size: NOSize) {
+        placeholderTextView.noSetText(text: placeHolder ?? "", size: size)
     }
     
-    func configure(text: String?) {
-        textView.noSetText(text: text ?? "")
+    func configure(text: String?, size: NOSize) {
+        itemSize = size
+        textView.noSetText(text: text ?? "", size: size)
         reloadPlaceholder()
+        print("UPD SIZE: \(itemSize)")
     }
 }

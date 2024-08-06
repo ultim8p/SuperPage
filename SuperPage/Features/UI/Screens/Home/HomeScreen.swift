@@ -56,10 +56,10 @@ struct HomeScreen: View {
                             selectedChat: .constant(nil)
                         )
 
-                        if settingsState.settingsUsage.shouldShowTokensLeft {
-                            CompSeparator()
-                            HomeTokenStatsView()
-                        }
+//                        if settingsState.settingsUsage.shouldShowTokensLeft {
+//                            CompSeparator()
+//                            HomeTokenStatsView()
+//                        }
 //                        
 //                        HomeUpgradeView()
                         CompSeparator()

@@ -209,11 +209,12 @@ extension ChatsState {
                 Message.create(role: .user, text: text)
             ]
         )
-//        setState(branch: branch, state: .creatingMessage, loadingState: .loading)
+        
+        save(draft: draft)
         update(branch: branch, state: .creatingMessage)
         update(branch: branch, localState: .loading)
         
-        save(draft: draft)
+        
         Task {
             do {
                 let response = try await repo.postChatsBranchesMessagesCreate(env: env, reques: request)

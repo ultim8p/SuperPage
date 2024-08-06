@@ -39,11 +39,11 @@ class NOCollectionView: PlatformCollectionView {
     }
     
     #if os(macOS)
-    override var frame: PlatformRect {
-      didSet {
-        collectionViewLayout?.invalidateLayout()
-      }
-    }
+//    override var frame: PlatformRect {
+//      didSet {
+//        collectionViewLayout?.invalidateLayout()
+//      }
+//    }
     #endif
     
     var collectionHeight: CGFloat {

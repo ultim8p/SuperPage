@@ -13,6 +13,7 @@ import AppKit
 #elseif canImport(Cocoa)
 import Cocoa
 #endif
+import NoUI
 
 class SendMessageToolBar: NOView {
     
@@ -109,7 +110,7 @@ class SendMessageToolBar: NOView {
     
     func reloadProgressState() {
         let msgsSize = messagesCountLabel.targetTextSize(targetWidth: bounds.size.width)
-        messagesCountLabel.noSetText(text: "\(selectedMessagesCount) messages")
+//        messagesCountLabel.noSetText(text: "\(selectedMessagesCount) messages")
         messagesCountLabel.height(msgsSize.height).width(msgsSize.width)
         let hasSelectedMessages = selectedMessagesCount > 0
         let hasMessages = messagesCount > 0

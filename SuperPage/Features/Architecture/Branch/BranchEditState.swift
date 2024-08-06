@@ -95,6 +95,15 @@ extension BranchEditState {
             
             self?.didChange(branchLocalState: state)
         }.store(in: &cancellables)
+        
+        chatsState.$drafts.sink { [weak self] drafts in
+            guard
+                let branchId = self?.selectedBranchRef?._id,
+                let draft = drafts[branchId]
+            else { return }
+            
+            self?.didChange(draft: draft)
+        }.store(in: &cancellables)
     }
 }
 
@@ -106,6 +115,14 @@ private extension BranchEditState {
         guard selectedBranchRef != ref else { return }
         
         // Save message draf & useful state of previous branch,
+//        chatsState.save(draft: MessageDraft)
+        
+//        if !newMessage.isEmpty, let branch {
+//            let draftMessage = Message.create(role: .user, text: newMessage)
+//            let draft = MessageDraft(branch: branch, messages: [draftMessage])
+//            chatsState.save(draft: draft)
+//            print("GOT DRFT: backing up draft: \(newMessage)")
+//        }
         
         selectedBranchRef = ref
         setupBranch()
@@ -126,6 +143,10 @@ private extension BranchEditState {
     
     func didChange(branch: Branch?) {
         self.branch = branch
+    }
+    
+    func didChange(draft: MessageDraft?) {
+        self.draft = draft
     }
     
     func setupBranch() {
@@ -213,8 +234,8 @@ extension BranchEditState {
             let branch = chatsState.branchFor(branchRef: selectedBranchRef)
         else { return }
         
-        let draftMessage = Message.create(role: .user, text: newMessage)
-        draft = MessageDraft(branch: branch, messages: [draftMessage])
+//        let draftMessage = Message.create(role: .user, text: newMessage)
+//        draft = MessageDraft(branch: branch, messages: [draftMessage])
         
         chatsState.postCreateMessage(
             text: newMessage,

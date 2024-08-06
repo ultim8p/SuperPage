@@ -43,7 +43,7 @@ struct BranchScreen: View {
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button(action: {
 //                                            dismiss()
-                                navigationManager.selectedBranchId = nil
+                                navigationManager.selectedBranchRef = nil
                             }) {
                                 Image(systemName: "chevron.left")
                                     .font(.system(size: 20, weight: .black))

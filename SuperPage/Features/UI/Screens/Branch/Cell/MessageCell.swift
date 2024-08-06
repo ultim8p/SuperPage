@@ -13,6 +13,7 @@ import AppKit
 #elseif canImport(Cocoa)
 import Cocoa
 #endif
+import NoUI
 
 protocol MessageCellDelegate: AnyObject {
     
@@ -46,8 +47,6 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
     
     weak var delegate: MessageCellDelegate?
     
-    var cardWidthConstraint: NSLayoutConstraint!
-    
     let textView: NOTextView = NOTextView(frame: .zero, textContainer: nil)
     
     let placeholderTextView = NOTextView(frame: .zero, textContainer: nil)
@@ -69,6 +68,9 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
     var isInput: Bool = false
     
     var isHovered: Bool = false
+    
+    var textWidth: CGFloat = 0.0
+    var textHeight: CGFloat = 0.0
     
     enum Constant {
         static let topSpace: CGFloat = 22.0
@@ -114,17 +116,20 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
     
     private func setupSelectedBar() {
         selectedBar
-            .onLeft(to: textView, const: -2.0)
-            .top(to: textView)
-            .bottom(to: textView)
-            .width(4.0)
-        selectedBar.noSet(radius: 2.0)
-        selectedBar.noBackgroundColor = SuperColor.icon
-        selectedBar.isHidden = true
+            .centerX(to: leftView)
+            .top(to: leftView)
+            .bottom(to: leftView)
+            .width(Constant.barHoverWidth)
+        
+        selectedBar.noSet(radius: Constant.barHoverWidth * 0.5)
     }
     
     private func setupBackgroundViews() {
-        leftView.lead(to: noContentView).top(to: noContentView).bottom(to: noContentView).onLeft(to: cardView)
+        leftView
+            .lead(to: noContentView)
+            .top(to: ownerBubble)
+            .bottom(to: textView)
+            .onLeft(to: cardView)
         
         leftView.onTap { [weak self] in
             guard let self, !isInput else { return }
@@ -132,72 +137,85 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
             self.reloadSelectedBarState()
             self.delegate?.messageCellDidTap(self)
         }
-        
-        leftView.onHover { [weak self] mouseOn in
-            guard let self, !isInput else { return }
-            isHovered = mouseOn
-            let barWidth = mouseOn ? Constant.barHoverWidth : Constant.barWidth
-            selectedBar.noSet(radius: barWidth * 0.5)
-            selectedBar.width(barWidth)
-//            self.textView.backgroundColor = mouseOn ?
-//                .black.withAlphaComponent(0.1) :
-//                .clear
-            reloadSelectedBarState()
-        }
+//        leftView.onHover { [weak self] mouseOn in
+//            guard let self, !isInput else { return }
+//            isHovered = mouseOn
+//            let barWidth = mouseOn ? Constant.barHoverWidth : Constant.barWidth
+//            selectedBar.noSet(radius: barWidth * 0.5)
+//            selectedBar.width(barWidth)
+////            self.textView.backgroundColor = mouseOn ?
+////                .black.withAlphaComponent(0.1) :
+////                .clear
+//            reloadSelectedBarState()
+//        }
     }
     
     private func setupCardView() {
         cardView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.centerX(to: noContentView).top(to: noContentView).bottom(to: noContentView)
-        cardWidthConstraint = cardView.widthAnchor.constraint(equalToConstant: NODevice.readableWidth(for: noContentView.bounds.size.width))
-        cardWidthConstraint.isActive = true
+        cardView
+            .centerX(to: noContentView)
+            .top(to: noContentView)
+            .bottom(to: noContentView)
         
         cardView.addSubview(lineSeparator)
         lineSeparator.noBackgroundColor = SuperColor.lineSeparator
-        lineSeparator.onFullTop(to: cardView).height(1.0)
+        lineSeparator
+            .onFullTop(to: cardView)
+            .height(0.5)
     }
     
     private func setupTextView() {
         textView.noTextViewDelegate = self
-        textView.lead(to: cardView).trail(to: cardView)
+        textView
+            .centerX(to: cardView)
             .top(to: cardView, const: Constant.topSpace)
-            .bottom(to: cardView, const: Constant.bottomSpace)
+//            .bottom(to: cardView, const: Constant.bottomSpace)
         
         textView.register(closure: {
             self.delegate?.messageCell(self, didPerform: .commandEnter)
         }, for: .commandEnter)
         
-        ownerBubble.top(to: cardView, const: 1.0).lead(to: cardView, const: 0.0)
+        ownerBubble
+            .top(to: cardView, const: 1.0)
+            .lead(to: cardView, const: 0.0)
+        
         placeholderTextView.formatters = [TextFormat.placeholder(nil)]
-        placeholderTextView.onFull(to: textView)
-        placeholderTextView.noSetText(text: "Type...\n\nShortcuts:\n · [⌘ ENTER] To to submit.\n · [⌘ M] To change AI model.\n · [⌘ E] to edit the Page’s properties.")
+        placeholderTextView
+            .lead(to: textView)
+            .top(to: textView)
+        
         placeholderTextView.isEditable = false
         placeholderTextView.isSelectable = false
     }
     
     func reloadConstraints(width: CGFloat) {
-        cardWidthConstraint.constant = NODevice.readableWidth(for: width)
+        
+        cardView.width(textWidth)
+        textView.width(textWidth)
+        placeholderTextView.width(textWidth)
     }
     
     func reloadSelectedBarState() {
-        selectedBar.isHidden = !(isTapped || isHovered)
-        selectedBar.noBackgroundColor = isTapped ? SuperColor.icon : SuperColor.icon.withAlphaComponent(0.4)
+//        selectedBar.isHidden = !(isTapped || isHovered)
+        selectedBar.noBackgroundColor = isTapped ? SuperColor.icon : SuperColor.icon.withAlphaComponent(0.1)
     }
     
-    func configure(message: Message?, editable: Bool, width: CGFloat, isSelected: Bool) {
-//        let role = message?.role
-//        let isAssistant = role == .assistant
-//        let backgroundColor: PlatformColor = isAssistant ?
-//            .clear :
-//        SuperColor.userMessageBackground
-//        cardView.noBackgroundColor = backgroundColor
+    func configure(message: Message?, editable: Bool, width: CGFloat, isSelected: Bool, height: CGFloat) {
+        textHeight = height
+        textWidth = NODevice.readableWidth(for: width)
+        
         isHovered = false
         isInput = false
         isTapped = isSelected
-        selectedBar.isHidden = !isTapped
-        textView.noSetText(text: message?.fullTextValue() ?? "")
+//        selectedBar.isHidden = !isTapped
+        textView.noSetText(
+            text: message?.fullTextValue() ?? "",
+            size: NOSize(width: textWidth, height: height)
+        )
+        
         textView.isEditable = false
         textView.isSelectable = true
+        selectedBar.isHidden = false
         reloadConstraints(width: width)
         lineSeparator.isHidden = true
         hasPlaceholder = false
@@ -205,21 +223,45 @@ class MessageCell: PCollectionViewCell, NOTextViewDelegate, ClassNameProtocol {
         reloadPlaceholder()
         ownerBubble.configure(message)
         reloadSelectedBarState()
+        
+        textView.height(height)
+        placeholderTextView.height(height)
     }
     
-    func configure(text: String, editable: Bool, width: CGFloat, showSeparator: Bool) {
+    func configure(text: String, editable: Bool, width: CGFloat, showSeparator: Bool, height: CGFloat) {
+        textHeight = height
 //        cardView.noBackgroundColor = SuperColor.userMessageBackground
+        textWidth = NODevice.readableWidth(for: width)
         isInput = true
         isTapped = false
         hasPlaceholder = true
         ownerBubble.isHidden = true
         selectedBar.isHidden = true
-        textView.noSetText(text: text)
+        textView.noSetText(
+            text: text,
+            size: NOSize(width: textWidth, height: height)
+        )
+        print("TEXTV: Configd height: \(height)")
+        placeholderTextView.noSetText(
+            text: """
+        Type...
+        
+        Try some shortcuts:
+        · [⌘ ENTER] To to submit.
+        · [⌘ M] To change AI model.
+        · [⌘ E] to edit the Page’s properties.
+        """,
+            size: NOSize(width: textWidth, height: height)
+        )
+        
         textView.isEditable = editable
         textView.isSelectable = true
         reloadConstraints(width: width)
         lineSeparator.isHidden = !showSeparator
         reloadPlaceholder()
+        
+        textView.height(height)
+        placeholderTextView.height(height)
     }
     
     func reloadPlaceholder() {
@@ -236,5 +278,7 @@ extension MessageCell {
     func noTextViewDidChangeSize(_ textView: NOTextView) {
         reloadPlaceholder()
         delegate?.messageCell(self, didUpdateMessage: textView.noText)
+        let textSize = textView.targetTextSize(targetWidth: textWidth)
+        textView.noSetText(size: NOSize(width: textWidth, height: max(textHeight, textSize.height)))
     }
 }

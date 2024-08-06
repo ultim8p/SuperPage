@@ -47,7 +47,7 @@ class ErrorView: NOView {
     func configure(error: NoError?) {
         let textSize = errorLabel.targetTextSize(targetWidth: self.bounds.size.width - 12.0)
         errorLabel.height(textSize.height).width(textSize.width)
-        errorLabel.noSetText(text: error?.reason ?? "")
+//        errorLabel.noSetText(text: error?.reason ?? "")
         reloadLayoutIfNeeded()
     }
 }
